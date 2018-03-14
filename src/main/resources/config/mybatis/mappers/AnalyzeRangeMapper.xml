@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.silita.biaodaa.dao.AnalyzeRangeMapper">
+    <select id="queryAnalyzeRangeByField" parameterType="String" resultType="Map">
+        select * from mishu_snatch.analyze_range where field=#{field}
+    </select>
+
+    <insert id="insertAnalyzeDetail" parameterType="com.snatch.model.AnalyzeDetail">
+        INSERT INTO mishu_analyze.analyze_detail (
+        redisId,noticeUrl,title,tbAssureSum,projDq,
+        projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
+        bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
+        province,city,county,projType,zzRank,
+        pbMode,tbAssureEndDate,tbAssureEndTime,lyAssureSum,slProveSum,
+        assureEndDate,assureEndTime,zgCheckDate,kbStaffAsk,fileCost,
+        otherCost,zbName,zbContactMan,zbContactWay,dlContactMan,
+        dlContactWay,personRequest,shebaoRequest,yejiRequest,registrationForm,
+        projectTimeLimit,projectCompletionDate,supplementNoticeNumber,supplementNoticeReason,flowStandardFlag,
+        money,block,analyzeDate)
+        VALUES
+        (#{redisId},#{noticeUrl},#{title},#{tbAssureSum},#{projDq},
+        #{projXs},#{projSum},#{bmStartDate},#{bmEndDate},#{bmEndTime},
+        #{bmSite},#{kbSite},#{tbEndDate},#{tbEndTime},#{gsDate},
+        #{province},#{city},#{county},#{projType},#{zzRank},
+        #{pbMode},#{tbAssureEndDate},#{tbAssureEndTime},#{lyAssureSum},#{slProveSum},
+        #{assureEndDate},#{assureEndTime},#{zgCheckDate},#{kbStaffAsk},#{fileCost},
+        #{otherCost},#{zbName},#{zbContactMan},#{zbContactWay},#{dlContactMan},
+        #{dlContactWay},#{personRequest},#{shebaoRequest},#{yejiRequest},#{registrationForm},
+        #{projectTimeLimit},#{projectCompletionDate},#{supplementNoticeNumber},#{supplementNoticeReason},#{flowStandardFlag},
+        #{money},#{block},now())
+    </insert>
+
+
+    <insert id="batchInsertAnalyzeDetail" parameterType="Map">
+        INSERT INTO mishu_analyze.analyze_detail (
+        redisId,noticeUrl,title,tbAssureSum,projDq,
+        projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
+        bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
+        province,city,county,projType,zzRank,
+        pbMode,tbAssureEndDate,tbAssureEndTime,lyAssureSum,slProveSum,
+        assureEndDate,assureEndTime,zgCheckDate,kbStaffAsk,fileCost,
+        otherCost,zbName,zbContactMan,zbContactWay,dlContactMan,
+        dlContactWay,personRequest,shebaoRequest,yejiRequest,registrationForm,
+        projectTimeLimit,projectCompletionDate,supplementNoticeNumber,supplementNoticeReason,flowStandardFlag,
+        money,block,analyzeDate)
+        VALUES
+        <foreach collection="list" index="index" item="b" separator=",">
+        (#{b.redisId},#{b.noticeUrl},#{b.title},#{b.tbAssureSum},#{b.projDq},
+        #{b.projXs},#{b.projSum},#{b.bmStartDate},#{b.bmEndDate},#{b.bmEndTime},
+        #{b.bmSite},#{b.kbSite},#{b.tbEndDate},#{b.tbEndTime},#{b.gsDate},
+        #{b.province},#{b.city},#{b.county},#{b.projType},#{b.zzRank},
+        #{b.pbMode},#{b.tbAssureEndDate},#{b.tbAssureEndTime},#{b.lyAssureSum},#{b.slProveSum},
+        #{b.assureEndDate},#{b.assureEndTime},#{b.zgCheckDate},#{b.kbStaffAsk},#{b.fileCost},
+        #{b.otherCost},#{b.zbName},#{b.zbContactMan},#{b.zbContactWay},#{b.dlContactMan},
+        #{b.dlContactWay},#{b.personRequest},#{b.shebaoRequest},#{b.yejiRequest},#{b.registrationForm},
+        #{b.projectTimeLimit},#{b.projectCompletionDate},#{b.supplementNoticeNumber},#{b.supplementNoticeReason},#{b.flowStandardFlag},
+        #{b.money},#{b.block},now())
+        </foreach>
+    </insert>
+
+</mapper>
