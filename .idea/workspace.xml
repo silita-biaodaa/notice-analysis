@@ -1,15 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6201d04-508f-48cc-8bd9-d70584429a09" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+    <list default="true" id="76413e44-2421-433e-a63f-b2d203137694" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/AnalysisBootstrap.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/common/Constant.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/controller/TestController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/dao/AnalyzeRangeMapper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/dao/TestMapper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/DisruptorOperator$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/DisruptorOperator.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/ZhaoBiaoDisruptorCreator$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/ZhaoBiaoDisruptorCreator.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/event/AnalyzeEvent.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/exception/AnalyzeException.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/handler/BaseHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/ApplyDateHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/ApplyProjSumHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/InsertAnalyzeDetailHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/TbAssureSumHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/model/TUser.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/service/NoticeAnalyzeService.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/service/TestService.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/task/TestTask.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/CNNumberFormat$Chn_Name_value.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/CNNumberFormat$Test_Data.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/CNNumberFormat.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/ChineseCompressUtil$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/ChineseCompressUtil$FormattingVisitor.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/ChineseCompressUtil.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/DateUtils.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/MyMapper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/MyStringUtils.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/PropertiesUtils$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/PropertiesUtils.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/RedisCacheUtil.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/silita/biaodaa/utils/RedisUtil.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/snatch/model/AnalyzeDetail.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/snatch/model/AnalyzeDetailZhongBiao.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/snatch/model/Dimension.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/snatch/model/Notice.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/snatch/model/ZhaobiaoDetail.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/analysis.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/generator/generatorConfig.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/mybatis/mappers/AnalyzeRangeMapper.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/mybatis/mappers/TestMapper.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/mybatis/mybatis-config.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/spring/applicationContext-datasource.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/spring/applicationContext-redis.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/spring/applicationContext.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config/spring/springmvc-servlet.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/log4j.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/com/silita/biaodaa/service/ConfigTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/com/silita/biaodaa/service/RedisTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/META-INF/MANIFEST.MF" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/AnalysisBootstrap.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/common/Constant.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/controller/TestController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/dao/AnalyzeRangeMapper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/dao/TestMapper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/DisruptorOperator$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/DisruptorOperator.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/ZhaoBiaoDisruptorCreator$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/ZhaoBiaoDisruptorCreator.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/event/AnalyzeEvent.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/exception/AnalyzeException.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/handler/BaseHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/ApplyDateHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/ApplyProjSumHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/InsertAnalyzeDetailHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/disruptor/handler/zhaoBiao/TbAssureSumHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/model/TUser.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/service/NoticeAnalyzeService.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/service/TestService.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/task/TestTask.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/CNNumberFormat$Chn_Name_value.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/CNNumberFormat$Test_Data.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/CNNumberFormat.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/ChineseCompressUtil$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/ChineseCompressUtil$FormattingVisitor.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/ChineseCompressUtil.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/DateUtils.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/MyMapper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/MyStringUtils.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/PropertiesUtils$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/PropertiesUtils.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/RedisCacheUtil.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/silita/biaodaa/utils/RedisUtil.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/snatch/model/AnalyzeDetail.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/snatch/model/AnalyzeDetailZhongBiao.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/snatch/model/Dimension.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/snatch/model/Notice.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/com/snatch/model/ZhaobiaoDetail.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/analysis.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/generator/generatorConfig.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/mybatis/mappers/AnalyzeRangeMapper.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/mybatis/mappers/TestMapper.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/mybatis/mybatis-config.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/spring/applicationContext-datasource.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/spring/applicationContext-redis.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/spring/applicationContext.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/config/spring/springmvc-servlet.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/classes/log4j.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/HikariCP-2.7.8.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/ant-1.8.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/ant-launcher-1.8.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/aopalliance-1.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/asm-3.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/aspectjweaver-1.6.8.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/bonecp-0.7.1.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/bonecp-spring-0.7.1.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/cglib-2.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/commons-codec-1.5.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/commons-collections-3.2.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/commons-fileupload-1.2.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/commons-lang3-3.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/commons-logging-1.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/commons-pool2-2.3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/disruptor-3.2.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/fastjson-1.1.17.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/guava-r08.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jackson-annotations-2.6.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jackson-core-2.6.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jackson-core-asl-1.9.9.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jackson-databind-2.6.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jackson-mapper-asl-1.9.9.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/javax.annotation-api-1.3.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jedis-2.7.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jersey-client-1.9.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jersey-core-1.9.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jsoup-1.8.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jstl-1.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jta-1.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/jul-to-slf4j-1.7.25.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/log4j-1.2.16.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/log4j-api-2.10.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/log4j-to-slf4j-2.10.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/logback-classic-1.2.3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/logback-core-1.2.3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mapper-base-1.0.0-beta3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mapper-core-1.0.0-beta3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mapper-spring-1.0.0-beta3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mapper-spring-boot-autoconfigure-2.0.0-beta3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mapper-spring-boot-starter-2.0.0-beta3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mapper-weekend-1.1.3-beta3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mybatis-3.1.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mybatis-spring-1.1.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/mysql-connector-java-5.1.32.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/persistence-api-1.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/poi-3.10.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/slf4j-api-1.6.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/slf4j-log4j12-1.6.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/snakeyaml-1.19.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-aop-4.1.6.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-beans-4.1.6.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-boot-2.0.0.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-boot-autoconfigure-2.0.0.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-boot-starter-2.0.0.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-boot-starter-jdbc-2.0.0.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-boot-starter-logging-2.0.0.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-context-4.1.6.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-context-support-4.0.9.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-core-4.1.6.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-data-redis-1.5.0.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-expression-4.1.6.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-jdbc-3.1.1.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-tx-3.1.1.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-web-4.1.6.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/spring-webmvc-4.1.6.RELEASE.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/lib/standard-1.1.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/WEB-INF/web.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/trasen-manage/index.html" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notice-analysis.iml" afterPath="$PROJECT_DIR$/notice-analysis.iml" />
     </list>
     <ignored path="notice-analysis.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
-    <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,33 +189,12 @@
   <component name="FavoritesManager">
     <favorites_list name="notice-analysis" />
   </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
       <projects_view />
-    </option>
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/.gitignore" />
-      </list>
     </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
@@ -71,7 +215,7 @@
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
     <option name="width" value="1280" />
-    <option name="height" value="717" />
+    <option name="height" value="716" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -98,7 +242,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
@@ -119,25 +262,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="notice-analysis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="notice-analysis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value=".idea" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../trasen-workspace" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
   </component>
   <component name="RunManager">
@@ -559,37 +697,37 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00001" summary="#删除环境配置">
-      <created>1521040156507</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1521040156507</updated>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="76413e44-2421-433e-a63f-b2d203137694" name="Default" comment="" />
+      <created>1521040616133</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1521040616133</updated>
+      <workItem from="1521040619124" duration="27000" />
     </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="197000" />
+    <option name="totallyTimeSpent" value="27000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="717" extended-state="6" />
+    <frame x="0" y="23" width="1280" height="716" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24959612" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24959612" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -616,26 +754,8 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="#删除环境配置" />
-    <option name="LAST_COMMIT_MESSAGE" value="#删除环境配置" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
-  </component>
-  <component name="antWorkspaceConfiguration">
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
-    <option name="FILTER_TARGETS" value="false" />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>
