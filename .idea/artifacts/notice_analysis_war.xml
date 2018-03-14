@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="notice-analysis:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="trasen-manage.war">
-      <element id="artifact" artifact-name="notice-analysis:war exploded" />
-    </root>
-  </artifact>
-</component>
