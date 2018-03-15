@@ -24,6 +24,7 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+
     @Autowired
     TestTask testTask;
 
