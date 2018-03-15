@@ -12,11 +12,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * Author: caigang
- * Time: 2015/8/12 16:39
- * Remark: disruptor相关操作
- */
 @Component
 public class DisruptorOperator {
 
