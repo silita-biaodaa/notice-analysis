@@ -66,7 +66,7 @@ public class TestController {
             }finally{
                 lock.unlock();
             }
-            disruptorOperator.publish(notice);
+//            disruptorOperator.publish(notice);
         } catch (Exception e) {
             e.printStackTrace();
         }
