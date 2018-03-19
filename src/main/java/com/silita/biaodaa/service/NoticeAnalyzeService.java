@@ -29,8 +29,6 @@ public class NoticeAnalyzeService {
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
 
-
-
     /**
      * 解析保证金
      * 正则匹配
@@ -395,4 +393,70 @@ public class NoticeAnalyzeService {
         param.put("list",list);
         analyzeRangeMapper.batchInsertAnalyzeDetail(param);
     }
+
+    /**
+     * 解析报名地址
+     * 数据匹配
+     * return 报名地址
+     */
+    public String analyzeApplyAddress(String html) {
+        String rangeHtml="";
+        String address = null;
+        List<Map<String, Object>> arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyAddress");
+        for (int i = 0; i < arList.size(); i++) {
+            String start = arList.get(i).get("rangeStart").toString();
+            String end = arList.get(i).get("rangeEnd").toString();
+            int indexStart=0;
+            int indexEnd=0;
+            if(!"".equals(start)){
+                indexStart = html.indexOf(start);//范围开始位置
+            }
+            if(!"".equals(end)){
+                indexEnd = html.indexOf(end);//范围结束位置
+            }
+            if(indexStart != -1 && indexEnd != -1){
+                if(indexEnd > indexStart){
+                    rangeHtml = html.substring(indexStart, indexEnd+1);//截取范围之间的文本
+                }else if(indexStart > indexEnd) {
+                    if(html.length() - indexStart >= 80){
+                        rangeHtml = html.substring(indexStart, indexStart + 80);
+                    }else{
+                        rangeHtml = html.substring(indexStart, html.length());//截取范围开始到结尾
+                    }
+                }
+                List<String> addrList = analyzeRangeMapper.queryAnalyzeRangeBmAddr();
+                for (int j = 0; j < addrList.size(); j++) {
+                    int indexNum =  rangeHtml.indexOf(addrList.get(j));
+                    if(indexNum != -1){
+                        address = addrList.get(j);
+                        break;
+                    }
+                }
+                if(!"".equals(address)){
+                    //查询标准化地址
+                    List<String> baseList = analyzeRangeMapper.queryBaseBmAddress(address);
+                    if(!baseList.isEmpty()){
+                        address = baseList.get(0);
+                    }
+                    break;
+                }
+            }
+        }
+//		if("".equals(address)) {
+        if(html.indexOf("下载招标文件") != -1 ||html.indexOf("下载获取招标文件") != -1) {
+            return "网上下载";
+        }
+        int start = html.indexOf("下载");
+        int end = html.indexOf("招标文件");
+        if((start != -1 && end != -1) && (end - start > 0 && end - start <20)) {
+            return "网上下载";
+        }
+        if(html.indexOf("在") != -1 && html.indexOf("进行网上下载") != -1) {
+            return "网上下载";
+        }
+//		}
+        return address;
+    }
+
+
 }

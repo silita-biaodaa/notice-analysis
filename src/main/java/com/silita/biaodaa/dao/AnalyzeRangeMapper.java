@@ -16,4 +16,7 @@ public interface AnalyzeRangeMapper {
 
     void batchInsertAnalyzeDetail(Map<String,Object> param);
 
+    List<String> queryAnalyzeRangeBmAddr();
+
+    List<String> queryBaseBmAddress(String address);
 }

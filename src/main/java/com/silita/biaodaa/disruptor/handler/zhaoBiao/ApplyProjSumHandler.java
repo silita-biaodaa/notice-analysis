@@ -41,4 +41,15 @@ public class ApplyProjSumHandler extends BaseHandler {
             }
         }
     }
+
+    @Override
+    protected String executeAnalysis(String stringPart) {
+        //TODO：具体逻辑代码自己实现
+        return null;
+    }
+
+    @Override
+    protected void saveResult(EsNotice esNotice, String analysisResult) {
+        //TODO：具体逻辑代码自己实现
+    }
 }

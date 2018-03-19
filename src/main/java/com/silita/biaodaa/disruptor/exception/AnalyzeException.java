@@ -11,7 +11,7 @@ public class AnalyzeException implements ExceptionHandler {
     @Override
     public void handleEventException(Throwable ex, long sequence, Object event) {
         //TODO disruptor处理过程中的异常处理
-        logger.info("exception title:");
+        logger.error(ex.getMessage(),ex);
     }
 
     @Override
