@@ -29,7 +29,7 @@ public class RedisTest extends ConfigTest {
 
     @Test
     public void getNotice(){
-        byte[] rawKey = redisTemplate.getKeySerializer().serialize("liuqi");
+        byte[] rawKey = redisTemplate.getKeySerializer().serialize("maofeng");
         RedisConnection connection = RedisConnectionUtils.getConnection(redisTemplate.getConnectionFactory());
         List<byte[]> results = connection.bLPop(0, rawKey);
         if(CollectionUtils.isEmpty(results)){
@@ -40,7 +40,7 @@ public class RedisTest extends ConfigTest {
 
     @Test
     public void test(){
-        Notice notice = (Notice) redisTemplate.opsForList().leftPop("liuqi",5, TimeUnit.SECONDS);
+        Notice notice = (Notice) redisTemplate.opsForList().leftPop("maofeng",5, TimeUnit.SECONDS);
         System.out.println(notice);
     }
 

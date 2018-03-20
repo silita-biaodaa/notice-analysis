@@ -19,6 +19,7 @@ public class AnalyzeDetail implements Serializable {
     private String noticeUrl;                         //公告url
     private String tbAssureSum;                         //保证金
     private String projSum;                         //项目金额
+    private String assureSumRemit;//保证金汇款方式
 
     private String bmStartDate;              //报名时间
     private String bmEndDate;           //报名截止时间
@@ -40,6 +41,7 @@ public class AnalyzeDetail implements Serializable {
     private String pbMode;//评标办法
     private String projDq;//项目地区
     private String projXs;//项目县市
+
 
     private String tbAssureEndDate;//投标保证金截止时间
     private String tbAssureEndTime;//投标保证金截止时间点

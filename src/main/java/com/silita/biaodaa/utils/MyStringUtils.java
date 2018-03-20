@@ -7,6 +7,8 @@ import com.snatch.model.ZhaobiaoDetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by dh on 2017/5/3.
@@ -129,6 +131,15 @@ public class MyStringUtils {
 		return false;
 	}
 
-
+	public static String deleteHtmlTag (String content) {
+		content = content.replaceAll("\\s*",""); // 去除空格
+		String regEx_html="<.+?>"; // HTML标签的正则表达式
+		Pattern pattern = Pattern.compile(regEx_html);
+		Matcher matcher = pattern.matcher(content);
+		content = matcher.replaceAll("");
+		content = content.replaceAll("&nbsp;","");
+		content = content.replaceAll(" ","");
+		return content;
+	}
 
 }
