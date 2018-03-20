@@ -3,7 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.silita.biaodaa.dao.TestMapper">
     <select id="getTestName" parameterType="String" resultType="com.silita.biaodaa.model.TUser">
-        select * from t_user where pkid=#{id}
+        select * from analyze_detail where id=#{id}
     </select>
+
+    <select id="getNoticeToRedis" resultType="com.snatch.model.Notice">
+        select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,province,city,county,provinceCode,cityCode,countyCode,photoUrl,`type`,snatchNumber,areaRank from notice
+    </select>
+
+
 
 </mapper>
