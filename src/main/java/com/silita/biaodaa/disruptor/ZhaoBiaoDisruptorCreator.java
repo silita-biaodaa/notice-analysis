@@ -16,8 +16,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Author: caigang
- * Time: 2015/8/10 15:06
  * Remark: 创建disruptor
  */
 @Component

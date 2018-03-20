@@ -24,6 +24,7 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+
     @Autowired
     TestTask testTask;
 
@@ -41,7 +42,7 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
                 disruptorOperator.start();
                 try {
                     final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(9);
-                    scheduler.scheduleAtFixedRate(testTask, 0, 1, TimeUnit.SECONDS);
+                    scheduler.scheduleAtFixedRate(testTask, 0, 500, TimeUnit.MILLISECONDS);
                     logger.info("===========任务启动完成=========");
                 } catch (Exception e) {
                     logger.info("任务启动异常", e);

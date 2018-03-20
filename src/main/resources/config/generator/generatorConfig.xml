@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <properties resource="config/db.properties"/>
+    <properties resource="config/analysis.properties"/>
 
     <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
         <property name="beginningDelimiter" value="`"/>
@@ -27,9 +27,9 @@
         <javaClientGenerator targetPackage="com.silita.biaodaa.dao" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="t_user">
+        <table tableName="snatchurl">
             <!--mysql 配置-->
-            <generatedKey column="pkid" sqlStatement="Mysql" identity="true"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
             <!--oracle 配置-->
             <!--<generatedKey column="id" sqlStatement="select SEQ_{1}.nextval from dual" identity="false" type="pre"/>-->
         </table>
