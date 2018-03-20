@@ -43,6 +43,11 @@ public class ApplyProjSumHandler extends BaseHandler {
     }
 
     @Override
+    protected Object currentFieldValues(EsNotice esNotice) {
+        return null;
+    }
+
+    @Override
     protected String executeAnalysis(String stringPart) {
         //TODO：具体逻辑代码自己实现
         return null;
