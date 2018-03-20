@@ -43,7 +43,7 @@ public class InsertAnalyzeDetailHandler extends BaseHandler {
     }
 
     @Override
-    protected void saveResult(EsNotice esNotice, String analysisResult) {
-        //TODO：具体逻辑代码自己实现
+    protected void saveResult(EsNotice esNotice, Object analysisResult) {
+        //TODO：具体逻辑代码负责人实现
     }
 }

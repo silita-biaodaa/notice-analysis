@@ -24,9 +24,46 @@ public class MyStringUtils {
 		}
 	}
 
+	public static boolean isNotNull(List str){
+		if(str !=null && str.size()>0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
 	public static boolean isNull(String str){
 		return !isNotNull(str);
 	}
+
+	public static boolean isNull(List str){
+		return !isNotNull(str);
+	}
+
+
+	public static boolean isNull(Object str){
+		boolean flag=true;
+		if(str==null){
+			return flag;
+		}
+		if(str instanceof String){
+			flag= !isNotNull((String)str);
+		}else if(str instanceof List){
+			flag= !isNotNull((List)str);
+		}
+		return flag;
+	}
+
+	public static boolean isNotNull(Object str){
+		boolean flag=false;
+		if(str instanceof String){
+			flag= isNotNull((String)str);
+		}else if(str instanceof List){
+			flag= isNotNull((List)str);
+		}
+		return flag;
+	}
+
 
 	public static List<String> StringSplit(String str, int num) {
 		int length = str.length();

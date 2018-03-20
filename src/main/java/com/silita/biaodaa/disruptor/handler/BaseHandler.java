@@ -18,7 +18,7 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
         AnalyzeDetail ad = esNotice.getDetail();
         if(MyStringUtils.isNull(ad.getBmSite())) {
             String[] list = CommonMethods.buildAnalysisList(esNotice);
-            String s3 = null;
+            Object s3 = null;
             try {
                 for(int i=0;i<list.length;i++) {
                     if(MyStringUtils.isNull(s3)) {
@@ -31,7 +31,7 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
                 if(MyStringUtils.isNull(s3)) {
                     saveResult(esNotice,s3);
                 }
-                logger.debug("[title:"+esNotice.getTitle()+"]，[url:"+esNotice.getUrl()+"][fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]");
+                logger.info("[title:"+esNotice.getTitle()+"]，[url:"+esNotice.getUrl()+"][fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]");
             } catch (Exception e) {
                 logger.error("[title:"+esNotice.getTitle()+"]，[url:"+esNotice.getUrl()+"][fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]"+ e.getMessage(),e);
             }finally {
@@ -45,13 +45,14 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
      * @param stringPart
      * @return
      */
-    protected abstract String executeAnalysis(String stringPart);
+    protected abstract Object executeAnalysis(String stringPart);
 
     /**
      * 解析结果保存
      * @param esNotice
      * @param analysisResult
      */
-    protected abstract void saveResult(EsNotice esNotice,String analysisResult);
+    protected abstract void saveResult(EsNotice esNotice,Object analysisResult);
+
 
 }

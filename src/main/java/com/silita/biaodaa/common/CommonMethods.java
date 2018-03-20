@@ -23,8 +23,10 @@ public class CommonMethods {
         ChineseCompressUtil util = new ChineseCompressUtil();
         String plainHtml = util.getPlainText(esNotice.getContent());
         String[] str = plainHtml.split("</p>");
-        str = Arrays.copyOf(str,str.length+1);
-        str[str.length-1]=plainHtml;
+        if(str.length>1) {
+            str = Arrays.copyOf(str, str.length + 1);
+            str[str.length - 1] = plainHtml;
+        }
         return str;
     }
 }

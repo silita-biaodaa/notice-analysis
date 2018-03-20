@@ -15,14 +15,17 @@ public class ApplyAddressHandler extends BaseHandler {
     @Autowired
     NoticeAnalyzeService noticeAnalyzeService;
 
+    public ApplyAddressHandler(){
+        this.fieldDesc="报名地址";
+    }
+
     @Override
     protected String executeAnalysis(String stringPart) {
-        this.fieldDesc="报名地址";
         return noticeAnalyzeService.analyzeApplyAddress(stringPart);
     }
 
     @Override
-    protected void saveResult(EsNotice esNotice, String analysisResult) {
-        esNotice.getDetail().setBmSite(analysisResult);
+    protected void saveResult(EsNotice esNotice, Object analysisResult) {
+        esNotice.getDetail().setBmSite((String)analysisResult);
     }
 }
