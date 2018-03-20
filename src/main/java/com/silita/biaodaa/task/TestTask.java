@@ -47,7 +47,7 @@ public class TestTask implements Runnable {
     public Notice takeFromHead(int timeout) throws InterruptedException{
         lock.lockInterruptibly();
         try{
-            return (Notice) redisTemplate.opsForList().leftPop("liuqi",timeout, TimeUnit.SECONDS);
+            return (Notice) redisTemplate.opsForList().leftPop("maofeng",timeout, TimeUnit.SECONDS);
         }finally{
             lock.unlock();
         }

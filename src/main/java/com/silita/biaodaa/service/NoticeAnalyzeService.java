@@ -1,10 +1,14 @@
 package com.silita.biaodaa.service;
 
 import com.silita.biaodaa.cache.GlobalCache;
+import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
+import com.silita.biaodaa.utils.ChineseCompressUtil;
 import com.silita.biaodaa.utils.DateUtils;
+import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.AnalyzeDetail;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +33,7 @@ public class NoticeAnalyzeService {
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
 
+    private ChineseCompressUtil chineseCompressUtil = new ChineseCompressUtil();
 
 
     /**
@@ -385,6 +390,70 @@ public class NoticeAnalyzeService {
         }
         return bmEndTime;
     }
+
+
+    /**
+     * 解析保证金汇款方式
+     * @param html 公告内容
+     * @return 保证金汇款方式
+     */
+    public String analyzeAssureSumRemit (String html) {
+        String assureSumRemit = "";
+        String content = chineseCompressUtil.getPlainText(html);
+        content = MyStringUtils.deleteHtmlTag(content);
+        String[] regexs = {
+                "(投标保证金的形式)(:|：).*?(,|。|，)",
+                "(交纳方式)(:|：).*?(,|。|，)",
+                "(投标保证金交纳方式)(:|：).*?(,|。|，)",
+                "(投标保证金缴纳方式)(:|：).*?(,|。|，)",
+                "(投标保证金递交方式)(:|：).*?(,|。|，)"
+        };
+        for (int i = 0; i < regexs.length; i++) {
+            Pattern pa = Pattern.compile(regexs[i]);
+            Matcher ma = pa.matcher(content);
+            if (ma.find()) {
+                String txt = ma.group();
+                int firstIndex = regexs[i].substring(regexs[i].indexOf("(") + 1 ,regexs[i].indexOf(")")).length() + 1;
+                txt = txt.substring(firstIndex);
+
+//                if (txt.contains(":")) {
+//                    txt = txt.substring(txt.indexOf(":")+1);
+//                } else {
+//                    txt = txt.substring(txt.indexOf("：")+1);
+//                }
+
+                if (txt.contains("投标保证金")) {
+                    txt = txt.substring(0,txt.indexOf("投标保证金"));
+                } else if (txt.contains("保证金")) {
+                    txt = txt.substring(0,txt.indexOf("保证金"));
+                } else {
+                    txt = txt.substring(0,txt.length()-1);
+                }
+
+                String regex = "[0-9一二三四五六七八九]";
+                pa = Pattern.compile(regex);
+                ma = pa.matcher(txt);
+                if (ma.find()) {
+                    txt = txt.substring(0,txt.indexOf(ma.group()));
+                }
+
+                if (!"".equals(txt) && !Constant.DEFAULT_STRING.equals(txt)) {
+                    assureSumRemit = txt;
+                    break;
+                }
+            }
+        }
+        if (StringUtils.isBlank(assureSumRemit)) {
+
+        }
+
+
+
+
+        return assureSumRemit;
+    }
+
+
 
     public void insertAnalyzeDetail(AnalyzeDetail analyzeDetail){
         analyzeRangeMapper.insertAnalyzeDetail(analyzeDetail);

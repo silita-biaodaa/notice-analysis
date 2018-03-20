@@ -62,7 +62,7 @@ public class TestController {
         try {
             lock.lockInterruptibly();
             try{
-                notice = (Notice) redisTemplate.opsForList().leftPop("liuqi",0, TimeUnit.SECONDS);
+                notice = (Notice) redisTemplate.opsForList().leftPop("maofeng",0, TimeUnit.SECONDS);
             }finally{
                 lock.unlock();
             }
