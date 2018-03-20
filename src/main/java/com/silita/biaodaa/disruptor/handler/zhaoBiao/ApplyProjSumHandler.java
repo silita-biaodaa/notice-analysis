@@ -1,11 +1,7 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
-import com.silita.biaodaa.common.Constant;
-import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
-import com.silita.biaodaa.utils.MyStringUtils;
-import com.snatch.model.AnalyzeDetail;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +19,8 @@ public class ApplyProjSumHandler extends BaseHandler {
     @Autowired
     NoticeAnalyzeService noticeAnalyzeService;
 
-
-
-    @Override
-    public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
-        EsNotice esNotice = event.getEsNotice();
-        AnalyzeDetail analyzeDetail = esNotice.getDetail();
-        if(MyStringUtils.isNull(analyzeDetail.getProjSum())) {
-            try {
-                String s2 = noticeAnalyzeService.analyzeApplyProjSum(esNotice.getContent());
-                logger.info("===解析[" + esNotice.getTitle() + "]的项目金额[" + s2 + "]===");
-                if (!"".equals(s2) && null != s2 && !Constant.DEFAULT_STRING.equals(s2) && analyzeDetail.getProjSum() == null) {
-                    analyzeDetail.setProjSum(s2);
-                }
-            } catch (Exception e) {
-                logger.error("error--s2" + e, e);
-            }
-        }
+    public ApplyProjSumHandler(){
+        this.fieldDesc="项目金额";
     }
 
     @Override
@@ -48,13 +29,16 @@ public class ApplyProjSumHandler extends BaseHandler {
     }
 
     @Override
-    protected String executeAnalysis(String stringPart) {
-        //TODO：具体逻辑代码自己实现
-        return null;
+    protected Object executeAnalysis(String stringPart) {
+        return noticeAnalyzeService.analyzeApplyProjSum(stringPart);
     }
 
     @Override
     protected void saveResult(EsNotice esNotice, Object analysisResult) {
-        //TODO：具体逻辑代码负责人实现
+        if(analysisResult!=null){
+            esNotice.getDetail().setProjSum(analysisResult.toString());
+        }
     }
+
+
 }

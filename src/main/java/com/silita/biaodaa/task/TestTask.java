@@ -56,7 +56,7 @@ public class TestTask implements Runnable {
         }
     }
 
-    private EsNotice noticeToEsNotice(Notice notice){
+    public EsNotice noticeToEsNotice(Notice notice){
         EsNotice esNotice = null;
         if (notice != null) {
             esNotice = new EsNotice();
