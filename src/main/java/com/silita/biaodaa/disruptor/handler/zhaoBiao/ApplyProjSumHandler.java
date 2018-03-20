@@ -29,7 +29,7 @@ public class ApplyProjSumHandler extends BaseHandler {
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart) {
+    protected Object executeAnalysis(String stringPart,String source) {
         return noticeAnalyzeService.analyzeApplyProjSum(stringPart);
     }
 

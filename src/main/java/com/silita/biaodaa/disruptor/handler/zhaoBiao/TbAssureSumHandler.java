@@ -47,7 +47,7 @@ public class TbAssureSumHandler extends BaseHandler {
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart) {
+    protected Object executeAnalysis(String stringPart, String source) {
         return null;
     }
 

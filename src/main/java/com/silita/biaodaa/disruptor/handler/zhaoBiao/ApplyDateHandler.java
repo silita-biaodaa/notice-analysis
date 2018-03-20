@@ -64,8 +64,7 @@ public class ApplyDateHandler extends BaseHandler {
     }
 
     @Override
-    protected String executeAnalysis(String stringPart) {
-        //TODO：具体逻辑代码负责人实现
+    protected Object executeAnalysis(String stringPart, String source) {
         return null;
     }
 
