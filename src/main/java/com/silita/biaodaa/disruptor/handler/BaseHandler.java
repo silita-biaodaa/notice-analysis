@@ -4,7 +4,6 @@ import com.lmax.disruptor.EventHandler;
 import com.silita.biaodaa.common.CommonMethods;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.utils.MyStringUtils;
-import com.snatch.model.AnalyzeDetail;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
 
@@ -15,8 +14,7 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
 
     public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
         EsNotice esNotice = event.getEsNotice();
-        AnalyzeDetail ad = esNotice.getDetail();
-        if(MyStringUtils.isNull(ad.getBmSite())) {
+        if(MyStringUtils.isNull(currentFieldValues(esNotice))) {
             String[] list = CommonMethods.buildAnalysisList(esNotice);
             Object s3 = null;
             try {
@@ -39,6 +37,14 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
             }
         }
     }
+
+    /**
+     * 返回需要分析的字段值
+     * @param esNotice
+     * @return
+     */
+    protected  abstract Object currentFieldValues(EsNotice esNotice);
+
 
     /**
      * 设置每个片段的解析规则

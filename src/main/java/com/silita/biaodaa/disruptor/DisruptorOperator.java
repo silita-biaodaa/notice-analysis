@@ -1,6 +1,7 @@
 package com.silita.biaodaa.disruptor;
 
 import com.lmax.disruptor.EventTranslatorOneArg;
+import com.silita.biaodaa.common.SnatchContent;
 import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
 import com.snatch.model.AnalyzeDetail;
 import com.snatch.model.Notice;
@@ -47,6 +48,8 @@ public class DisruptorOperator {
      * 初始化disruptor
      */
     public void init() {
+        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler);
+        ZhongBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler);
         ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,assureSumRemitHandler,insertAnalyzeDetailHandler);
     }
 
@@ -55,7 +58,9 @@ public class DisruptorOperator {
      */
     public void start() {
         ZhaoBiaoDisruptorCreator.getProcessDisruptor().start();
-        logger.info("disruptor start success");
+        logger.info("ZhaoBiao DisruptorCreator start success...");
+        ZhongBiaoDisruptorCreator.getProcessDisruptor().start();
+        logger.info("ZhongBiao DisruptorCreator start success###");
     }
 
     /**
@@ -63,7 +68,9 @@ public class DisruptorOperator {
      */
     public void shutdown() {
         ZhaoBiaoDisruptorCreator.shutdownDisruptor();
-        logger.info("disruptor shutdown");
+        logger.info("ZhaoBiao DisruptorCreator shutdown");
+        ZhongBiaoDisruptorCreator.shutdownDisruptor();
+        logger.info("ZhongBiao DisruptorCreator shutdown");
     }
 
     /**
@@ -71,7 +78,16 @@ public class DisruptorOperator {
      * @param esNotice
      */
     public void publish(EsNotice esNotice) {
-        ZhaoBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator,esNotice);
+        String type = esNotice.getType().toString();
+        if(SnatchContent.ZHAO_BIAO_TYPE.equals(type)) {
+            ZhaoBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
+        }else if(SnatchContent.ZHONG_BIAO_TYPE.equals(type)){
+            ZhongBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
+        }else {
+            //TODO:其他类型后续需要整理
+            ZhongBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
+            logger.warn("其他类型，按中标逻辑处理。[type:"+esNotice.getType()+"][title:"+esNotice.getTitle()+"][url:"+esNotice.getUrl()+"]");
+        }
     }
 
 }

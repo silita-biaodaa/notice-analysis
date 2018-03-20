@@ -1,8 +1,8 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
-import com.lmax.disruptor.EventHandler;
 import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
+import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.AnalyzeDetail;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * 保证金
  */
 @Component
-public class TbAssureSumHandler implements EventHandler<AnalyzeEvent> {
+public class TbAssureSumHandler extends BaseHandler {
 
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
@@ -39,5 +39,20 @@ public class TbAssureSumHandler implements EventHandler<AnalyzeEvent> {
                 logger.error("error--s1" + e, e);
             }
         }
+    }
+
+    @Override
+    protected Object currentFieldValues(EsNotice esNotice) {
+        return null;
+    }
+
+    @Override
+    protected Object executeAnalysis(String stringPart) {
+        return null;
+    }
+
+    @Override
+    protected void saveResult(EsNotice esNotice, Object analysisResult) {
+
     }
 }

@@ -59,6 +59,11 @@ public class ApplyDateHandler extends BaseHandler {
     }
 
     @Override
+    protected Object currentFieldValues(EsNotice esNotice) {
+        return null;
+    }
+
+    @Override
     protected String executeAnalysis(String stringPart) {
         //TODO：具体逻辑代码负责人实现
         return null;

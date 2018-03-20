@@ -20,6 +20,11 @@ public class ApplyAddressHandler extends BaseHandler {
     }
 
     @Override
+    protected Object currentFieldValues(EsNotice esNotice) {
+        return esNotice.getDetail().getBmSite();
+    }
+
+    @Override
     protected String executeAnalysis(String stringPart) {
         return noticeAnalyzeService.analyzeApplyAddress(stringPart);
     }

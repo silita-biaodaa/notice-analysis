@@ -58,5 +58,16 @@
         #{b.money},#{b.block},now())
         </foreach>
     </insert>
+    
+    <select id="queryAnalyzeRangeBmAddr" resultType="String">
+        SELECT address FROM mishu_snatch.analyze_range_bmaddr
+    </select>
+
+    <select id="queryBaseBmAddress" resultType="Map" parameterType="String">
+        SELECT address
+        FROM mishu_snatch.analyze_range_bmaddr
+        WHERE id=(SELECT baseAddrId FROM mishu_snatch.analyze_range_bmaddr_alias
+				WHERE alias=#{address})
+    </select>
 
 </mapper>

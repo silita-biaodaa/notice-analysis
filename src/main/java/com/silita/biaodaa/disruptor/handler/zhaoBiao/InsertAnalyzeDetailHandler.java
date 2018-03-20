@@ -1,7 +1,7 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
+import com.lmax.disruptor.EventHandler;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
 import com.snatch.model.AnalyzeDetail;
 import com.snatch.model.EsNotice;
@@ -13,14 +13,12 @@ import org.springframework.stereotype.Component;
  * Created by zhangxiahui on 18/3/14.
  */
 @Component
-public class InsertAnalyzeDetailHandler extends BaseHandler {
+public class InsertAnalyzeDetailHandler implements EventHandler<AnalyzeEvent> {
 
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
     @Autowired
     NoticeAnalyzeService noticeAnalyzeService;
-
-
 
     @Override
     public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
@@ -34,16 +32,5 @@ public class InsertAnalyzeDetailHandler extends BaseHandler {
         } catch (Exception e) {
             logger.error("入库" + e, e);
         }
-    }
-
-    @Override
-    protected String executeAnalysis(String stringPart) {
-        //TODO：具体逻辑代码自己实现
-        return null;
-    }
-
-    @Override
-    protected void saveResult(EsNotice esNotice, Object analysisResult) {
-        //TODO：具体逻辑代码负责人实现
     }
 }
