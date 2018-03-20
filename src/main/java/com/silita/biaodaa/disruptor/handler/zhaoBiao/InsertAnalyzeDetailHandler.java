@@ -29,7 +29,7 @@ public class InsertAnalyzeDetailHandler extends BaseHandler {
         AnalyzeDetail analyzeDetail = event.getAnalyzeDetail();
         Notice notice = event.getNotice();
         try {
-            analyzeDetail.setRedisId(notice.getRedisId());
+//            analyzeDetail.setRedisId(notice.getRedisId());
             analyzeDetail.setNoticeUrl(notice.getUrl());
             analyzeDetail.setTitle(notice.getTitle());
             analyzeDetail = zhaobiaoReplaceFiled(notice,analyzeDetail);

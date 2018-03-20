@@ -1,10 +1,7 @@
 package com.silita.biaodaa.disruptor;
 
 import com.lmax.disruptor.EventTranslatorOneArg;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.ApplyDateHandler;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.ApplyProjSumHandler;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.InsertAnalyzeDetailHandler;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.TbAssureSumHandler;
+import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
 import com.snatch.model.AnalyzeDetail;
 import com.snatch.model.Notice;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
@@ -34,6 +31,9 @@ public class DisruptorOperator {
     @Autowired
     InsertAnalyzeDetailHandler insertAnalyzeDetailHandler;
 
+    @Autowired
+    AssureSumRemitHandler assureSumRemitHandler;
+
 
 
     private static EventTranslatorOneArg<AnalyzeEvent,Notice> eventTranslator = new EventTranslatorOneArg<AnalyzeEvent,Notice>() {
@@ -49,7 +49,7 @@ public class DisruptorOperator {
      * 初始化disruptor
      */
     public void init() {
-        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,assureSumRemitHandler,insertAnalyzeDetailHandler);
     }
 
     /**

@@ -6,10 +6,7 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.exception.AnalyzeException;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.ApplyDateHandler;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.ApplyProjSumHandler;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.InsertAnalyzeDetailHandler;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.TbAssureSumHandler;
+import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +49,17 @@ public class ZhaoBiaoDisruptorCreator {
     public static synchronized void initDisruptor(TbAssureSumHandler tbAssureSumHandler
             ,ApplyProjSumHandler applyProjSumHandler
             ,ApplyDateHandler applyDateHandler
+            ,AssureSumRemitHandler assureSumRemitHandler
             ,InsertAnalyzeDetailHandler insertAnalyzeDetailHandler) {
         if(processDisruptor == null) {
             logger.info("..........disruptor init..........\nDISRUPTOR BUFFER_SIZE:"+BUFFER_SIZE+" THREAD_NUM:"+THREAD_NUM);
             processDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY,BUFFER_SIZE,EXECUTOR,ProducerType.SINGLE,new SleepingWaitStrategy());
             processDisruptor.handleExceptionsWith(new AnalyzeException());
-            processDisruptor.handleEventsWith(tbAssureSumHandler)
-                    .then(applyProjSumHandler)
-                    .then(applyDateHandler)
+            processDisruptor
+//                    .handleEventsWith(tbAssureSumHandler)
+                    .handleEventsWith(assureSumRemitHandler)
+//                    .then(applyProjSumHandler)
+//                    .then(applyDateHandler)
                     .then(insertAnalyzeDetailHandler);
             logger.info("..........disruptor init success..........");
         }
