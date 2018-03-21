@@ -2,9 +2,6 @@ package com.silita.biaodaa.disruptor;
 
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.silita.biaodaa.common.SnatchContent;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
-import com.snatch.model.AnalyzeDetail;
-import com.snatch.model.Notice;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
 import com.snatch.model.EsNotice;
@@ -35,6 +32,9 @@ public class DisruptorOperator {
     @Autowired
     ApplyAddressHandler applyAddressHandler;
 
+    @Autowired
+    ApplyTbEndDateHandler applyTbEndDateHandler;
+
 
 
     private static EventTranslatorOneArg<AnalyzeEvent,EsNotice> eventTranslator = new EventTranslatorOneArg<AnalyzeEvent,EsNotice>() {
@@ -48,7 +48,7 @@ public class DisruptorOperator {
      * 初始化disruptor
      */
     public void init() {
-        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler,assureSumRemitHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler,applyTbEndDateHandler);
         ZhongBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler);
     }
 
