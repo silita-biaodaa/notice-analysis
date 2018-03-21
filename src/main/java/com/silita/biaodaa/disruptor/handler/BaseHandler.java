@@ -20,13 +20,14 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
             try {
                 for(int i=0;i<list.length;i++) {
                     if(MyStringUtils.isNull(s3)) {
-                        s3 = executeAnalysis(list[i]);
+                        list[i] = list[i].replaceAll("<[^>]+>", "");
+                        s3 = executeAnalysis(list[i],esNotice.getSource());
                         if(MyStringUtils.isNotNull(s3)) {
                             break;
                         }
                     }
                 }
-                if(MyStringUtils.isNull(s3)) {
+                if(MyStringUtils.isNotNull(s3)) {
                     saveResult(esNotice,s3);
                 }
                 logger.info("[title:"+esNotice.getTitle()+"]，[url:"+esNotice.getUrl()+"][fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]");
@@ -51,7 +52,7 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
      * @param stringPart
      * @return
      */
-    protected abstract Object executeAnalysis(String stringPart);
+    protected abstract Object executeAnalysis(String stringPart,String source);
 
     /**
      * 解析结果保存

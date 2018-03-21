@@ -7,7 +7,10 @@
     </select>
 
     <select id="getNoticeToRedis" resultType="com.snatch.model.Notice">
-        select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,province,city,county,provinceCode,cityCode,countyCode,photoUrl,`type`,snatchNumber,areaRank from notice
+        select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,
+        province,city,county,provinceCode,cityCode,countyCode,photoUrl,`type`,
+        snatchNumber,areaRank,provinceCode as 'srouce'
+        from notice
     </select>
 
 
