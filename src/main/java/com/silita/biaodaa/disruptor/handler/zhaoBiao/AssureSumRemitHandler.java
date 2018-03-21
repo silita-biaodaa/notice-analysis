@@ -30,23 +30,6 @@ public class AssureSumRemitHandler extends BaseHandler {
     }
 
     @Override
-    public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
-        String assureSumRemit = "";
-        AnalyzeDetail ad = event.getEsNotice().getDetail();
-        EsNotice notice = event.getEsNotice();
-        try {
-            assureSumRemit = noticeAnalyzeService.analyzeAssureSumRemit(notice.getContent());
-            logger.info("===解析["+notice.getTitle()+"]的保证金汇款方式["+assureSumRemit+"]===");
-            if (!"".equals(assureSumRemit) && null != assureSumRemit && !Constant.DEFAULT_STRING.equals(assureSumRemit) && ad.getAssureSumRemit() == null) {
-                ad.setAssureSumRemit(assureSumRemit);
-            }
-        } catch (Exception e) {
-            System.out.println("error--li" + e.getMessage());
-            logger.error("error--li" + e, e);
-        }
-    }
-
-    @Override
     protected Object currentFieldValues(EsNotice esNotice) {
         return esNotice.getDetail().getAssureSumRemit();
     }

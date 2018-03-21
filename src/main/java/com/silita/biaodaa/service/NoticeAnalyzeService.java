@@ -399,11 +399,10 @@ public class NoticeAnalyzeService {
      */
     public String analyzeAssureSumRemit (String html) {
         String assureSumRemit = "";
-        String content = MyStringUtils.deleteHtmlTag(html);
         List<String> regexs = analyzeRangeMapper.queryAnalyzeRangeRegexByField("applyAssureSumRemit");
         for (String regex : regexs) {
             Pattern pa = Pattern.compile(regex);
-            Matcher ma = pa.matcher(content);
+            Matcher ma = pa.matcher(html);
             if (ma.find()) {
                 String txt = ma.group();
                 assureSumRemit = MyStringUtils.findAssureSumRemit(txt);
