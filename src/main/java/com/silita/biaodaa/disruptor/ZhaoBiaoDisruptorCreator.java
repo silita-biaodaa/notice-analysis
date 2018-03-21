@@ -49,15 +49,13 @@ public class ZhaoBiaoDisruptorCreator {
             ,ApplyDateHandler applyDateHandler
             ,InsertAnalyzeDetailHandler insertAnalyzeDetailHandler
             ,ApplyAddressHandler applyAddressHandler
-            ,AssureSumRemitHandler assureSumRemitHandler) {
+            ,ApplyTbEndDateHandler applyTbEndDateHandler) {
         if(processDisruptor == null) {
             logger.info("..........disruptor init..........\nDISRUPTOR BUFFER_SIZE:"+BUFFER_SIZE+" THREAD_NUM:"+THREAD_NUM);
             processDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY,BUFFER_SIZE,EXECUTOR,ProducerType.SINGLE,new SleepingWaitStrategy());
             processDisruptor.handleExceptionsWith(new AnalyzeException());
-            processDisruptor
-                    .handleEventsWith(assureSumRemitHandler)
-//                    .handleEventsWith(applyAddressHandler)
-//                    .then(tbAssureSumHandler)
+            processDisruptor.handleEventsWith(applyTbEndDateHandler)
+                    .then(applyDateHandler)
 //                    .then(applyProjSumHandler)
 //                    .then(applyDateHandler)
                     .then(insertAnalyzeDetailHandler);

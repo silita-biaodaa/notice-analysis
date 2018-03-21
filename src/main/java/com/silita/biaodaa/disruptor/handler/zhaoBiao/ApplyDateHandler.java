@@ -1,75 +1,73 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
-import com.silita.biaodaa.common.Constant;
-import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
+import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
+import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyBmEndDate;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
-import com.silita.biaodaa.service.NoticeAnalyzeService;
 import com.silita.biaodaa.utils.MyStringUtils;
-import com.snatch.model.AnalyzeDetail;
 import com.snatch.model.EsNotice;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zhangxiahui on 18/3/13.
+ * 解析报名开始、结束时间
+ * Created by gmy on 18/3/13.
  */
 @Component
 public class ApplyDateHandler extends BaseHandler {
 
-    Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
-
     @Autowired
-    NoticeAnalyzeService noticeAnalyzeService;
+    OtherApplyBmEndDate otherApplyBmEndDate;
 
+    public ApplyDateHandler() {
+        this.fieldDesc="报名开始、结束时间";
+    }
 
-
-    @Override
-    public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
-        EsNotice esNotice = event.getEsNotice();
-        AnalyzeDetail ad = esNotice.getDetail();
-        if(MyStringUtils.isNull(ad.getBmStartDate())) {
-            try {
-                List<String> li = noticeAnalyzeService.analyzeApplyDate(esNotice.getContent());
-                if (li != null && li.size() > 1) {
-                    logger.info("===解析[" + esNotice.getTitle() + "]的报名时间[" + li.get(0) + "][" + li.get(1) + "]===");
-                    if (!"".equals(li.get(0)) && null != li.get(0)
-                            && !Constant.DEFAULT_STRING.equals(li.get(0)) && ad.getBmStartDate() == null) {
-                        ad.setBmStartDate(li.get(0));//报名时间
-                    }
-                    if (!"".equals(li.get(1)) && null != li.get(1)
-                            && !Constant.DEFAULT_STRING.equals(li.get(1)) && ad.getBmEndDate() == null) {
-                        ad.setBmEndDate(li.get(1));//报名截止时间
-                    }
-                    //########报名结束时间点
-                    String bmEndTime = noticeAnalyzeService.analyzeApplyTime(esNotice.getContent());
-                    if (!"".equals(bmEndTime) && null != bmEndTime && !Constant.DEFAULT_STRING.equals(bmEndTime) && ad.getBmEndTime() == null) {
-                        ad.setBmEndTime(bmEndTime);
-                    }
-                } else {
-                    logger.info("===解析[" + esNotice.getTitle() + "]的报名时间[]===");
-                }
-            } catch (Exception e) {
-                logger.error("error--li" + e, e);
-            }
+    private DoubleFieldAnalysis routeRules(String source){
+        switch (source){
+            case "hunan": return otherApplyBmEndDate;
+            default:return otherApplyBmEndDate;
         }
-
     }
 
     @Override
     protected Object currentFieldValues(EsNotice esNotice) {
-        return null;
+        List<String> dateList = new ArrayList<>();
+        if(MyStringUtils.isNotNull(esNotice.getDetail().getBmStartDate())) {
+            dateList.add(esNotice.getDetail().getBmStartDate());
+        }
+        if(MyStringUtils.isNotNull(esNotice.getDetail().getBmEndDate())) {
+            dateList.add(esNotice.getDetail().getBmEndDate());
+        }
+        return dateList;
     }
 
     @Override
     protected Object executeAnalysis(String stringPart, String source) {
-        return null;
+        DoubleFieldAnalysis analysis = routeRules(source);
+        return analysis.analysis(stringPart);
     }
 
     @Override
     protected void saveResult(EsNotice esNotice, Object analysisResult) {
-        //TODO：具体逻辑代码负责人实现
+        List<String> dateList = ( List<String>)analysisResult;
+        if(dateList.size() > 1) {
+            if(MyStringUtils.isNotNull(dateList.get(0))) {
+                if("openDate".equals(dateList.get(0))) {
+                    esNotice.getDetail().setBmStartDate(esNotice.getDetail().getGsDate());
+                } else {
+                    esNotice.getDetail().setBmStartDate(dateList.get(0));
+                }
+            }
+            if(MyStringUtils.isNotNull(dateList.get(1))) {
+                if("tbEndDate".equals(dateList.get(1))) {
+                    esNotice.getDetail().setBmEndDate(esNotice.getDetail().getTbEndDate());
+                } else {
+                    esNotice.getDetail().setBmEndDate(dateList.get(1));
+                }
+            }
+        }
     }
 }
