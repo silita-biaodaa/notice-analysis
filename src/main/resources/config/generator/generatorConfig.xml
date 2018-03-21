@@ -27,7 +27,7 @@
         <javaClientGenerator targetPackage="com.silita.biaodaa.dao" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="snatchurl">
+        <table tableName="notice">
             <!--mysql 配置-->
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
             <!--oracle 配置-->
