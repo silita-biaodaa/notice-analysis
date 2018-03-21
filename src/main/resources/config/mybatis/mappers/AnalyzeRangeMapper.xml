@@ -6,8 +6,12 @@
         select * from mishu_snatch.analyze_range where field=#{field}
     </select>
 
+    <select id="queryAnalyzeRangeRegexByField" parameterType="String" resultType="Map">
+        SELECT regex FROM  mishu_snatch.analyze_range WHERE field=#{field}
+    </select>
+
     <insert id="insertAnalyzeDetail" parameterType="com.snatch.model.AnalyzeDetail">
-        INSERT INTO mishu_analyze.analyze_detail (
+        INSERT INTO mishu.zhaobiao_analyze_detail (
         redisId,noticeUrl,title,tbAssureSum,projDq,
         projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
         bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
@@ -17,7 +21,7 @@
         otherCost,zbName,zbContactMan,zbContactWay,dlContactMan,
         dlContactWay,personRequest,shebaoRequest,yejiRequest,registrationForm,
         projectTimeLimit,projectCompletionDate,supplementNoticeNumber,supplementNoticeReason,flowStandardFlag,
-        money,block,analyzeDate)
+        money,block,analyzeDate,assureSumRemit)
         VALUES
         (#{redisId},#{noticeUrl},#{title},#{tbAssureSum},#{projDq},
         #{projXs},#{projSum},#{bmStartDate},#{bmEndDate},#{bmEndTime},
@@ -28,12 +32,12 @@
         #{otherCost},#{zbName},#{zbContactMan},#{zbContactWay},#{dlContactMan},
         #{dlContactWay},#{personRequest},#{shebaoRequest},#{yejiRequest},#{registrationForm},
         #{projectTimeLimit},#{projectCompletionDate},#{supplementNoticeNumber},#{supplementNoticeReason},#{flowStandardFlag},
-        #{money},#{block},now())
+        #{money},#{block},now(),#{assureSumRemit})
     </insert>
 
 
     <insert id="batchInsertAnalyzeDetail" parameterType="Map">
-        INSERT INTO mishu_analyze.analyze_detail (
+        INSERT INTO mishu.zhaobiao_analyze_detail (
         redisId,noticeUrl,title,tbAssureSum,projDq,
         projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
         bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
@@ -43,22 +47,22 @@
         otherCost,zbName,zbContactMan,zbContactWay,dlContactMan,
         dlContactWay,personRequest,shebaoRequest,yejiRequest,registrationForm,
         projectTimeLimit,projectCompletionDate,supplementNoticeNumber,supplementNoticeReason,flowStandardFlag,
-        money,block,analyzeDate)
+        money,block,analyzeDate,assureSumRemit)
         VALUES
         <foreach collection="list" index="index" item="b" separator=",">
-        (#{b.redisId},#{b.noticeUrl},#{b.title},#{b.tbAssureSum},#{b.projDq},
-        #{b.projXs},#{b.projSum},#{b.bmStartDate},#{b.bmEndDate},#{b.bmEndTime},
-        #{b.bmSite},#{b.kbSite},#{b.tbEndDate},#{b.tbEndTime},#{b.gsDate},
-        #{b.province},#{b.city},#{b.county},#{b.projType},#{b.zzRank},
-        #{b.pbMode},#{b.tbAssureEndDate},#{b.tbAssureEndTime},#{b.lyAssureSum},#{b.slProveSum},
-        #{b.assureEndDate},#{b.assureEndTime},#{b.zgCheckDate},#{b.kbStaffAsk},#{b.fileCost},
-        #{b.otherCost},#{b.zbName},#{b.zbContactMan},#{b.zbContactWay},#{b.dlContactMan},
-        #{b.dlContactWay},#{b.personRequest},#{b.shebaoRequest},#{b.yejiRequest},#{b.registrationForm},
-        #{b.projectTimeLimit},#{b.projectCompletionDate},#{b.supplementNoticeNumber},#{b.supplementNoticeReason},#{b.flowStandardFlag},
-        #{b.money},#{b.block},now())
+            (#{b.redisId},#{b.noticeUrl},#{b.title},#{b.tbAssureSum},#{b.projDq},
+            #{b.projXs},#{b.projSum},#{b.bmStartDate},#{b.bmEndDate},#{b.bmEndTime},
+            #{b.bmSite},#{b.kbSite},#{b.tbEndDate},#{b.tbEndTime},#{b.gsDate},
+            #{b.province},#{b.city},#{b.county},#{b.projType},#{b.zzRank},
+            #{b.pbMode},#{b.tbAssureEndDate},#{b.tbAssureEndTime},#{b.lyAssureSum},#{b.slProveSum},
+            #{b.assureEndDate},#{b.assureEndTime},#{b.zgCheckDate},#{b.kbStaffAsk},#{b.fileCost},
+            #{b.otherCost},#{b.zbName},#{b.zbContactMan},#{b.zbContactWay},#{b.dlContactMan},
+            #{b.dlContactWay},#{b.personRequest},#{b.shebaoRequest},#{b.yejiRequest},#{b.registrationForm},
+            #{b.projectTimeLimit},#{b.projectCompletionDate},#{b.supplementNoticeNumber},#{b.supplementNoticeReason},#{b.flowStandardFlag},
+            #{b.money},#{b.block},now(),#{assureSumRemit})
         </foreach>
     </insert>
-    
+
     <select id="queryAnalyzeRangeBmAddr" resultType="String">
         SELECT address FROM mishu_snatch.analyze_range_bmaddr
     </select>

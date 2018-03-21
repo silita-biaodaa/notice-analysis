@@ -19,4 +19,7 @@ public interface AnalyzeRangeMapper {
     List<String> queryAnalyzeRangeBmAddr();
 
     List<String> queryBaseBmAddress(String address);
+
+    List<String> queryAnalyzeRangeRegexByField(String field);
+
 }

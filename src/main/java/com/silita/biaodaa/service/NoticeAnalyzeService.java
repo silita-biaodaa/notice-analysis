@@ -399,61 +399,49 @@ public class NoticeAnalyzeService {
      */
     public String analyzeAssureSumRemit (String html) {
         String assureSumRemit = "";
-        String content = chineseCompressUtil.getPlainText(html);
-        content = MyStringUtils.deleteHtmlTag(content);
-        String[] regexs = {
-                "(投标保证金的形式)(:|：).*?(,|。|，)",
-                "(交纳方式)(:|：).*?(,|。|，)",
-                "(投标保证金交纳方式)(:|：).*?(,|。|，)",
-                "(投标保证金缴纳方式)(:|：).*?(,|。|，)",
-                "(投标保证金递交方式)(:|：).*?(,|。|，)"
-        };
-        for (int i = 0; i < regexs.length; i++) {
-            Pattern pa = Pattern.compile(regexs[i]);
+        String content = MyStringUtils.deleteHtmlTag(html);
+        List<String> regexs = analyzeRangeMapper.queryAnalyzeRangeRegexByField("applyAssureSumRemit");
+        for (String regex : regexs) {
+            Pattern pa = Pattern.compile(regex);
             Matcher ma = pa.matcher(content);
             if (ma.find()) {
                 String txt = ma.group();
-                int firstIndex = regexs[i].substring(regexs[i].indexOf("(") + 1 ,regexs[i].indexOf(")")).length() + 1;
-                txt = txt.substring(firstIndex);
-
-//                if (txt.contains(":")) {
-//                    txt = txt.substring(txt.indexOf(":")+1);
-//                } else {
-//                    txt = txt.substring(txt.indexOf("：")+1);
-//                }
-
-                if (txt.contains("投标保证金")) {
-                    txt = txt.substring(0,txt.indexOf("投标保证金"));
-                } else if (txt.contains("保证金")) {
-                    txt = txt.substring(0,txt.indexOf("保证金"));
-                } else {
-                    txt = txt.substring(0,txt.length()-1);
-                }
-
-                String regex = "[0-9一二三四五六七八九]";
-                pa = Pattern.compile(regex);
-                ma = pa.matcher(txt);
-                if (ma.find()) {
-                    txt = txt.substring(0,txt.indexOf(ma.group()));
-                }
-
-                if (!"".equals(txt) && !Constant.DEFAULT_STRING.equals(txt)) {
-                    assureSumRemit = txt;
-                    break;
-                }
+                assureSumRemit = MyStringUtils.findAssureSumRemit(txt);
+                break;
             }
         }
-        if (StringUtils.isBlank(assureSumRemit)) {
-
-        }
-
-
-
-
         return assureSumRemit;
     }
 
-
+    /**
+     * 解析项目工期
+     * @param text
+     * @return
+     */
+    public String analyzeApplyProjectTimeLimit(String text) {
+        String rangeHtml = "";
+        String timeLimit = "";
+        List<Map<String, Object>> arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyProjectTimeLimit");
+        for(int i = 0; i < arList.size(); i++) {
+            String regex = String.valueOf(arList.get(i).get("regex")).replaceAll("\\\\","\\\\\\\\");
+            Matcher matre = Pattern.compile(regex).matcher(text);
+            while (matre.find()) {
+                rangeHtml = matre.group();
+                if(!"".equals(rangeHtml)){
+                    String regEx = "[1-9]\\d*";//工期数字
+                    Pattern pat = Pattern.compile(regEx);
+                    Matcher mat = pat.matcher(rangeHtml);
+                    while (mat.find()) {
+                        if(Double.parseDouble(mat.group())>10){
+                            timeLimit = mat.group();
+                            return timeLimit;
+                        }
+                    }
+                }
+            }
+        }
+        return timeLimit;
+    }
 
     public void insertAnalyzeDetail(AnalyzeDetail analyzeDetail){
         analyzeRangeMapper.insertAnalyzeDetail(analyzeDetail);

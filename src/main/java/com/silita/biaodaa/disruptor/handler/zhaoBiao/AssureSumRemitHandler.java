@@ -5,6 +5,7 @@ import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
 import com.snatch.model.AnalyzeDetail;
+import com.snatch.model.EsNotice;
 import com.snatch.model.Notice;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,15 @@ public class AssureSumRemitHandler extends BaseHandler {
     @Autowired
     NoticeAnalyzeService noticeAnalyzeService;
 
+    public AssureSumRemitHandler () {
+        this.fieldDesc = "保证金汇款方式";
+    }
+
     @Override
     public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
         String assureSumRemit = "";
-        AnalyzeDetail ad = event.getAnalyzeDetail();
-        Notice notice = event.getNotice();
-        if ("https://www.ynggzyxx.gov.cn/jyxx/jsgcZbggDetail?guid=dc0574c9-5edd-4dc9-9ed8-d199cf817418&isOther=false".equals(notice.getUrl())) {
-            System.out.println(1);
-        }
+        AnalyzeDetail ad = event.getEsNotice().getDetail();
+        EsNotice notice = event.getEsNotice();
         try {
             assureSumRemit = noticeAnalyzeService.analyzeAssureSumRemit(notice.getContent());
             logger.info("===解析["+notice.getTitle()+"]的保证金汇款方式["+assureSumRemit+"]===");
@@ -42,7 +44,21 @@ public class AssureSumRemitHandler extends BaseHandler {
             System.out.println("error--li" + e.getMessage());
             logger.error("error--li" + e, e);
         }
-
-
     }
+
+    @Override
+    protected Object currentFieldValues(EsNotice esNotice) {
+        return esNotice.getDetail().getAssureSumRemit();
+    }
+
+    @Override
+    protected String executeAnalysis(String stringPart,String source) {
+        return noticeAnalyzeService.analyzeAssureSumRemit(stringPart);
+    }
+
+    @Override
+    protected void saveResult(EsNotice esNotice, Object assureSumRemit) {
+        esNotice.getDetail().setAssureSumRemit((String)assureSumRemit);
+    }
+
 }

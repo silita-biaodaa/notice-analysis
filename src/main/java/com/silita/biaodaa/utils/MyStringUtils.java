@@ -4,6 +4,7 @@ package com.silita.biaodaa.utils;
 
 
 import com.snatch.model.ZhaobiaoDetail;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class MyStringUtils {
 
 	private static final String DEFAULT_STRING = "___";
 
+	private static final String[] remit = {"网银转账","网上支付","银行电汇","银行保函","保险单","担保函","电汇","转账"};
 
 	public static boolean isNotNull(String str){
 		if(str !=null && !str.trim().equals("")){
@@ -140,6 +142,20 @@ public class MyStringUtils {
 		content = content.replaceAll("&nbsp;","");
 		content = content.replaceAll(" ","");
 		return content;
+	}
+
+	public static String findAssureSumRemit (String str) {
+		String assureSumRemit = "";
+		for (int i = 0; i < remit.length; i++) {
+			if (str.contains(remit[i])) {
+				if (StringUtils.isBlank(assureSumRemit)) {
+					assureSumRemit = remit[i];
+				} else {
+					assureSumRemit += "、"+remit[i];
+				}
+			}
+		}
+		return assureSumRemit;
 	}
 
 }
