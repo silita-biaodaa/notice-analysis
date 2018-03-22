@@ -55,11 +55,11 @@ public class ZhaoBiaoDisruptorCreator {
             logger.info("..........disruptor init..........\nDISRUPTOR BUFFER_SIZE:" + BUFFER_SIZE + " THREAD_NUM:" + THREAD_NUM);
             processDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY, BUFFER_SIZE, EXECUTOR, ProducerType.SINGLE, new SleepingWaitStrategy());
             processDisruptor.handleExceptionsWith(new AnalyzeException());
-            processDisruptor.handleEventsWith(applyDateHandler)
-                    .then(applyTbEndDateHandler)
+            processDisruptor.handleEventsWith(applyAddressHandler)
+//                    .then(applyTbEndDateHandler)
 //                    .then(applyProjSumHandler)
 //                    .then(applyDateHandler)
-                    .then(applyAssureEndDateHandler)
+//                    .then(applyAssureEndDateHandler)
                     .then(insertAnalyzeDetailHandler);
             logger.info("..........disruptor init success..........");
         }

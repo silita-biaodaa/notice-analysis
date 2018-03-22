@@ -3,14 +3,9 @@ package com.silita.biaodaa.disruptor.handler;
 import com.lmax.disruptor.EventHandler;
 import com.silita.biaodaa.common.CommonMethods;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
-import com.silita.biaodaa.utils.ChineseCompressUtil;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
@@ -33,7 +28,7 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
             try {
                 for(int i=0;i<list.length;i++) {
                     if(MyStringUtils.isNull(s3)) {
-                        list[i] = list[i].replaceAll("<[^>]+>", "");
+//                        list[i] = list[i].replaceAll("<[^>]+>", "");
                         if(MyStringUtils.isNotNull(list[i])){
                             s3 = executeAnalysis(list[i],esNotice.getSource());
                             if(MyStringUtils.isNotNull(s3)) {

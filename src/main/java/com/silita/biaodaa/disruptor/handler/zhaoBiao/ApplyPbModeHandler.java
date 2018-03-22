@@ -2,9 +2,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyAddress;
 import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyPbMode;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyAddress;
 import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyPbMode;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.snatch.model.EsNotice;

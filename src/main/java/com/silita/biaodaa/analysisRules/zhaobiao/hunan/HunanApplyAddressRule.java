@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Created by dh on 2018/3/20.
  */
 @Component
-public class HunanApplyAddress implements SingleFieldAnalysis {
+public class HunanApplyAddressRule implements SingleFieldAnalysis {
     @Autowired
     NoticeAnalyzeService noticeAnalyzeService;
 
