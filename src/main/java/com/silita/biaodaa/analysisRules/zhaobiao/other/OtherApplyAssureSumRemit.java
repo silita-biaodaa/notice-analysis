@@ -23,7 +23,7 @@ public class OtherApplyAssureSumRemit implements SingleFieldAnalysis {
     AnalyzeRangeMapper analyzeRangeMapper;
 
     @Override
-    public String analysis(String segment) {
+    public String analysis(String segment,String keyWork) {
         String assureSumRemit = "";
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyAssureSumRemit");

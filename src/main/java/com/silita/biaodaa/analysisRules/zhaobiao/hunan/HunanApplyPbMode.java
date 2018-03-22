@@ -22,7 +22,7 @@ public class HunanApplyPbMode implements SingleFieldAnalysis {
     AnalyzeRangeMapper analyzeRangeMapper;
 
     @Override
-    public String analysis(String segment) {
+    public String analysis(String segment,String keyWork) {
         String val = "";
 
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();

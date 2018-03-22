@@ -27,7 +27,7 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
     HunanApplyPbMode hunanApplyPbMode;
 
     @Override
-    public String analysis(String segment) {
+    public String analysis(String segment,String keyWork) {
         String val = "";
 
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
@@ -45,7 +45,7 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
             }
         }
         if (StringUtils.isBlank(val)) {
-            val = hunanApplyPbMode.analysis(segment);
+            val = hunanApplyPbMode.analysis(segment,null);
         }
         return val;
     }

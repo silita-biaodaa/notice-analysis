@@ -1,37 +1,39 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
-
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyAddress;
-import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyPbMode;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyAddress;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyPbMode;
+import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyTbAssureSum;
+import com.silita.biaodaa.common.Constant;
+import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.service.NoticeAnalyzeService;
+import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.AnalyzeDetail;
 import com.snatch.model.EsNotice;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by Administrator on 2018/3/21.
+ * Created by zhangxiahui on 18/3/13.
+ * 保证金
  */
 @Component
-public class ApplyPbModeHandler extends BaseHandler{
-    @Autowired
-    HunanApplyPbMode hunanApplyPbMode;
+public class ApplyTbAssureSumHandler extends BaseHandler {
 
     @Autowired
-    OtherApplyPbMode otherApplyPbMode;
+    OtherApplyTbAssureSum otherApplyTbAssureSum;
+
+    public ApplyTbAssureSumHandler () {
+        this.fieldDesc = "保证金";
+    }
 
     private SingleFieldAnalysis routeRules(String source){
-        switch (source) {
-            case "hunan": return hunanApplyPbMode;
-            default:return otherApplyPbMode;
-        }
+        return otherApplyTbAssureSum;
     }
 
     @Override
     protected Object currentFieldValues(EsNotice esNotice) {
-        return esNotice.getDetail().getPbMode();
+        return esNotice.getDetail().getTbAssureSum();
     }
 
     @Override
@@ -42,6 +44,6 @@ public class ApplyPbModeHandler extends BaseHandler{
 
     @Override
     protected void saveResult(EsNotice esNotice, Object analysisResult) {
-        esNotice.getDetail().setPbMode((String)analysisResult);
+        esNotice.getDetail().setTbAssureSum((String)analysisResult);
     }
 }

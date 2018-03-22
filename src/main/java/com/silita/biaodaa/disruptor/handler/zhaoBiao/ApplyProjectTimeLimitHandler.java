@@ -33,7 +33,7 @@ public class ApplyProjectTimeLimitHandler extends BaseHandler{
     @Override
     protected Object executeAnalysis(String stringPart, String source) {
         SingleFieldAnalysis analysis = routeRules(source);
-        return analysis.analysis(stringPart);
+        return analysis.analysis(stringPart,null);
     }
 
     @Override

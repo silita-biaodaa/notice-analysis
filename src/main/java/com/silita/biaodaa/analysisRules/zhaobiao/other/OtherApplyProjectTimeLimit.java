@@ -24,7 +24,7 @@ public class OtherApplyProjectTimeLimit implements SingleFieldAnalysis {
 
 
     @Override
-    public String analysis(String segment) {
+    public String analysis(String segment,String keyWork) {
         String rangeHtml = "";
         String timeLimit = "";
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
