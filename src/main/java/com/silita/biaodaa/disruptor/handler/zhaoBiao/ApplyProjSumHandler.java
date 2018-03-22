@@ -2,6 +2,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanProjSum;
+import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
 import com.snatch.model.EsNotice;
@@ -37,7 +38,21 @@ public class ApplyProjSumHandler extends BaseHandler {
     @Override
     protected Object executeAnalysis(String stringPart,String source) {
         SingleFieldAnalysis analysis = routeRules(source);
-        return analysis.analysis(stringPart);
+        String value =  analysis.analysis(stringPart,this.keyWord);
+        if(value!=null){
+            if(value.indexOf(Constant.SPLIT_STRING+"-")==0){
+                this.keyWord = value.replace(Constant.SPLIT_STRING+"-","");;
+                value = null;
+            }else if(value.indexOf(Constant.SPLIT_STRING)==0){
+                this.keyValue = value.replace(Constant.SPLIT_STRING,"");
+                value = null;
+                this.keyWord = null;
+            }
+        }
+        return value;
+
+
+
     }
 
     @Override
@@ -46,6 +61,7 @@ public class ApplyProjSumHandler extends BaseHandler {
             String proJSum = analysisResult.toString();
             if(!"".equals(proJSum)){
                 esNotice.getDetail().setProjSum(analysisResult.toString());
+
             }
         }
     }

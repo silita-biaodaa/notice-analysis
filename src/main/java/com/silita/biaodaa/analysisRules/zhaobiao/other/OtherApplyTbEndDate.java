@@ -26,7 +26,7 @@ public class OtherApplyTbEndDate implements SingleFieldAnalysis {
     AnalyzeRangeMapper analyzeRangeMapper;
 
     @Override
-    public String analysis(String segment) {
+    public String analysis(String segment,String keyWord) {
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
         String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期格式1
