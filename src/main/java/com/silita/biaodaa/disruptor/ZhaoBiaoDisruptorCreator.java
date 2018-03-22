@@ -44,7 +44,7 @@ public class ZhaoBiaoDisruptorCreator {
     /**
      * 利用spring完成初始化，singleton
      */
-    public static synchronized void initDisruptor(TbAssureSumHandler tbAssureSumHandler
+    public static synchronized void initDisruptor(ApplyTbAssureSumHandler tbAssureSumHandler
             ,ApplyProjSumHandler applyProjSumHandler
             ,ApplyDateHandler applyDateHandler
             ,InsertAnalyzeDetailHandler insertAnalyzeDetailHandler

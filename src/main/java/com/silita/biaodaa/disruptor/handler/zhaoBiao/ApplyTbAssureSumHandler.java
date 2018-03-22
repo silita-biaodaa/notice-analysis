@@ -1,0 +1,49 @@
+package com.silita.biaodaa.disruptor.handler.zhaoBiao;
+
+import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
+import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyTbAssureSum;
+import com.silita.biaodaa.common.Constant;
+import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
+import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.service.NoticeAnalyzeService;
+import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.AnalyzeDetail;
+import com.snatch.model.EsNotice;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ * Created by zhangxiahui on 18/3/13.
+ * 保证金
+ */
+@Component
+public class ApplyTbAssureSumHandler extends BaseHandler {
+
+    @Autowired
+    OtherApplyTbAssureSum otherApplyTbAssureSum;
+
+    public ApplyTbAssureSumHandler () {
+        this.fieldDesc = "保证金";
+    }
+
+    private SingleFieldAnalysis routeRules(String source){
+        return otherApplyTbAssureSum;
+    }
+
+    @Override
+    protected Object currentFieldValues(EsNotice esNotice) {
+        return esNotice.getDetail().getTbAssureSum();
+    }
+
+    @Override
+    protected Object executeAnalysis(String stringPart, String source) {
+        SingleFieldAnalysis analysis = routeRules(source);
+        return analysis.analysis(stringPart,null);
+    }
+
+    @Override
+    protected void saveResult(EsNotice esNotice, Object analysisResult) {
+        esNotice.getDetail().setTbAssureSum((String)analysisResult);
+    }
+}

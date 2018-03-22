@@ -15,7 +15,7 @@ public class DisruptorOperator {
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
     @Autowired
-    TbAssureSumHandler tbAssureSumHandler;
+    ApplyTbAssureSumHandler tbAssureSumHandler;
 
     @Autowired
     ApplyProjSumHandler applyProjSumHandler;
@@ -27,13 +27,19 @@ public class DisruptorOperator {
     InsertAnalyzeDetailHandler insertAnalyzeDetailHandler;
 
     @Autowired
-    AssureSumRemitHandler assureSumRemitHandler;
+    ApplyAssureSumRemitHandler assureSumRemitHandler;
 
     @Autowired
     ApplyAddressHandler applyAddressHandler;
 
     @Autowired
     ApplyTbEndDateHandler applyTbEndDateHandler;
+
+    @Autowired
+    ApplyProjectTimeLimitHandler applyProjectTimeLimitHandler;
+
+    @Autowired
+    ApplyPbModeHandler applyPbModeHandler;
 
 
 

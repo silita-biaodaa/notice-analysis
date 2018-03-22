@@ -44,10 +44,11 @@ public class ZhongBiaoDisruptorCreator {
     /**
      * 利用spring完成初始化，singleton
      */
-    public static synchronized void initDisruptor(TbAssureSumHandler tbAssureSumHandler
-            ,ApplyProjSumHandler applyProjSumHandler
-            ,ApplyDateHandler applyDateHandler
-            ,InsertAnalyzeDetailHandler insertAnalyzeDetailHandler,ApplyAddressHandler applyAddressHandler) {
+    public static synchronized void initDisruptor(ApplyTbAssureSumHandler tbAssureSumHandler
+            , ApplyProjSumHandler applyProjSumHandler
+            , ApplyDateHandler applyDateHandler
+            , InsertAnalyzeDetailHandler insertAnalyzeDetailHandler
+            , ApplyAddressHandler applyAddressHandler) {
         if(processZhongbiaoDisruptor == null) {
             logger.info(".......... processZhongbiaoDisruptor init..........\nDISRUPTOR BUFFER_SIZE:"+BUFFER_SIZE+" THREAD_NUM:"+THREAD_NUM);
             processZhongbiaoDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY,BUFFER_SIZE,EXECUTOR,ProducerType.SINGLE,new SleepingWaitStrategy());
