@@ -6,6 +6,7 @@ import com.silita.biaodaa.utils.CNNumberFormat;
 import com.silita.biaodaa.utils.ChineseCompressUtil;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.AnalyzeDetail;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,9 +30,6 @@ public class NoticeAnalyzeService {
 
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
-
-    private ChineseCompressUtil chineseCompressUtil = new ChineseCompressUtil();
-
 
     /**
      * 解析保证金
@@ -411,57 +409,6 @@ public class NoticeAnalyzeService {
         return bmEndTime;
     }
 
-
-    /**
-     * 解析保证金汇款方式
-     * @param html 公告内容
-     * @return 保证金汇款方式
-     */
-    public String analyzeAssureSumRemit (String html) {
-        String assureSumRemit = "";
-        List<String> regexs = analyzeRangeMapper.queryAnalyzeRangeRegexByField("applyAssureSumRemit");
-        for (String regex : regexs) {
-            Pattern pa = Pattern.compile(regex);
-            Matcher ma = pa.matcher(html);
-            if (ma.find()) {
-                String txt = ma.group();
-                assureSumRemit = MyStringUtils.findAssureSumRemit(txt);
-                break;
-            }
-        }
-        return assureSumRemit;
-    }
-
-    /**
-     * 解析项目工期
-     * @param text
-     * @return
-     */
-    public String analyzeApplyProjectTimeLimit(String text) {
-        String rangeHtml = "";
-        String timeLimit = "";
-        List<Map<String, Object>> arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyProjectTimeLimit");
-        for(int i = 0; i < arList.size(); i++) {
-            String regex = String.valueOf(arList.get(i).get("regex")).replaceAll("\\\\","\\\\\\\\");
-            Matcher matre = Pattern.compile(regex).matcher(text);
-            while (matre.find()) {
-                rangeHtml = matre.group();
-                if(!"".equals(rangeHtml)){
-                    String regEx = "[1-9]\\d*";//工期数字
-                    Pattern pat = Pattern.compile(regEx);
-                    Matcher mat = pat.matcher(rangeHtml);
-                    while (mat.find()) {
-                        if(Double.parseDouble(mat.group())>10){
-                            timeLimit = mat.group();
-                            return timeLimit;
-                        }
-                    }
-                }
-            }
-        }
-        return timeLimit;
-    }
-
     public void insertAnalyzeDetail(AnalyzeDetail analyzeDetail){
         analyzeRangeMapper.insertAnalyzeDetail(analyzeDetail);
     }
@@ -535,6 +482,5 @@ public class NoticeAnalyzeService {
 //		}
         return address;
     }
-
 
 }

@@ -6,8 +6,12 @@
         select * from mishu_snatch.analyze_range where field=#{field}
     </select>
 
-    <select id="queryAnalyzeRangeRegexByField" parameterType="String" resultType="Map">
-        SELECT regex FROM  mishu_snatch.analyze_range WHERE field=#{field}
+    <select id="queryAnalyzeRangePbMode" parameterType="String" resultType="Map" >
+        SELECT anotherName, standardName FROM mishu_snatch.#{table} WHERE 1 = 1
+        <!--<choose>-->
+            <!--<when test="#{province}==HuNan"> province=#{province}</when>-->
+            <!--<otherwise> province!='HuNan'</otherwise>-->
+        <!--</choose>-->
     </select>
 
     <insert id="insertAnalyzeDetail" parameterType="com.snatch.model.AnalyzeDetail">
