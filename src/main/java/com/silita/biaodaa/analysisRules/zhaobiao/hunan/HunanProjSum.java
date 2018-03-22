@@ -2,12 +2,17 @@ package com.silita.biaodaa.analysisRules.zhaobiao.hunan;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
+import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
+import com.silita.biaodaa.utils.MyStringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.xml.DocumentDefaultsDefinition;
 import org.springframework.stereotype.Component;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -30,7 +35,7 @@ public class HunanProjSum implements SingleFieldAnalysis {
      * return 项目金额
      */
     @Override
-    public String analysis(String html) {
+    public String analysis(String html,String keyWord) {
         String rangeHtml="";
         String deposit = "";
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
@@ -45,6 +50,10 @@ public class HunanProjSum implements SingleFieldAnalysis {
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("rangeStart").toString();
             String end = arList.get(i).get("rangeEnd").toString();
+            String regex = "";
+            if(arList.get(i).get("regex")!=null){
+                regex = arList.get(i).get("regex").toString();
+            }
             int indexStart=0;
             int indexEnd=0;
             if(!"".equals(start)){
@@ -55,7 +64,7 @@ public class HunanProjSum implements SingleFieldAnalysis {
             }
             if(indexStart > -1 && indexEnd> -1){
                 if(indexEnd > indexStart){
-                    rangeHtml = html.substring(indexStart, indexEnd+1);//截取范围之间的文本
+                    rangeHtml = html.substring(indexStart, indexEnd+end.length());//截取范围之间的文本
                 }else if(indexStart > indexEnd) {
                     if(html.length()-indexStart>=50){
                         rangeHtml = html.substring(indexStart, indexStart+50);//截取范围开始至后30个字符
@@ -103,12 +112,70 @@ public class HunanProjSum implements SingleFieldAnalysis {
                 if(deposit.length()>0){
                     break;
                 }
+                //北京市公共资源 张夏晖 2018-03-21 使用正则截取可能是项目金额的数字
+                if(MyStringUtils.isNull(deposit)){
+                    Pattern pattern = Pattern.compile("["+regex+"]");
+                    Matcher matcher = pattern.matcher(rangeHtml);
+                    String pjNum = matcher.replaceAll("");
+                    pjNum = pjNum.replace(",","");
+                    pjNum = pjNum.replace("约","");
+
+                    boolean ifNum = pjNum.matches("([1-9]\\d*\\.?\\d*)|(0\\.\\d*[1-9])");
+
+                    if(pjNum!=null&&ifNum){
+                        if(rangeHtml.indexOf("万")>-1){
+                            if(pjNum.indexOf(".")>-1){
+                                DecimalFormat df = new DecimalFormat("#");
+                                Double d = Double.parseDouble(pjNum);
+                                deposit = df.format(d*10000d);
+                            }else{
+                                deposit = pjNum+"0000";
+                            }
+                        }else{
+                            deposit = pjNum;
+                        }
+                        break;
+                    }
+                }
             }
         }
 //		if(MyStringUtils.isNotNull(deposit)) {
 //			BigDecimal d = new BigDecimal(Double.parseDouble(deposit) / 10000);
 //			deposit = "约" + String.valueOf(d) + "万";
 //		}
+        if(MyStringUtils.isNull(deposit)) {
+            // TODO: 18/3/21 关键字存库
+            //采购预算（万元）
+            //标段合同估算价(元)
+            if("采购预算（万元）".equals(html)
+                    ||"标段合同估算价(元)".equals(html)
+                    ||"计划投资/万元".equals(html)
+                    ||"中标（成交）价格：".equals(html)){
+                if(html.indexOf("万")>-1){
+                    deposit = Constant.SPLIT_STRING+"-"+10000;
+                }else{
+                    deposit = Constant.SPLIT_STRING+"-"+1;
+                }
+            }
+            if(MyStringUtils.isNotNull(keyWord)){
+                html.replace("万","");
+                html.replace("元","");
+                String reg ="([1-9]\\d*\\.?\\d*)|(0\\.\\d*[1-9])";
+                if(html.matches(reg)){
+                    DecimalFormat df = new DecimalFormat("#");
+                    Double htmlD = Double.parseDouble(html);
+                    Integer d = Integer.parseInt(keyWord);
+                    if(htmlD>10){//排出序号
+                        if(d==1){
+                            deposit = Constant.SPLIT_STRING+html;
+                        }else{
+                            deposit = Constant.SPLIT_STRING+df.format(htmlD*d);
+                        }
+                    }
+                }
+            }
+
+        }
         return deposit;
     }
 }

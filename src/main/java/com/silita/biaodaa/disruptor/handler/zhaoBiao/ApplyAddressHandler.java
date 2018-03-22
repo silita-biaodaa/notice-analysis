@@ -42,7 +42,7 @@ public class ApplyAddressHandler extends BaseHandler {
     @Override
     protected String executeAnalysis(String stringPart,String source) {
         SingleFieldAnalysis analysis = routeRules(source);
-        return analysis.analysis(stringPart);
+        return analysis.analysis(stringPart,null);
     }
 
     @Override

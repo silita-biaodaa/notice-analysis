@@ -15,7 +15,7 @@ public class OtherApplyAddress implements SingleFieldAnalysis {
     NoticeAnalyzeService noticeAnalyzeService;
 
     @Override
-    public String analysis(String segment) {
+    public String analysis(String segment,String keyWord) {
         return noticeAnalyzeService.analyzeApplyAddress(segment);
     }
 }
