@@ -57,7 +57,7 @@ public class DisruptorOperator {
      * 初始化disruptor
      */
     public void init() {
-        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler,applyTbEndDateHandler,applyAssureEndDateHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler,applyTbEndDateHandler,applyAssureEndDateHandler);
         ZhongBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler);
     }
 
