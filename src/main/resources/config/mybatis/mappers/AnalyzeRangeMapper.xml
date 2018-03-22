@@ -6,8 +6,8 @@
         select * from mishu_snatch.analyze_range where field=#{field}
     </select>
 
-    <select id="queryAnalyzeRangePbMode" parameterType="String" resultType="Map" >
-        SELECT anotherName, standardName FROM mishu_snatch.#{table} WHERE 1 = 1
+    <select id="queryAnalyzeRangePbMode" parameterType="String" resultType="Map">
+        SELECT anotherName, standardName FROM ${_parameter} WHERE 1 = 1
         <!--<choose>-->
             <!--<when test="#{province}==HuNan"> province=#{province}</when>-->
             <!--<otherwise> province!='HuNan'</otherwise>-->

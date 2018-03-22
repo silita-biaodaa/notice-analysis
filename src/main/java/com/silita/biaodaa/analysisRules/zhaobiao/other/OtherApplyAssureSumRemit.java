@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OtherApplyAssureSumRemit implements SingleFieldAnalysis {
-    Logger logger = Logger.getLogger(OtherApplyAssureSumRemit.class);
 
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
@@ -33,9 +31,8 @@ public class OtherApplyAssureSumRemit implements SingleFieldAnalysis {
             arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyAssureSumRemit");
             analyzeRangeByFieldMap.put("applyAssureSumRemit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
-        }else{
-            logger.info("=========applyAssureSumRemit=======走的缓存=======");
         }
+
         for (int i = 0; i < arList.size(); i++) {
             String regex = String.valueOf(arList.get(i).get("regex")).replaceAll("\\\\","\\\\\\\\");
             Pattern pa = Pattern.compile(regex);

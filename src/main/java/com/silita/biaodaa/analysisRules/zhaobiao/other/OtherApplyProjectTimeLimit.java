@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
  */
 @Component
 public class OtherApplyProjectTimeLimit implements SingleFieldAnalysis {
-    Logger logger = Logger.getLogger(OtherApplyProjectTimeLimit.class);
 
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
@@ -34,9 +33,8 @@ public class OtherApplyProjectTimeLimit implements SingleFieldAnalysis {
             arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyProjectTimeLimit");
             analyzeRangeByFieldMap.put("applyProjectTimeLimit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
-        }else{
-            logger.info("=========applyProjectTimeLimit=======走的缓存=======");
         }
+
         for(int i = 0; i < arList.size(); i++) {
             String regex = String.valueOf(arList.get(i).get("regex")).replaceAll("\\\\","\\\\\\\\");
             Matcher matre = Pattern.compile(regex).matcher(segment);

@@ -20,8 +20,6 @@ import java.util.Map;
 @Component
 public class OtherApplyPbMode implements SingleFieldAnalysis {
 
-    Logger logger = Logger.getLogger(HunanApplyPbMode.class);
-
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
 
@@ -35,11 +33,9 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> pbList = analyzeRangeByFieldMap.get("OtherPbMode");
         if(pbList == null){
-            pbList = analyzeRangeMapper.queryAnalyzeRangePbMode("analyze_range_pbmode_other");
+            pbList = analyzeRangeMapper.queryAnalyzeRangePbMode("mishu_snatch.analyze_range_pbmode_other");
             analyzeRangeByFieldMap.put("OtherPbMode",pbList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
-        }else{
-            logger.info("=========OtherPbMode=======走的缓存=======");
         }
 
         for (int i = 0; i < pbList.size(); i++) {

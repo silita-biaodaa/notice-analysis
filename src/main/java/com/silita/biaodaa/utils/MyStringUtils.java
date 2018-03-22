@@ -18,7 +18,7 @@ public class MyStringUtils {
 
 	private static final String DEFAULT_STRING = "___";
 
-	private static final String[] remit = {"网银转账","网上支付","银行电汇","银行保函","保险单","担保函","电汇","转账"};
+	private static final String[] remit = {"网银转账","网上支付","银行保函","保险单","担保函","电汇","转账"};
 
 	public static boolean isNotNull(String str){
 		if(str !=null && !str.trim().equals("")){
