@@ -81,4 +81,17 @@ public class TestController {
     }
 
 
+    @ResponseBody
+    @RequestMapping(value = "/pushRedis", method = RequestMethod.GET)
+    public Map<String, Object> pushRedis() {
+        try {
+            testService.pushRedisNotice();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ImmutableMap.Builder<String, Object>().put("status", 1)
+                .put("msg", "push到Redis成功!").build();
+    }
+
+
 }
