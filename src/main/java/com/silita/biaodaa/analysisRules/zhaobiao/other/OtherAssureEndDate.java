@@ -16,31 +16,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 其他站点投标结束时间
- * Created by 91567 on 2018/3/21.
+ * Created by 91567 on 2018/3/22.
  */
 @Component
-public class OtherApplyTbEndDate implements SingleFieldAnalysis {
+public class OtherAssureEndDate implements SingleFieldAnalysis {
 
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
 
     @Override
-    public String analysis(String segment,String keyWord) {
+    public String analysis(String segment) {
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
         String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期格式1
         String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{2})|(\\d{1,2}：\\d{2})";
         List<String> list = null;
         List<String> list2 = null;
-        String bmEndDateAndTime = "";
+        String assureEndDateAndTime = "";
         String rangeHtml = "";
 
         Map<String, List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
-        List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyBidDate");
+        List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("assureEndDate");
         if (arList == null) {
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyBidDate");
-            analyzeRangeByFieldMap.put("applyBidDate", arList);
+            arList = analyzeRangeMapper.queryAnalyzeRangeByField("assureEndDate");
+            analyzeRangeByFieldMap.put("assureEndDate", arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         } else {
             System.out.println("=========applyDate=======走的缓存=======");
@@ -77,16 +76,17 @@ public class OtherApplyTbEndDate implements SingleFieldAnalysis {
                     }
                 }
                 //拼凑日期+时间
-                if (list2.size() > 0 && list.size() > 0) {
-                    bmEndDateAndTime = list.get(list.size() - 1) + list2.get(list2.size() - 1);
+                if (list.size() > 0 && list2.size() > 0) {
+                    assureEndDateAndTime = list.get(list.size() - 1) + list2.get(list2.size() - 1);
                 } else if (list.size() > 0) {
-                    bmEndDateAndTime = list.get(list.size() - 1);
+                    assureEndDateAndTime = list.get(list.size() - 1);
                 }
-                if (MyStringUtils.isNotNull(bmEndDateAndTime)) {
+                if (MyStringUtils.isNotNull(assureEndDateAndTime)) {
                     break;
                 }
             }
         }
-        return bmEndDateAndTime;
+        return assureEndDateAndTime;
     }
+
 }

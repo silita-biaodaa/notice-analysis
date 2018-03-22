@@ -28,10 +28,13 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
     public List analysis(String segment) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat df2 = new SimpleDateFormat("MM-dd");// 设置日期格式2
+        SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
         String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期格式1
         String dateRegex2 = "(\\d{1,2}月\\d{1,2})";//匹配日期格式2
+        String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{2})|(\\d{1,2}：\\d{2})";
         List<String> list = null;
         List<String> list2 = null;
+        List<String> list3 = null;
         String rangeHtml = "";
 
         Map<String, List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
@@ -50,6 +53,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
             Matcher rangeMat = rangePat.matcher(segment);
             if (rangeMat.find()) {
                 list = new ArrayList<String>();
+                list3 = new ArrayList<String>();
                 rangeHtml = rangeMat.group();
                 //处理
                 if (rangeHtml.contains("即日起") || rangeHtml.contains("发布之日起") || rangeHtml.contains("发布之时起")) {
@@ -92,7 +96,22 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                         list.clear();
                     }
                 }
-                if (list.size() > 1) {
+                //匹配时间
+                Pattern timePat = Pattern.compile(timeRegex);
+                Matcher timeMat = timePat.matcher(rangeHtml);
+                while (timeMat.find()) {
+                    try {
+                        list3.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":"))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+                }
+                //报名结束时间拼凑报名时间点
+                if (list.size() == 2) {
+                    if(list3.size() > 0) {
+                        list.set(1, list.get(1) + list3.get(list3.size() - 1));
+                    }
                     break;
                 }
             }

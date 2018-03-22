@@ -44,20 +44,22 @@ public class ZhaoBiaoDisruptorCreator {
     /**
      * 利用spring完成初始化，singleton
      */
-    public static synchronized void initDisruptor(ApplyTbAssureSumHandler tbAssureSumHandler
-            ,ApplyProjSumHandler applyProjSumHandler
-            ,ApplyDateHandler applyDateHandler
-            ,InsertAnalyzeDetailHandler insertAnalyzeDetailHandler
-            ,ApplyAddressHandler applyAddressHandler
-            ,ApplyTbEndDateHandler applyTbEndDateHandler) {
-        if(processDisruptor == null) {
-            logger.info("..........disruptor init..........\nDISRUPTOR BUFFER_SIZE:"+BUFFER_SIZE+" THREAD_NUM:"+THREAD_NUM);
-            processDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY,BUFFER_SIZE,EXECUTOR,ProducerType.SINGLE,new SleepingWaitStrategy());
+    public static synchronized void initDisruptor(TbAssureSumHandler tbAssureSumHandler
+            , ApplyProjSumHandler applyProjSumHandler
+            , ApplyDateHandler applyDateHandler
+            , InsertAnalyzeDetailHandler insertAnalyzeDetailHandler
+            , ApplyAddressHandler applyAddressHandler
+            , ApplyTbEndDateHandler applyTbEndDateHandler
+            , ApplyAssureEndDateHandler applyAssureEndDateHandler) {
+        if (processDisruptor == null) {
+            logger.info("..........disruptor init..........\nDISRUPTOR BUFFER_SIZE:" + BUFFER_SIZE + " THREAD_NUM:" + THREAD_NUM);
+            processDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY, BUFFER_SIZE, EXECUTOR, ProducerType.SINGLE, new SleepingWaitStrategy());
             processDisruptor.handleExceptionsWith(new AnalyzeException());
-            processDisruptor.handleEventsWith(applyProjSumHandler)
-//                    .then(tbAssureSumHandler)
+            processDisruptor.handleEventsWith(applyDateHandler)
+                    .then(applyTbEndDateHandler)
 //                    .then(applyProjSumHandler)
 //                    .then(applyDateHandler)
+                    .then(applyAssureEndDateHandler)
                     .then(insertAnalyzeDetailHandler);
             logger.info("..........disruptor init success..........");
         }

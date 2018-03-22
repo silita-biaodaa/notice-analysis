@@ -36,6 +36,9 @@ public class DisruptorOperator {
     ApplyTbEndDateHandler applyTbEndDateHandler;
 
     @Autowired
+    ApplyAssureEndDateHandler applyAssureEndDateHandler;
+
+    @Autowired
     ApplyProjectTimeLimitHandler applyProjectTimeLimitHandler;
 
     @Autowired
@@ -54,7 +57,7 @@ public class DisruptorOperator {
      * 初始化disruptor
      */
     public void init() {
-        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler,applyTbEndDateHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler,applyTbEndDateHandler,applyAssureEndDateHandler);
         ZhongBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler);
     }
 
@@ -83,7 +86,7 @@ public class DisruptorOperator {
      * @param esNotice
      */
     public void publish(EsNotice esNotice) {
-        /*String type = esNotice.getType().toString();
+        String type = esNotice.getType().toString();
         if(SnatchContent.ZHAO_BIAO_TYPE.equals(type)) {
             ZhaoBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
         }else if(SnatchContent.ZHONG_BIAO_TYPE.equals(type)){
@@ -92,8 +95,7 @@ public class DisruptorOperator {
             //TODO:其他类型后续需要整理
             ZhongBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
             logger.warn("其他类型，按中标逻辑处理。[type:"+esNotice.getType()+"][title:"+esNotice.getTitle()+"][url:"+esNotice.getUrl()+"]");
-        }*/
-        ZhaoBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
+        }
     }
 
 }

@@ -62,10 +62,16 @@ public class ApplyDateHandler extends BaseHandler {
                 }
             }
             if(MyStringUtils.isNotNull(dateList.get(1))) {
-                if("tbEndDate".equals(dateList.get(1))) {
+                String bmEndDateAndTime = dateList.get(1);
+                if("tbEndDate".equals(bmEndDateAndTime)) {
                     esNotice.getDetail().setBmEndDate(esNotice.getDetail().getTbEndDate());
                 } else {
-                    esNotice.getDetail().setBmEndDate(dateList.get(1));
+                    if(bmEndDateAndTime.contains(":")) {
+                        esNotice.getDetail().setBmEndDate(bmEndDateAndTime.substring(0,10));
+                        esNotice.getDetail().setBmEndTime(bmEndDateAndTime.substring(10));
+                    } else {
+                        esNotice.getDetail().setBmEndDate(bmEndDateAndTime);
+                    }
                 }
             }
         }
