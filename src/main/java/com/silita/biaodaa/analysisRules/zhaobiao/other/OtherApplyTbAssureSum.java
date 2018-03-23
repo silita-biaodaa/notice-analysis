@@ -3,6 +3,7 @@ package com.silita.biaodaa.analysisRules.zhaobiao.other;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
+import com.silita.biaodaa.dao.CommonMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
 public class OtherApplyTbAssureSum implements SingleFieldAnalysis{
 
     @Autowired
-    AnalyzeRangeMapper analyzeRangeMapper;
+    CommonMapper commonMapper;
 
     @Override
     public String analysis(String segment,String keyWork) {
@@ -30,32 +31,17 @@ public class OtherApplyTbAssureSum implements SingleFieldAnalysis{
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDeposit");
         if(arList == null){
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyDeposit");
+            arList = commonMapper.queryRegexByField("applyDeposit");
             analyzeRangeByFieldMap.put("applyDeposit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }
 
         for (int i = 0; i < arList.size(); i++) {
-            String start = arList.get(i).get("rangeStart").toString();
-            String end = arList.get(i).get("rangeEnd").toString();
-            int indexStart=0;
-            int indexEnd=0;
-            if(!"".equals(start)){
-                indexStart = segment.indexOf(start);//范围开始位置
-            }
-            if(!"".equals(end)){
-                indexEnd = segment.indexOf(end);//范围结束位置
-            }
-            if(indexStart > -1 && indexEnd> -1){
-                if(indexEnd > indexStart){
-                    rangeHtml = segment.substring(indexStart, indexEnd+1);//截取范围之间的文本
-                }else if(indexStart > indexEnd) {
-                    if(segment.length()-indexStart>=50){
-                        rangeHtml = segment.substring(indexStart, indexStart+50);//截取范围开始至后30个字符
-                    }else{
-                        rangeHtml = segment.substring(indexStart, segment.length());//截取范围开始至后30个字符
-                    }
-                }
+            String regex = String.valueOf(arList.get(i).get("regex")).replaceAll("\\\\","\\\\\\\\");
+            Pattern pa = Pattern.compile(regex);
+            Matcher ma = pa.matcher(segment);
+            while (ma.find()) {
+                rangeHtml = ma.group();
                 //匹配中文人民币
                 String regExCn = "([零壹贰叁肆伍陆柒捌玖拾佰仟万亿])";//大写人民币
                 Pattern pat1 = Pattern.compile(regExCn);
@@ -93,9 +79,9 @@ public class OtherApplyTbAssureSum implements SingleFieldAnalysis{
                         }
                     }
                 }
-                if(deposit.length()>0){
-                    break;
-                }
+            }
+            if(deposit.length()>0){
+                break;
             }
         }
         return deposit;

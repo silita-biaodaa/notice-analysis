@@ -3,6 +3,8 @@ package com.silita.biaodaa.analysisRules.zhaobiao.other;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
+import com.silita.biaodaa.dao.CommonMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,7 @@ import java.util.regex.Pattern;
 public class OtherApplyProjectTimeLimit implements SingleFieldAnalysis {
 
     @Autowired
-    AnalyzeRangeMapper analyzeRangeMapper;
+    CommonMapper commonMapper;
 
 
     @Override
@@ -30,7 +32,7 @@ public class OtherApplyProjectTimeLimit implements SingleFieldAnalysis {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyProjectTimeLimit");
         if(arList == null){
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyProjectTimeLimit");
+            arList = commonMapper.queryRegexByField("applyProjectTimeLimit");
             analyzeRangeByFieldMap.put("applyProjectTimeLimit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }
@@ -45,14 +47,29 @@ public class OtherApplyProjectTimeLimit implements SingleFieldAnalysis {
                     Pattern pat = Pattern.compile(regEx);
                     Matcher mat = pat.matcher(rangeHtml);
                     while (mat.find()) {
-                        if(Double.parseDouble(mat.group())>10){
-                            timeLimit = mat.group();
-                            return timeLimit;
+                        if (rangeHtml.endsWith("月")) {
+                            int limit = Integer.parseInt(mat.group());
+                            timeLimit = String.valueOf(limit*30);
+                        } else if (rangeHtml.endsWith("年")) {
+                            int limit = Integer.parseInt(mat.group());
+                            if (limit < 10) {
+                                timeLimit = String.valueOf(limit*365);
+                            }
+                        } else {
+                            if(Double.parseDouble(mat.group())>10){
+                                timeLimit = mat.group();
+                            }
                         }
+                        return timeLimit;
                     }
                 }
             }
         }
+
+        if (StringUtils.isBlank(timeLimit)) {
+
+        }
+
         return timeLimit;
     }
 }

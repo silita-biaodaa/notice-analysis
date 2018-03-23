@@ -3,6 +3,7 @@ package com.silita.biaodaa.analysisRules.zhaobiao.other;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
+import com.silita.biaodaa.dao.CommonMapper;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class OtherApplyAssureSumRemit implements SingleFieldAnalysis {
 
     @Autowired
-    AnalyzeRangeMapper analyzeRangeMapper;
+    CommonMapper commonMapper;
 
     @Override
     public String analysis(String segment,String keyWork) {
@@ -28,7 +29,7 @@ public class OtherApplyAssureSumRemit implements SingleFieldAnalysis {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyAssureSumRemit");
         if (arList == null) {
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyAssureSumRemit");
+            arList = commonMapper.queryRegexByField("applyAssureSumRemit");
             analyzeRangeByFieldMap.put("applyAssureSumRemit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }
