@@ -4,6 +4,7 @@ import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
+import com.silita.biaodaa.dao.CommonMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.apache.log4j.Logger;
@@ -27,7 +28,7 @@ public class HunanProjSum implements SingleFieldAnalysis {
     Logger logger = Logger.getLogger(HunanProjSum.class);
 
     @Autowired
-    AnalyzeRangeMapper analyzeRangeMapper;
+    CommonMapper CommonMapper;
 
     /**
      * 解析项目金额
@@ -36,20 +37,21 @@ public class HunanProjSum implements SingleFieldAnalysis {
      */
     @Override
     public String analysis(String html,String keyWord) {
+        html = html.replaceAll("<[^>]+>", "");
         String rangeHtml="";
         String deposit = "";
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyProjSum");
         if(arList == null){
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyProjSum");
+            arList = CommonMapper.queryRegexByField("applyProjSum");
             analyzeRangeByFieldMap.put("applyProjSum",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
             logger.info("=========applyProjSum=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
-            String start = arList.get(i).get("rangeStart").toString();
-            String end = arList.get(i).get("rangeEnd").toString();
+            String start = arList.get(i).get("startKey").toString();
+            String end = arList.get(i).get("endKey").toString();
             String regex = "";
             if(arList.get(i).get("regex")!=null){
                 regex = arList.get(i).get("regex").toString();
@@ -65,12 +67,17 @@ public class HunanProjSum implements SingleFieldAnalysis {
             if(indexStart > -1 && indexEnd> -1){
                 //---关键字在"承接过"附件则排除
                 int re = html.indexOf("承接过");
-                if(re>-1&&indexStart-re<5){
+                if(re>-1&&indexStart>re&&indexStart-re<5){
                     continue;
                 }
                 //----类似工程
                 int re2 = html.indexOf("类似工程");
-                if(re2>-1&&indexStart-re2<5){
+                if(re2>-1&&indexStart>re2&&indexStart-re2<5){
+                    continue;
+                }
+                //----累计完成合同额
+                int re3 = html.indexOf("累计完成合同额");
+                if(re3>-1&&indexStart>re3&&indexStart-re3<5){
                     continue;
                 }
                 if(indexEnd > indexStart){
@@ -81,6 +88,18 @@ public class HunanProjSum implements SingleFieldAnalysis {
                     }else{
                         rangeHtml = html.substring(indexStart, html.length());//截取范围开始至后30个字符
                     }
+                }
+                //---关键字在"承接过"附件则排除
+                if(rangeHtml.indexOf("承接过")>-1){
+                    continue;
+                }
+                //----类似工程
+                if(rangeHtml.indexOf("类似工程")>-1){
+                    continue;
+                }
+                //----累计完成合同额
+                if(rangeHtml.indexOf("累计完成合同额")>-1){
+                    continue;
                 }
                 //匹配中文人民币
                 String regExCn = "([零壹贰叁肆伍陆柒捌玖拾佰仟万亿])";//大写人民币
@@ -161,6 +180,7 @@ public class HunanProjSum implements SingleFieldAnalysis {
             if("采购预算（万元）".equals(html)
                     ||"标段合同估算价(元)".equals(html)
                     ||"计划投资/万元".equals(html)
+                    ||"本项目总投资额：".equals(html)
                     ||"中标（成交）价格：".equals(html)){
                 if(html.indexOf("万")>-1){
                     deposit = Constant.SPLIT_STRING+"-"+10000;
@@ -169,8 +189,13 @@ public class HunanProjSum implements SingleFieldAnalysis {
                 }
             }
             if(MyStringUtils.isNotNull(keyWord)){
-                html.replace("万","");
-                html.replace("元","");
+                if(html.indexOf("万")>-1){
+                    keyWord = "10000";
+                }else{
+                    keyWord = "1";
+                }
+                html = html.replace("万","");
+                html = html.replace("元","");
                 String reg ="([1-9]\\d*\\.?\\d*)|(0\\.\\d*[1-9])";
                 if(html.matches(reg)){
                     DecimalFormat df = new DecimalFormat("#");

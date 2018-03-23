@@ -38,6 +38,8 @@ public class NoticeRedisTest extends ConfigTest  {
 
     @Test
     public void analyzeHandler(){
+        disruptorOperator.init();
+        disruptorOperator.start();
         Notice notice = null ;
         while (true){
             try {
