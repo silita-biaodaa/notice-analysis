@@ -37,11 +37,18 @@ public class ApplyProjSumHandler extends BaseHandler {
 
     @Override
     protected Object executeAnalysis(String stringPart,EsNotice esNotice) {
+        if(esNotice.getTitle().indexOf("设计")>0
+                ||esNotice.getTitle().indexOf("监理")>0
+                ||esNotice.getTitle().indexOf("勘察")>0
+                ||esNotice.getTitle().indexOf("审计")>0
+                ||esNotice.getTitle().indexOf("招标代理")>0){
+            return null;
+        }
         SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
         String value =  analysis.analysis(stringPart,this.keyWord);
         if(value!=null){
             if(value.indexOf(Constant.SPLIT_STRING+"-")==0){
-                this.keyWord = value.replace(Constant.SPLIT_STRING+"-","");;
+                this.keyWord = value.replace(Constant.SPLIT_STRING+"-","");
                 value = null;
             }else if(value.indexOf(Constant.SPLIT_STRING)==0){
                 this.keyValue = value.replace(Constant.SPLIT_STRING,"");

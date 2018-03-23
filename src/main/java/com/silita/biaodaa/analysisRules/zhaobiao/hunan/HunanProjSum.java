@@ -63,6 +63,16 @@ public class HunanProjSum implements SingleFieldAnalysis {
                 indexEnd = html.indexOf(end);//范围结束位置
             }
             if(indexStart > -1 && indexEnd> -1){
+                //---关键字在"承接过"附件则排除
+                int re = html.indexOf("承接过");
+                if(re>-1&&indexStart-re<5){
+                    continue;
+                }
+                //----类似工程
+                int re2 = html.indexOf("类似工程");
+                if(re2>-1&&indexStart-re2<5){
+                    continue;
+                }
                 if(indexEnd > indexStart){
                     rangeHtml = html.substring(indexStart, indexEnd+end.length());//截取范围之间的文本
                 }else if(indexStart > indexEnd) {
@@ -143,6 +153,7 @@ public class HunanProjSum implements SingleFieldAnalysis {
 //			BigDecimal d = new BigDecimal(Double.parseDouble(deposit) / 10000);
 //			deposit = "约" + String.valueOf(d) + "万";
 //		}
+
         if(MyStringUtils.isNull(deposit)) {
             // TODO: 18/3/21 关键字存库
             //采购预算（万元）
