@@ -89,4 +89,5 @@ public class OtherAssureEndDate implements SingleFieldAnalysis {
         }
         return assureEndDateAndTime;
     }
+
 }

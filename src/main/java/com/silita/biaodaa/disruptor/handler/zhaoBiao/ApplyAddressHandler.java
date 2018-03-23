@@ -1,8 +1,8 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyAddress;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyAddress;
+import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyAddressRule;
+import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyAddressRule;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +15,20 @@ import org.springframework.stereotype.Component;
 public class ApplyAddressHandler extends BaseHandler {
 
     @Autowired
-    HunanApplyAddress hunanApplyAddress;
+    HunanApplyAddressRule hunanApplyAddress;
 
     @Autowired
-    OtherApplyAddress otherApplyAddress;
+    OtherApplyAddressRule otherApplyAddress;
 
     public ApplyAddressHandler(){
         this.fieldDesc="报名地址";
     }
 
+    /**
+     * 路由具体省份的解析规则
+     * @param source
+     * @return
+     */
     private SingleFieldAnalysis routeRules(String source){
         switch (source){
             case "hunan": return hunanApplyAddress;
@@ -40,8 +45,8 @@ public class ApplyAddressHandler extends BaseHandler {
     }
 
     @Override
-    protected String executeAnalysis(String stringPart,String source) {
-        SingleFieldAnalysis analysis = routeRules(source);
+    protected String executeAnalysis(String stringPart,EsNotice esNotice) {
+        SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
         return analysis.analysis(stringPart,null);
     }
 

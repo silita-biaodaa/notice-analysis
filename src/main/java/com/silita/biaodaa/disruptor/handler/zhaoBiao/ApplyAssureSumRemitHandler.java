@@ -32,8 +32,8 @@ public class ApplyAssureSumRemitHandler extends BaseHandler {
     }
 
     @Override
-    protected String executeAnalysis(String stringPart,String source) {
-        SingleFieldAnalysis analysis = routeRules(source);
+    protected String executeAnalysis(String stringPart,EsNotice esNotice) {
+        SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
         return analysis.analysis(stringPart,null);
     }
 

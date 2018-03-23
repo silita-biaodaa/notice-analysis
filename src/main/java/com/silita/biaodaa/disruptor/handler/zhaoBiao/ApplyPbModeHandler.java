@@ -2,9 +2,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyAddress;
 import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyPbMode;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyAddress;
 import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyPbMode;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.snatch.model.EsNotice;
@@ -35,8 +33,8 @@ public class ApplyPbModeHandler extends BaseHandler{
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart, String source) {
-        SingleFieldAnalysis analysis = routeRules(source);
+    protected Object executeAnalysis(String stringPart, EsNotice esNotice) {
+        SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
         return analysis.analysis(stringPart,null);
     }
 
