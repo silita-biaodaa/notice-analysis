@@ -36,8 +36,8 @@ public class ApplyProjSumHandler extends BaseHandler {
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart,String source) {
-        SingleFieldAnalysis analysis = routeRules(source);
+    protected Object executeAnalysis(String stringPart,EsNotice esNotice) {
+        SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
         String value =  analysis.analysis(stringPart,this.keyWord);
         if(value!=null){
             if(value.indexOf(Constant.SPLIT_STRING+"-")==0){

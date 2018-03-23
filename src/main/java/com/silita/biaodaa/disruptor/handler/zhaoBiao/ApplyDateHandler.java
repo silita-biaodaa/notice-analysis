@@ -45,8 +45,8 @@ public class ApplyDateHandler extends BaseHandler {
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart, String source) {
-        DoubleFieldAnalysis analysis = routeRules(source);
+    protected Object executeAnalysis(String stringPart, EsNotice esNotice) {
+        DoubleFieldAnalysis analysis = routeRules(esNotice.getSource());
         return analysis.analysis(stringPart);
     }
 

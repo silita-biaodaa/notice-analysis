@@ -30,7 +30,7 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
                     if(MyStringUtils.isNull(s3)) {
 //                        list[i] = list[i].replaceAll("<[^>]+>", "");
                         if(MyStringUtils.isNotNull(list[i])){
-                            s3 = executeAnalysis(list[i],esNotice.getSource());
+                            s3 = executeAnalysis(list[i],esNotice);
                             if(MyStringUtils.isNotNull(s3)) {
                                 break;
                             }
@@ -64,7 +64,7 @@ public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
      * @param stringPart
      * @return
      */
-    protected abstract Object executeAnalysis(String stringPart,String source);
+    protected abstract Object executeAnalysis(String stringPart,EsNotice esNotice);
 
     /**
      * 解析结果保存
