@@ -29,7 +29,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat df2 = new SimpleDateFormat("MM-dd");// 设置日期格式2
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
-        String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期格式1
+        String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})|(\\d{4}/\\d{1,2}/\\d{1,2})";//匹配日期格式1
         String dateRegex2 = "(\\d{1,2}月\\d{1,2})";//匹配日期格式2
         String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{2})|(\\d{1,2}：\\d{2})";
         List<String> list = null;
@@ -55,6 +55,10 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                 list = new ArrayList<String>();
                 list3 = new ArrayList<String>();
                 rangeHtml = rangeMat.group();
+                //处理2017年03月15日至2017年05月15日，总工期62日历天
+                if (rangeHtml.contains("工期")) {
+                    continue;
+                }
                 //处理
                 if (rangeHtml.contains("即日起") || rangeHtml.contains("发布之日起") || rangeHtml.contains("发布之时起")) {
                     list.add("openDate");
@@ -67,7 +71,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                 Matcher dateMat = datePat.matcher(rangeHtml);
                 while (dateMat.find()) {
                     try {
-                        list.add(df.format(df.parse(dateMat.group().replaceAll("年", "-").replaceAll("月", "-"))));
+                        list.add(df.format(df.parse(dateMat.group().replaceAll("年", "-").replaceAll("月", "-").replaceAll("/", "-"))));
                     } catch (ParseException e) {
                         e.printStackTrace();
                         continue;
@@ -80,7 +84,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                     Matcher dateMat2 = datePat2.matcher(rangeHtml);
                     while (dateMat2.find()) {
                         try {
-                            list2.add(df2.format(df2.parse(dateMat2.group().replaceAll("年", "-").replaceAll("月", "-"))));
+                            list2.add(df2.format(df2.parse(dateMat2.group().replaceAll("月", "-"))));
                         } catch (ParseException e) {
                             e.printStackTrace();
                             continue;
@@ -96,6 +100,12 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                         list.clear();
                     }
                 }
+//                //2个时间差大于10天
+//                if (list.size() >= 2) {
+//                    if(DateUtils.dateDifference(list.get(0), list.get(1)) > 20) {
+//                        list.clear();
+//                    }
+//                }
                 //匹配时间
                 Pattern timePat = Pattern.compile(timeRegex);
                 Matcher timeMat = timePat.matcher(rangeHtml);
@@ -108,8 +118,8 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                     }
                 }
                 //报名结束时间拼凑报名时间点
-                if (list.size() == 2) {
-                    if(list3.size() > 0) {
+                if (list.size() >= 2) {
+                    if (list3.size() > 0) {
                         list.set(1, list.get(1) + list3.get(list3.size() - 1));
                     }
                     break;

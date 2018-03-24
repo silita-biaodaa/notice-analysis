@@ -29,7 +29,7 @@ public class OtherAssureEndDate implements SingleFieldAnalysis {
     public String analysis(String segment, String keyWork) {
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
-        String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期格式1
+        String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})|(\\d{4}/\\d{1,2}/\\d{1,2})";//匹配日期格式1
         String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{2})|(\\d{1,2}：\\d{2})";
         List<String> list = null;
         List<String> list2 = null;
@@ -59,7 +59,7 @@ public class OtherAssureEndDate implements SingleFieldAnalysis {
                 Matcher dateMat = datePat.matcher(rangeHtml);
                 while (dateMat.find()) {
                     try {
-                        list.add(dfDate.format(dfDate.parse(dateMat.group().replaceAll("年", "-").replaceAll("月", "-"))));
+                        list.add(dfDate.format(dfDate.parse(dateMat.group().replaceAll("年", "-").replaceAll("月", "-").replaceAll("/", "-"))));
                     } catch (ParseException e) {
                         e.printStackTrace();
                         continue;
@@ -89,5 +89,4 @@ public class OtherAssureEndDate implements SingleFieldAnalysis {
         }
         return assureEndDateAndTime;
     }
-
 }
