@@ -694,8 +694,8 @@ public class DateUtils {
 			try {
 				Date date1 = format.parse(dateTimeOne);
 				Date date2 = format.parse(dateTimeTwo);
+				//				num = (int) ((date1.getTime() - date2.getTime()) / (1000*3600*24));
 				num = (int) ((date1.getTime() - date2.getTime()) / (86400000));
-//				num = (int) ((date1.getTime() - date2.getTime()) / (1000*3600*24));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
