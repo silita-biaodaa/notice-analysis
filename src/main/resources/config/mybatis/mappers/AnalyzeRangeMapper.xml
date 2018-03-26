@@ -15,7 +15,7 @@
     </select>
 
     <insert id="insertAnalyzeDetail" parameterType="com.snatch.model.AnalyzeDetail">
-        INSERT INTO zhaobiao_analyze_detail (
+        INSERT INTO mishu_analyze.zhaobiao_analyze_detail (
         redisId,noticeUrl,title,tbAssureSum,projDq,
         projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
         bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
@@ -41,7 +41,7 @@
 
 
     <insert id="batchInsertAnalyzeDetail" parameterType="Map">
-        INSERT INTO zhaobiao_analyze_detail (
+        INSERT INTO mishu_analyze.zhaobiao_analyze_detail (
         redisId,noticeUrl,title,tbAssureSum,projDq,
         projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
         bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
