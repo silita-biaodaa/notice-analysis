@@ -4,6 +4,7 @@ import com.lmax.disruptor.EventTranslatorOneArg;
 import com.silita.biaodaa.common.SnatchContent;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
+import com.silita.biaodaa.disruptor.handler.zhongBiao.*;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,22 @@ public class DisruptorOperator {
     ApplyPbModeHandler applyPbModeHandler;
 
 
+    @Autowired
+    OneNameHandler oneNameHandler;
+
+    @Autowired
+    TwoNameHandler twoNameHandler;
+
+    @Autowired
+    ThreeNameHandler threeNameHandler;
+
+    @Autowired
+    ProjDutyHandler projDutyHandler;
+
+    @Autowired
+    InsertAnalyzeDetailZhongBiaoHandler insertAnalyzeDetailZhongBiaoHandler;
+
+
 
     private static EventTranslatorOneArg<AnalyzeEvent,EsNotice> eventTranslator = new EventTranslatorOneArg<AnalyzeEvent,EsNotice>() {
         @Override
@@ -57,8 +74,8 @@ public class DisruptorOperator {
      * 初始化disruptor
      */
     public void init() {
-        ZhaoBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler, applyProjSumHandler, applyDateHandler, insertAnalyzeDetailHandler, applyAddressHandler, applyTbEndDateHandler, applyAssureEndDateHandler);
-        ZhongBiaoDisruptorCreator.initDisruptor(tbAssureSumHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler,applyAddressHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(applyAddressHandler,insertAnalyzeDetailHandler);
+        ZhongBiaoDisruptorCreator.initDisruptor(oneNameHandler,twoNameHandler,threeNameHandler,projDutyHandler,insertAnalyzeDetailZhongBiaoHandler);
     }
 
     /**

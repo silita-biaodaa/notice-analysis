@@ -78,4 +78,25 @@
 				WHERE alias=#{address})
     </select>
 
+    <insert id="insertAnalyzeDetailZhongbiao" parameterType="com.snatch.model.AnalyzeDetailZhongBiao">
+        INSERT INTO mishu_analyze.analyze_detail_zhongbiao (
+        redisId,noticeUrl,title,gsDate,
+        projSum,projDq,projXs,pbMode,projType,
+        oneName,oneUUid,oneOffer,oneProjDuty,oneProjDutyUUid,
+        oneSkillDuty,oneSgy,oneAqy,oneZly,twoName,
+        twoOffer,twoProjDuty,twoSkillDuty,twoSgy,twoAqy,
+        twoZly,threeName,threeOffer,threeProjDuty,threeSkillDuty,
+        threeSgy,threeAqy,threeZly,province,city,
+        county,block,analyzeDate)
+        VALUES
+        (#{redisId},#{noticeUrl},#{title},#{gsDate},
+        #{projSum},#{projDq},#{projXs},#{pbMode},#{projType},
+        #{oneName},#{oneUUid},#{oneOffer},#{oneProjDuty},#{oneProjDutyUUid},
+        #{oneSkillDuty},#{oneSgy},#{oneAqy},#{oneZly},#{twoName},
+        #{twoOffer},#{twoProjDuty},#{twoSkillDuty},#{twoSgy},#{twoAqy},
+        #{twoZly},#{threeName},#{threeOffer},#{threeProjDuty},#{threeSkillDuty},
+        #{threeSgy},#{threeAqy},#{threeZly},#{province},#{city},
+        #{county},#{block},now())
+    </insert>
+
 </mapper>

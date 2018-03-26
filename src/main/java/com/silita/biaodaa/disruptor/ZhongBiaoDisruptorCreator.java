@@ -6,7 +6,7 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.exception.AnalyzeException;
-import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
+import com.silita.biaodaa.disruptor.handler.zhongBiao.*;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +44,18 @@ public class ZhongBiaoDisruptorCreator {
     /**
      * 利用spring完成初始化，singleton
      */
-    public static synchronized void initDisruptor(ApplyTbAssureSumHandler tbAssureSumHandler
-            , ApplyProjSumHandler applyProjSumHandler
-            , ApplyDateHandler applyDateHandler
-            , InsertAnalyzeDetailHandler insertAnalyzeDetailHandler
-            , ApplyAddressHandler applyAddressHandler) {
+    public static synchronized void initDisruptor(OneNameHandler oneNameHandler, TwoNameHandler twoNameHandler,
+                                                  ThreeNameHandler threeNameHandler, ProjDutyHandler projDutyHandler, InsertAnalyzeDetailZhongBiaoHandler insertAnalyzeDetailZhongBiaoHandler) {
         if(processZhongbiaoDisruptor == null) {
             logger.info(".......... processZhongbiaoDisruptor init..........\nDISRUPTOR BUFFER_SIZE:"+BUFFER_SIZE+" THREAD_NUM:"+THREAD_NUM);
             processZhongbiaoDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY,BUFFER_SIZE,EXECUTOR,ProducerType.SINGLE,new SleepingWaitStrategy());
             processZhongbiaoDisruptor.handleExceptionsWith(new AnalyzeException());
-            processZhongbiaoDisruptor.handleEventsWith(applyAddressHandler)
-//                    .then(tbAssureSumHandler)
-//                    .then(applyProjSumHandler)
-//                    .then(applyDateHandler)
-                    .then(insertAnalyzeDetailHandler);
-            logger.info("..........disruptor init success..........");
+            processZhongbiaoDisruptor.handleEventsWith(oneNameHandler)
+                    .then(twoNameHandler)
+                    .then(threeNameHandler)
+                    .then(projDutyHandler)
+                    .then(insertAnalyzeDetailZhongBiaoHandler);
+            logger.info("..........zhongbiao disruptor init success..........");
         }
     }
 

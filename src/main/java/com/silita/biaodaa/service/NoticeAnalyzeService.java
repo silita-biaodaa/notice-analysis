@@ -3,10 +3,9 @@ package com.silita.biaodaa.service;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
-import com.silita.biaodaa.utils.ChineseCompressUtil;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.AnalyzeDetail;
-import org.apache.commons.lang3.StringUtils;
+import com.snatch.model.AnalyzeDetailZhongBiao;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,6 +29,10 @@ public class NoticeAnalyzeService {
 
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
+
+    public void insertAnalyzeDetailZhongbiao(AnalyzeDetailZhongBiao analyzeDetailZhongBiao){
+        analyzeRangeMapper.insertAnalyzeDetailZhongbiao(analyzeDetailZhongBiao);
+    }
 
     /**
      * 解析保证金
