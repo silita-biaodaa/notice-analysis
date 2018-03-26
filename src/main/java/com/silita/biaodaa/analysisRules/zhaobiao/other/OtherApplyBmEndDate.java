@@ -3,6 +3,8 @@ package com.silita.biaodaa.analysisRules.zhaobiao.other;
 import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
+import com.silita.biaodaa.utils.DateUtils;
+import com.silita.biaodaa.utils.MyStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +28,13 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
 
     @Override
     public List analysis(String segment) {
+        segment = segment.replaceAll("<[^>]+>", "").replaceAll(" style=\\\"(.*?)\\\"", "");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat df2 = new SimpleDateFormat("MM-dd");// 设置日期格式2
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
         String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})|(\\d{4}/\\d{1,2}/\\d{1,2})";//匹配日期格式1
         String dateRegex2 = "(\\d{1,2}月\\d{1,2})";//匹配日期格式2
-        String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{2})|(\\d{1,2}：\\d{2})";
+        String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{0,2})|(\\d{1,2}：\\d{2})|(\\d{1,2}点\\d{0,2})";
         List<String> list = null;
         List<String> list2 = null;
         List<String> list3 = null;
@@ -55,10 +58,6 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                 list = new ArrayList<String>();
                 list3 = new ArrayList<String>();
                 rangeHtml = rangeMat.group();
-                //处理2017年03月15日至2017年05月15日，总工期62日历天
-                if (rangeHtml.contains("工期")) {
-                    continue;
-                }
                 //处理
                 if (rangeHtml.contains("即日起") || rangeHtml.contains("发布之日起") || rangeHtml.contains("发布之时起")) {
                     list.add("openDate");
@@ -100,18 +99,22 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                         list.clear();
                     }
                 }
-//                //2个时间差大于10天
-//                if (list.size() >= 2) {
-//                    if(DateUtils.dateDifference(list.get(0), list.get(1)) > 20) {
-//                        list.clear();
-//                    }
-//                }
+                //2个时间差大于20天
+                if (list.size() >= 2) {
+                    if (DateUtils.dateDifference(list.get(0), list.get(1)) > 20) {
+                        list.clear();
+                    }
+                }
                 //匹配时间
                 Pattern timePat = Pattern.compile(timeRegex);
                 Matcher timeMat = timePat.matcher(rangeHtml);
                 while (timeMat.find()) {
                     try {
-                        list3.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":"))));
+                        if (MyStringUtils.isNull(timeMat.group().replaceAll("\\d{0,2}时", ""))) {
+                            list3.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":00"))));
+                        } else {
+                            list3.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":").replaceAll("点", ":"))));
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                         continue;
