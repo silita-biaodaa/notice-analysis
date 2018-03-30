@@ -8,10 +8,18 @@
 
     <select id="getNoticeToRedis" resultType="com.snatch.model.Notice">
         select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,
-        province,city,county,provinceCode,cityCode,countyCode,photoUrl,`type`,
+        province,city,county,provinceCode,cityCode,countyCode,photoUrl,catchtype as `type`,
         snatchNumber,areaRank,provinceCode as 'source'
-        from notice
+        from mishu_analyze.notice
+        <!--where title like '%五老村办事处仁寿里8号、10号建筑改造出新项目的招标公告%'-->
     </select>
+<!--
+沈阳金杯车辆制造有限公司搬迁改造项目工程施工总承包
+中央储备粮锦州直属库凌海分库建仓项目施工
+山东省淮河流域重点平原洼地南四湖片
+学生宿舍B组团S3S4(北京信息科技大学新校区学生宿舍B组团
+河南省内黄监狱改扩建工程（二期）
+临沂市临港经济开发区龙潭湾水库工程项目-->
 
 
 

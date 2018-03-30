@@ -4,9 +4,7 @@ import com.silita.biaodaa.utils.ChineseCompressUtil;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by dh on 2018/3/19.
@@ -38,20 +36,21 @@ public class CommonMethods {
         }
         ChineseCompressUtil util = new ChineseCompressUtil();
         String plainHtml = util.getPlainText(esNotice.getContent());
-        String[] str = plainHtml.split(split1);
-        List<String> list = Arrays.asList(str);
-        List<String> mainList = new ArrayList<>();
-        for(String temp : list){
-            String [] str2 = temp.split(split2);
-            List<String> list2 = Arrays.asList(str2);
-            mainList.addAll(list2);
-        }
-        String[] array = new String[mainList.size()];
-        String [] main = mainList.toArray(array);
-        if(main.length>1) {
-            main = Arrays.copyOf(main, main.length + 1);
-            main[main.length - 1] = plainHtml;
-        }
+//        String[] str = plainHtml.split(split1);
+//        List<String> list = Arrays.asList(str);
+//        List<String> mainList = new ArrayList<>();
+//        for(String temp : list){
+//            String [] str2 = temp.split(split2);
+//            List<String> list2 = Arrays.asList(str2);
+//            mainList.addAll(list2);
+//        }
+//        String[] array = new String[mainList.size()];
+//        String [] main = mainList.toArray(array);
+//        if(main.length>1) {
+//            main = Arrays.copyOf(main, main.length + 1);
+//            main[main.length - 1] = plainHtml;
+//        }
+        String[] main = {plainHtml};
         return main;
     }
 

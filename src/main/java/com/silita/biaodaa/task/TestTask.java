@@ -1,5 +1,6 @@
 package com.silita.biaodaa.task;
 
+import com.silita.biaodaa.common.SnatchContent;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.*;
@@ -76,7 +77,7 @@ public class TestTask implements Runnable {
             esNotice.setSource(notice.getSource());
 
             Dimension dimension = notice.getDimension();
-            if(notice.getCatchType().equals("2")) { //中标
+            if(notice.getCatchType().equals(SnatchContent.ZHONG_BIAO_TYPE)) { //中标
                 AnalyzeDetailZhongBiao zdzb = new AnalyzeDetailZhongBiao();
                 zdzb.setNoticeUrl(notice.getUrl());
                 zdzb.setTitle(notice.getTitle());

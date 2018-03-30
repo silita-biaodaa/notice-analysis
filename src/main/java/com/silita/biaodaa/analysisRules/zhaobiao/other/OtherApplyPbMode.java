@@ -5,9 +5,7 @@ import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyPbMode;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.dao.CommonMapper;
-import com.silita.biaodaa.service.NoticeAnalyzeService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +25,9 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
     @Autowired
     HunanApplyPbMode hunanApplyPbMode;
 
+    @Autowired
+    AnalyzeRangeMapper analyzeRangeMapper;
+
     @Override
     public String analysis(String segment,String keyWork) {
         String val = "";
@@ -34,7 +35,7 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> pbList = analyzeRangeByFieldMap.get("OtherPbMode");
         if(pbList == null){
-            pbList = commonMapper.queryRegexByField("mishu_snatch.analyze_range_pbmode_other");
+            pbList = analyzeRangeMapper.queryAnalyzeRangePbMode("mishu_snatch.analyze_range_pbmode_other");
             analyzeRangeByFieldMap.put("OtherPbMode",pbList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }

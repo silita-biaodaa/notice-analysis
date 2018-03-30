@@ -113,42 +113,37 @@ public class OtherApplyAddressRule implements SingleFieldAnalysis {
                         } else {
                             address = innerMtr.group();
                         }
-                        address = address.trim();
+                        address = filterAnalysisResult(address);
                         //            logger.debug("解析段："+html+"\n[解析值："+address+"][regex:"+regex+"][groupCount:"+m.groupCount()+"][address:"+address+"]");
                         if (MyStringUtils.isNotNull(address)&& address.length()>4) {
                             logger.info( "\n##线下报名地址解析结果:[address:" + address + "] by [outerRegex:\""+outerRegex+"\"][innerRegex:\"" + innerRegex + "\"][groupCount:" + innerMtr.groupCount() + "]\n##被解析片段：" + matchPart );
                             break outerMtr;
                         }
                     }
-
                 }
-
-
-
             }
             matchPart=null;
         }
 
-
-//        if(MyStringUtils.isNull(address)) {
-//            if (html.indexOf("下载招标文件") != -1 || html.indexOf("下载获取招标文件") != -1) {
-//                return onLineApply;
-//            }
-//            int start = html.indexOf("下载");
-//            int end = html.indexOf("招标文件");
-//            if ((start != -1 && end != -1) && (end - start > 0 && end - start < 20)) {
-//                return onLineApply;
-//            }
-//            if (html.indexOf("在") != -1 && html.indexOf("进行网上下载") != -1) {
-//                return onLineApply;
-//            }
-//        }else{
-//            if(address!=null && address.length()>200) {
-//                address = address.substring(0, 200);
-//            }
+//        if(MyStringUtils.isNull(address)){
+//            address ="线下报名";
 //        }
-
         return address;
+    }
+
+    private String filterAnalysisResult(String str){
+        String regex = "(<.+>|[。，,.；：]*$|[ ]*$|^[ ]*)";
+        if(MyStringUtils.isNotNull(str)){
+            Pattern ptn = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
+            Matcher matcher = ptn.matcher(str);
+            while (matcher.find()) {
+                str = str.replaceAll(matcher.group(),"");
+            }
+            return str;
+        }else{
+            return null;
+        }
+
     }
 
 
