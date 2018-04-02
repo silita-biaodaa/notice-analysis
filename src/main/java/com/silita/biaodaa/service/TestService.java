@@ -33,9 +33,14 @@ public class TestService {
         for(Notice notice : list){
             redisTemplate.opsForList().leftPush("liuqi",notice);
         }
-
     }
 
+    public void pushHunanRedisNotice(){
+        List<Notice> list = testMapper.getHunanNoticeToRedis();
+        for(Notice notice : list){
+            redisTemplate.opsForList().leftPush("liuqi",notice);
+        }
+    }
 
 
 

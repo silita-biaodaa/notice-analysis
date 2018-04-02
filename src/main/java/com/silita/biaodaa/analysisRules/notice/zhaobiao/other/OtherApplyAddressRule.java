@@ -1,4 +1,4 @@
-package com.silita.biaodaa.analysisRules.zhaobiao.other;
+package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.dao.ApplyAddressMapper;
@@ -76,7 +76,7 @@ public class OtherApplyAddressRule implements SingleFieldAnalysis {
 
                 //网上报名解析
                 String onlineRegex = "((CA数字证书|登录电子化平台|数字证书登录|电子招标投标交易平台|网上支付)\\S?).*(报名|下载招标文件|交易平台|网上支付)*[。，,.]+";
-                String onlineRegex2 = "(信息网上报名)|((公共)+(资源)?(交易|网上)+(中心)?(网站|平台|系统)+)";
+                String onlineRegex2 = "(下载[\\S\\b\\d]{0,10}招标文件|信息网上报名|网上报名|网上进行电子报名|网上报名并获取电子招标文件|网上获取电子招标文件及其它招标资料)|((公共)+(资源)?(交易|网上)+(中心)?(网站|平台|系统)+)";
                 List<String > onlineList = new ArrayList<String>();
                 onlineList.add(onlineRegex);
                 onlineList.add(onlineRegex2);
@@ -132,7 +132,7 @@ public class OtherApplyAddressRule implements SingleFieldAnalysis {
     }
 
     private String filterAnalysisResult(String str){
-        String regex = "(<.+>|[。，,.；：]*$|[ ]*$|^[ ]*)";
+        String regex = "(<.+>|[。，,.；：]*$|[ ]*$|^[ ]*|<.?[^>]?p>)";
         if(MyStringUtils.isNotNull(str)){
             Pattern ptn = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
             Matcher matcher = ptn.matcher(str);

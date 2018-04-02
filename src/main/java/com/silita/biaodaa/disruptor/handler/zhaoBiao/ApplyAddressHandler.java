@@ -1,8 +1,8 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanApplyAddressRule;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyAddressRule;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan.HunanApplyAddressRule;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyAddressRule;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class ApplyAddressHandler extends BaseHandler {
      */
     private SingleFieldAnalysis routeRules(String source){
         switch (source){
-            case "hunan": return hunanApplyAddress;
+            case "hunan": return otherApplyAddress;//放棄使用湖南邏輯
             case "tianj": return otherApplyAddress;
             case "guangd": return otherApplyAddress;
             case "shangh": return otherApplyAddress;

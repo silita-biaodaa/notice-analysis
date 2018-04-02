@@ -1,18 +1,15 @@
-package com.silita.biaodaa.analysisRules.zhaobiao.hunan;
+package com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.common.Constant;
-import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.dao.CommonMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.xml.DocumentDefaultsDefinition;
 import org.springframework.stereotype.Component;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;

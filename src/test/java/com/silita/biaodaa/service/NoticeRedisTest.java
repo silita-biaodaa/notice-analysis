@@ -35,6 +35,11 @@ public class NoticeRedisTest extends ConfigTest  {
         testService.pushRedisNotice();
     }
 
+    @Test
+    public void pushHunanRedisNotice() {
+        testService.pushHunanRedisNotice();
+    }
+
 
     @Test
     public void analyzeHandler(){

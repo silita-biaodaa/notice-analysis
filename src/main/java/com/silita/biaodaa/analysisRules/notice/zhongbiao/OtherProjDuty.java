@@ -1,4 +1,4 @@
-package com.silita.biaodaa.analysisRules.zhongbiao;
+package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;

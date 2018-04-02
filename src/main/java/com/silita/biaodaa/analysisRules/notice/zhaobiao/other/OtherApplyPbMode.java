@@ -1,9 +1,11 @@
-package com.silita.biaodaa.analysisRules.zhaobiao.hunan;
+package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan.HunanApplyPbMode;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.dao.CommonMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +17,13 @@ import java.util.Map;
  * Created by maofeng on 2018/3/21.
  */
 @Component
-public class HunanApplyPbMode implements SingleFieldAnalysis {
+public class OtherApplyPbMode implements SingleFieldAnalysis {
 
     @Autowired
     CommonMapper commonMapper;
+
+    @Autowired
+    HunanApplyPbMode hunanApplyPbMode;
 
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
@@ -28,10 +33,10 @@ public class HunanApplyPbMode implements SingleFieldAnalysis {
         String val = "";
 
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
-        List<Map<String, Object>> pbList = analyzeRangeByFieldMap.get("HuNanPbMode");
+        List<Map<String, Object>> pbList = analyzeRangeByFieldMap.get("OtherPbMode");
         if(pbList == null){
-            pbList = analyzeRangeMapper.queryAnalyzeRangePbMode("mishu_snatch.analyze_range_pbmode");
-            analyzeRangeByFieldMap.put("HuNanPbMode",pbList);
+            pbList = analyzeRangeMapper.queryAnalyzeRangePbMode("mishu_snatch.analyze_range_pbmode_other");
+            analyzeRangeByFieldMap.put("OtherPbMode",pbList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }
 
@@ -40,6 +45,9 @@ public class HunanApplyPbMode implements SingleFieldAnalysis {
                 val = String.valueOf(pbList.get(i).get("standardName"));
                 break;
             }
+        }
+        if (StringUtils.isBlank(val)) {
+            val = hunanApplyPbMode.analysis(segment,null);
         }
         return val;
     }

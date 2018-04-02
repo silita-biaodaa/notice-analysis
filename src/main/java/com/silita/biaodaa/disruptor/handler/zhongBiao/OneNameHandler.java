@@ -1,6 +1,6 @@
 package com.silita.biaodaa.disruptor.handler.zhongBiao;
 
-import com.silita.biaodaa.analysisRules.zhongbiao.OtherOneName;
+import com.silita.biaodaa.analysisRules.notice.zhongbiao.OtherOneName;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;

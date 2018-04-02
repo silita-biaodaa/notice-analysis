@@ -1,10 +1,9 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.hunan.HunanProjSum;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan.HunanProjSum;
 import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
-import com.silita.biaodaa.service.NoticeAnalyzeService;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

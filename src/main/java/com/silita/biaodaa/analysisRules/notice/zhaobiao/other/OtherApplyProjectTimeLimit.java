@@ -1,11 +1,9 @@
-package com.silita.biaodaa.analysisRules.zhaobiao.other;
+package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
-import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.dao.CommonMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -13,6 +13,16 @@ import java.util.List;
  */
 public class CommonMethods {
 
+    public static String getClassString(Class cls){
+        if(cls !=null){
+            String name = cls.getName();
+            int endIdx = name.lastIndexOf(".");
+            return name.substring(endIdx+1);
+        }else{
+            return null;
+        }
+    }
+
     /**
      * 获取需要解析的片段
      * @param esNotice

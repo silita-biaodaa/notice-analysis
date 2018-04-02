@@ -1,4 +1,4 @@
-package com.silita.biaodaa.analysisRules.zhaobiao.other;
+package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;

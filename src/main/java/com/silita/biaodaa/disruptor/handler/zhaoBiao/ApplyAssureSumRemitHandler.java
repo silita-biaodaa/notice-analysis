@@ -1,7 +1,7 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyAssureSumRemit;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyAssureSumRemit;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;

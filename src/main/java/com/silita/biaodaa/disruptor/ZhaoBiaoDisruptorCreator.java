@@ -44,20 +44,16 @@ public class ZhaoBiaoDisruptorCreator {
     /**
      * 利用spring完成初始化，singleton
      */
-    public static synchronized void initDisruptor(ApplyTbAssureSumHandler tbAssureSumHandler
-            , ApplyProjSumHandler applyProjSumHandler
-            , ApplyDateHandler applyDateHandler
-            , InsertAnalyzeDetailHandler insertAnalyzeDetailHandler
-            , ApplyAddressHandler applyAddressHandler
-            , ApplyTbEndDateHandler applyTbEndDateHandler
-            , ApplyAssureEndDateHandler applyAssureEndDateHandler) {
+    public static synchronized void initDisruptor(
+            ApplyAddressHandler applyAddressHandler,
+            ApplyProjSumHandler applyProjSumHandler,
+            ApplyDateHandler applyDateHandler,
+            InsertAnalyzeDetailHandler insertAnalyzeDetailHandler) {
         if (processDisruptor == null) {
             logger.info("..........disruptor init..........\nDISRUPTOR BUFFER_SIZE:" + BUFFER_SIZE + " THREAD_NUM:" + THREAD_NUM);
             processDisruptor = new Disruptor<AnalyzeEvent>(EVENT_FACTORY, BUFFER_SIZE, EXECUTOR, ProducerType.SINGLE, new SleepingWaitStrategy());
             processDisruptor.handleExceptionsWith(new AnalyzeException());
-            processDisruptor.handleEventsWith(applyTbEndDateHandler)
-                    .then(applyDateHandler)
-                    .then(applyAssureEndDateHandler)
+            processDisruptor.handleEventsWith(applyAddressHandler,applyDateHandler,applyProjSumHandler)
                     .then(insertAnalyzeDetailHandler);
             logger.info("..........disruptor init success..........");
         }

@@ -1,7 +1,7 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
-import com.silita.biaodaa.analysisRules.zhaobiao.other.OtherApplyBmEndDate;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyBmEndDate;
 import com.silita.biaodaa.disruptor.handler.BaseHandler;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;

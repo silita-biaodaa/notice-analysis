@@ -74,7 +74,7 @@ public class DisruptorOperator {
      * 初始化disruptor
      */
     public void init() {
-        ZhaoBiaoDisruptorCreator.initDisruptor(applyAddressHandler,insertAnalyzeDetailHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(applyAddressHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler);
         ZhongBiaoDisruptorCreator.initDisruptor(oneNameHandler,twoNameHandler,threeNameHandler,projDutyHandler,insertAnalyzeDetailZhongBiaoHandler);
     }
 

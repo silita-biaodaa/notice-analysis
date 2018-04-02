@@ -1,4 +1,4 @@
-package com.silita.biaodaa.analysisRules.zhaobiao.hunan;
+package com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
