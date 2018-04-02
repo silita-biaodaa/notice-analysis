@@ -31,7 +31,8 @@ import java.util.List;
 		traversor.traverse(element); // walk the DOM, and call .head() and
 		element.select("span,a,u,b,font,img,br").unwrap();
 		String text = element.select("body").html().replaceAll("[　]*", "");
-//		text = text.replaceAll("[ ]*", "");
+		text = text.replaceAll("[ ]*", "");
+//        text = text.replaceAll("<[^>]+>", "");
 		text = text.replaceAll("\\n\\s*", "");
 		text = text.replaceAll("&nbsp;", "");
 		text = text.replaceAll("<[a-zA-Z0-9/]+:[\\w\\s='\"-\\:;@\\,~]+>", "");
