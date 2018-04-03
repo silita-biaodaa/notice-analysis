@@ -36,9 +36,21 @@ public class TestService {
     }
 
     public void pushHunanRedisNotice(){
-        List<Notice> list = testMapper.getHunanNoticeToRedis();
-        for(Notice notice : list){
-            redisTemplate.opsForList().leftPush("liuqi",notice);
+        int pageSize =100;
+        int pageNum=0;
+        int result=0;
+        while(pageNum==0 || result>0) {
+            int start =pageNum*pageSize;
+            List<Notice> list = testMapper.getHunanNoticeToRedis(start, pageSize);
+            if(list!=null && list.size()>0) {
+                result = list.size();
+                for (Notice notice : list) {
+                    redisTemplate.opsForList().leftPush("liuqi", notice);
+                }
+            }else {
+                result=0;
+            }
+            pageNum++;
         }
     }
 

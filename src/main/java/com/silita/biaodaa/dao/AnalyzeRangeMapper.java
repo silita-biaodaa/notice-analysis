@@ -11,8 +11,6 @@ import java.util.Map;
  */
 public interface AnalyzeRangeMapper {
 
-    List<Map<String, Object>> queryAnalyzeRangeByField(String field);
-
     void insertAnalyzeDetail(AnalyzeDetail analyzeDetail);
 
     void batchInsertAnalyzeDetail(Map<String,Object> param);

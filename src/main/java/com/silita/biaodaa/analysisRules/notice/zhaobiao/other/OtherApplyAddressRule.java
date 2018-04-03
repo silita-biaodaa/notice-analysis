@@ -1,7 +1,6 @@
 package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.dao.ApplyAddressMapper;
 import com.silita.biaodaa.dao.CommonMapper;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.apache.commons.logging.Log;
@@ -23,9 +22,6 @@ import java.util.regex.Pattern;
 public class OtherApplyAddressRule implements SingleFieldAnalysis {
 
     private Log logger = LogFactory.getLog(OtherApplyAddressRule.class);
-
-    @Autowired
-    ApplyAddressMapper applyAddressMapper;
 
     @Autowired
     CommonMapper commonMapper;
@@ -76,7 +72,7 @@ public class OtherApplyAddressRule implements SingleFieldAnalysis {
 
                 //网上报名解析
                 String onlineRegex = "((CA数字证书|登录电子化平台|数字证书登录|电子招标投标交易平台|网上支付)\\S?).*(报名|下载招标文件|交易平台|网上支付)*[。，,.]+";
-                String onlineRegex2 = "(下载[\\S\\b\\d]{0,10}招标文件|信息网上报名|网上报名|网上进行电子报名|网上报名并获取电子招标文件|网上获取电子招标文件及其它招标资料)|((公共)+(资源)?(交易|网上)+(中心)?(网站|平台|系统)+)";
+                String onlineRegex2 = "(下载.0,10}招标文件|信息网上报名|网上报名|网上进行电子报名|网上报名并获取电子招标文件|网上获取电子招标文件及其它招标资料)|((公共)+(资源)?(交易|网上)+(中心)?(网站|平台|系统)+)";
                 List<String > onlineList = new ArrayList<String>();
                 onlineList.add(onlineRegex);
                 onlineList.add(onlineRegex2);

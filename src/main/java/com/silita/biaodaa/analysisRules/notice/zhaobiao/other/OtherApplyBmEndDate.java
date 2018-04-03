@@ -2,7 +2,7 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
-import com.silita.biaodaa.dao.AnalyzeRangeMapper;
+import com.silita.biaodaa.dao.CommonMapper;
 import com.silita.biaodaa.utils.DateUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
 
     @Autowired
-    AnalyzeRangeMapper analyzeRangeMapper;
+    CommonMapper commonMapper;
 
     @Override
     public List analysis(String segment) {
@@ -43,7 +43,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
         Map<String, List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDate");
         if (arList == null) {
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyDate");
+            arList = commonMapper.queryRegexByField("applyDate");
             analyzeRangeByFieldMap.put("applyDate", arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         } else {

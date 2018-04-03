@@ -1,7 +1,7 @@
 package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.dao.AnalyzeRangeMapper;
+import com.silita.biaodaa.dao.CommonMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,16 +19,16 @@ public class OtherOneName implements SingleFieldAnalysis {
     Logger logger = Logger.getLogger(OtherOneName.class);
 
     @Autowired
-    AnalyzeRangeMapper analyzeRangeMapper;
+    CommonMapper commonMapper;
 
     @Override
     public String analysis(String html,String keyWork) {
         String rangeHtml="";
         String onePeople = "";
-        List<Map<String, Object>> arList = analyzeRangeMapper.queryAnalyzeRangeByField("onePeople");
+        List<Map<String, Object>> arList = commonMapper.queryRegexByField("onePeople");
         for (int i = 0; i < arList.size(); i++) {
-            String start = arList.get(i).get("rangeStart").toString();
-            String end = arList.get(i).get("rangeEnd").toString();
+            String start = arList.get(i).get("startKey").toString();
+            String end = arList.get(i).get("endKey").toString();
             int indexStart = 0;
             int indexEnd = 0;
             if (!"".equals(start)) {

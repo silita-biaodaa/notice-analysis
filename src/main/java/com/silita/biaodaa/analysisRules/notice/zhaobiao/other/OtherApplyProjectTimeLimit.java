@@ -22,7 +22,6 @@ public class OtherApplyProjectTimeLimit implements SingleFieldAnalysis {
     @Autowired
     CommonMapper commonMapper;
 
-
     @Override
     public String analysis(String segment,String keyWork) {
         String rangeHtml = "";

@@ -13,5 +13,5 @@ public interface TestMapper {
 
     List<Notice> getNoticeToRedis();
 
-    List<Notice> getHunanNoticeToRedis();
+    List<Notice> getHunanNoticeToRedis(int start,int end);
 }

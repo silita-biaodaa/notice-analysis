@@ -38,7 +38,7 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
         if (event instanceof ContextRefreshedEvent) {
             boolean isRoot = ((ContextRefreshedEvent) event).getApplicationContext().getParent() == null;
             if (isRoot) {
-                disruptorOperator.init();
+//                disruptorOperator.init();
                 disruptorOperator.start();
                 try {
                     final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(9);

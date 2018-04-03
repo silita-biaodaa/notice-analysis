@@ -1,5 +1,6 @@
 package com.silita.biaodaa.disruptor;
 
+import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.silita.biaodaa.common.SnatchContent;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
@@ -10,42 +11,48 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class DisruptorOperator {
 
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    ApplyTbAssureSumHandler tbAssureSumHandler;
-
-    @Autowired
-    ApplyProjSumHandler applyProjSumHandler;
-
-    @Autowired
-    ApplyDateHandler applyDateHandler;
-
-    @Autowired
-    InsertAnalyzeDetailHandler insertAnalyzeDetailHandler;
-
-    @Autowired
-    ApplyAssureSumRemitHandler assureSumRemitHandler;
-
+    //招標-------start------
     @Autowired
     ApplyAddressHandler applyAddressHandler;
-
-    @Autowired
-    ApplyTbEndDateHandler applyTbEndDateHandler;
 
     @Autowired
     ApplyAssureEndDateHandler applyAssureEndDateHandler;
 
     @Autowired
-    ApplyProjectTimeLimitHandler applyProjectTimeLimitHandler;
+    ApplyAssureSumRemitHandler assureSumRemitHandler;
+
+    @Autowired
+    ApplyDateHandler applyDateHandler;
 
     @Autowired
     ApplyPbModeHandler applyPbModeHandler;
 
+    @Autowired
+    ApplyProjectTimeLimitHandler applyProjectTimeLimitHandler;
 
+    @Autowired
+    ApplyProjSumHandler applyProjSumHandler;
+
+    @Autowired
+    ApplyTbAssureSumHandler applyTbAssureSumHandler;
+
+    @Autowired
+    ApplyTbEndDateHandler applyTbEndDateHandler;
+
+    @Autowired
+    InsertAnalyzeDetailHandler insertAnalyzeDetailHandler;
+    //招標-------end------
+
+    //----中標start------
     @Autowired
     OneNameHandler oneNameHandler;
 
@@ -60,7 +67,7 @@ public class DisruptorOperator {
 
     @Autowired
     InsertAnalyzeDetailZhongBiaoHandler insertAnalyzeDetailZhongBiaoHandler;
-
+    //----中標end------
 
 
     private static EventTranslatorOneArg<AnalyzeEvent,EsNotice> eventTranslator = new EventTranslatorOneArg<AnalyzeEvent,EsNotice>() {
@@ -73,9 +80,26 @@ public class DisruptorOperator {
     /**
      * 初始化disruptor
      */
+    @PostConstruct
     public void init() {
-        ZhaoBiaoDisruptorCreator.initDisruptor(applyAddressHandler,applyProjSumHandler,applyDateHandler,insertAnalyzeDetailHandler);
-        ZhongBiaoDisruptorCreator.initDisruptor(oneNameHandler,twoNameHandler,threeNameHandler,projDutyHandler,insertAnalyzeDetailZhongBiaoHandler);
+        List<EventHandler> zhaobiaoHandlerList = new ArrayList<EventHandler>();
+        zhaobiaoHandlerList.add(applyAddressHandler);
+        zhaobiaoHandlerList.add(applyAssureEndDateHandler);
+        zhaobiaoHandlerList.add(assureSumRemitHandler);
+        zhaobiaoHandlerList.add(applyDateHandler);
+        zhaobiaoHandlerList.add(applyPbModeHandler);
+        zhaobiaoHandlerList.add(applyProjectTimeLimitHandler);
+        zhaobiaoHandlerList.add(applyProjSumHandler);
+        zhaobiaoHandlerList.add(applyTbAssureSumHandler);
+        zhaobiaoHandlerList.add(applyTbEndDateHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(zhaobiaoHandlerList,insertAnalyzeDetailHandler);
+
+        List<EventHandler> zhongbiaoHandlerList = new ArrayList<EventHandler>();
+        zhongbiaoHandlerList.add(oneNameHandler);
+        zhongbiaoHandlerList.add(twoNameHandler);
+        zhongbiaoHandlerList.add(threeNameHandler);
+        zhongbiaoHandlerList.add(projDutyHandler);
+        ZhongBiaoDisruptorCreator.initDisruptor(zhongbiaoHandlerList,insertAnalyzeDetailZhongBiaoHandler);
     }
 
     /**
