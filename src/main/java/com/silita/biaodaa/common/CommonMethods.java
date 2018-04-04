@@ -3,6 +3,8 @@ package com.silita.biaodaa.common;
 import com.silita.biaodaa.utils.ChineseCompressUtil;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +14,8 @@ import java.util.List;
  * Created by dh on 2018/3/19.
  */
 public class CommonMethods {
+
+    private static Log logger = LogFactory.getLog(CommonMethods.class);
 
     public static String getClassString(Class cls){
         if(cls !=null){

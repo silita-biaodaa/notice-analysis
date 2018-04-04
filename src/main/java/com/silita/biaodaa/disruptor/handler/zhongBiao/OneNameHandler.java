@@ -1,7 +1,7 @@
 package com.silita.biaodaa.disruptor.handler.zhongBiao;
 
 import com.silita.biaodaa.analysisRules.notice.zhongbiao.OtherOneName;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 第一中标人
  */
 @Component
-public class OneNameHandler extends BaseHandler {
+public class OneNameHandler extends BaseAnalysisHandler {
 
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 

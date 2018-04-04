@@ -2,7 +2,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyAssureSumRemit;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
 import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Created by maofeng on 2018/3/19.
  */
 @Component
-public class ApplyAssureSumRemitHandler extends BaseHandler {
+public class ApplyAssureSumRemitHandler extends BaseAnalysisHandler {
 
     @Autowired
     OtherApplyAssureSumRemit otherApplySumRemit;

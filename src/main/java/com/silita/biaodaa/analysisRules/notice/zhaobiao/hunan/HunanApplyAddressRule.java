@@ -2,7 +2,7 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.dao.ApplyAddressMapper;
-import com.silita.biaodaa.dao.CommonMapper;
+import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,13 +23,13 @@ public class HunanApplyAddressRule implements SingleFieldAnalysis {
     ApplyAddressMapper applyAddressMapper;
 
     @Autowired
-    CommonMapper commonMapper;
+    CommonService commonService;
 
     @Override
     public String analysis(String segment,String keyWord) {
         String rangeHtml="";
         String address = null;
-        List<Map<String, Object>> arList = commonMapper.queryRegexByField("applyAddress");
+        List<Map<String, Object>> arList = commonService.queryRegexByField("applyAddress");
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("startKey").toString();
             String end = arList.get(i).get("endKey").toString();

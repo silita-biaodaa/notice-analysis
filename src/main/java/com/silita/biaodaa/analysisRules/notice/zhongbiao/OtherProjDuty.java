@@ -1,7 +1,7 @@
 package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.dao.CommonMapper;
+import com.silita.biaodaa.service.CommonService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,13 @@ public class OtherProjDuty implements SingleFieldAnalysis {
     Logger logger = Logger.getLogger(OtherProjDuty.class);
 
     @Autowired
-    CommonMapper commonMapper;
+    CommonService commonService;
 
     @Override
     public String analysis(String html,String keyWork) {
         String rangeHtml="";
         String projDuty = "";
-        List<Map<String, Object>> arList = commonMapper.queryRegexByField("projDuty");
+        List<Map<String, Object>> arList = commonService.queryRegexByField("projDuty");
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("startKey").toString();
             String end = arList.get(i).get("endKey").toString();

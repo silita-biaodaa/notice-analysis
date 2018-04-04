@@ -26,7 +26,7 @@
   <name>notice-analysis</name>
   <groupId>com.biaodaa</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0.33.3</version>
+  <version>1.0.22.6</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
@@ -52,7 +52,8 @@
     <servlet-api.version>2.5</servlet-api.version>
     <jsp-api.version>2.0</jsp-api.version>
     <jta.version>1.1</jta.version>
-
+    <ehcache.version>2.6.11</ehcache.version>
+    <kafka.version>1.0.0</kafka.version>
 
 
     <webSourceDirectory>src/main/webapp</webSourceDirectory>
@@ -84,6 +85,17 @@
   </distributionManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+      <version>${ehcache.version}</version>
+    </dependency>
+
+      <dependency>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>kafka_2.11</artifactId>
+          <version>${kafka.version}</version>
+      </dependency>
 
     <!-- springmvc -->
     <dependency>

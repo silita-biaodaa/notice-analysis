@@ -2,7 +2,6 @@ package com.silita.biaodaa.service;
 
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
-import com.silita.biaodaa.dao.CommonMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.AnalyzeDetail;
@@ -32,7 +31,7 @@ public class NoticeAnalyzeService {
     AnalyzeRangeMapper analyzeRangeMapper;
 
     @Autowired
-    CommonMapper commonMapper;
+    CommonService commonService;
 
     public void insertAnalyzeDetailZhongbiao(AnalyzeDetailZhongBiao analyzeDetailZhongBiao){
         analyzeRangeMapper.insertAnalyzeDetailZhongbiao(analyzeDetailZhongBiao);
@@ -50,11 +49,11 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDeposit");
         if(arList == null){
-            arList = commonMapper.queryRegexByField("applyDeposit");
+            arList = commonService.queryRegexByField("applyDeposit");
             analyzeRangeByFieldMap.put("applyDeposit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyDeposit=======走的缓存=======");
+//            logger.info("=========applyDeposit=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("startKey").toString();
@@ -133,11 +132,11 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyProjSum");
         if(arList == null){
-            arList = commonMapper.queryRegexByField("applyProjSum");
+            arList = commonService.queryRegexByField("applyProjSum");
             analyzeRangeByFieldMap.put("applyProjSum",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyProjSum=======走的缓存=======");
+//            logger.info("=========applyProjSum=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("startKey").toString();
@@ -226,11 +225,11 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDate");
         if(arList == null){
-            arList = commonMapper.queryRegexByField("applyDate");
+            arList = commonService.queryRegexByField("applyDate");
             analyzeRangeByFieldMap.put("applyDate",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyDate=======走的缓存=======");
+//            logger.info("=========applyDate=======走的缓存=======");
         }
 
         for (int i = 0; i < arList.size(); i++) {
@@ -307,11 +306,11 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyBidDate");
         if(arList == null){
-            arList = commonMapper.queryRegexByField("applyBidDate");
+            arList = commonService.queryRegexByField("applyBidDate");
             analyzeRangeByFieldMap.put("applyDate",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyDate=======走的缓存=======");
+//            logger.info("=========applyDate=======走的缓存=======");
         }
 
         for (int i = 0; i < arList.size(); i++) {
@@ -365,11 +364,11 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDate");
         if(arList == null){
-            arList = commonMapper.queryRegexByField("applyDate");
+            arList = commonService.queryRegexByField("applyDate");
             analyzeRangeByFieldMap.put("applyDate",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyDate=======走的缓存=======");
+//            logger.info("=========applyDate=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("startKey").toString();
@@ -434,7 +433,7 @@ public class NoticeAnalyzeService {
     public String analyzeApplyAddress(String html) {
         String rangeHtml="";
         String address = null;
-        List<Map<String, Object>> arList = commonMapper.queryRegexByField("applyAddress");
+        List<Map<String, Object>> arList = commonService.queryRegexByField("applyAddress");
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("startKey").toString();
             String end = arList.get(i).get("endKey").toString();

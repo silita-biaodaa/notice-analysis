@@ -3,7 +3,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan.HunanProjSum;
 import com.silita.biaodaa.common.Constant;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * 项目金额
  */
 @Component
-public class ApplyProjSumHandler extends BaseHandler {
+public class ApplyProjSumHandler extends BaseAnalysisHandler {
 
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 

@@ -3,7 +3,7 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.common.Constant;
-import com.silita.biaodaa.dao.CommonMapper;
+import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.CNNumberFormat;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.apache.log4j.Logger;
@@ -25,7 +25,7 @@ public class HunanProjSum implements SingleFieldAnalysis {
     Logger logger = Logger.getLogger(HunanProjSum.class);
 
     @Autowired
-    CommonMapper CommonMapper;
+    CommonService commonService;
 
     /**
      * 解析项目金额
@@ -40,11 +40,11 @@ public class HunanProjSum implements SingleFieldAnalysis {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyProjSum");
         if(arList == null){
-            arList = CommonMapper.queryRegexByField("applyProjSum");
+            arList = commonService.queryRegexByField("applyProjSum");
             analyzeRangeByFieldMap.put("applyProjSum",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyProjSum=======走的缓存=======");
+//            logger.info("=========applyProjSum=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
             String start = arList.get(i).get("startKey").toString();

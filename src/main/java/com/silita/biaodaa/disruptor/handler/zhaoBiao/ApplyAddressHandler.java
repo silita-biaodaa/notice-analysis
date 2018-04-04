@@ -3,7 +3,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan.HunanApplyAddressRule;
 import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyAddressRule;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
 import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 报名地址
  */
 @Component
-public class ApplyAddressHandler extends BaseHandler {
+public class ApplyAddressHandler extends BaseAnalysisHandler {
 
     @Autowired
     HunanApplyAddressRule hunanApplyAddress;

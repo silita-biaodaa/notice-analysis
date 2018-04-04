@@ -1,7 +1,7 @@
 package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
-import com.silita.biaodaa.dao.CommonMapper;
+import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +24,7 @@ public class OtherApplyAddressRule implements SingleFieldAnalysis {
     private Log logger = LogFactory.getLog(OtherApplyAddressRule.class);
 
     @Autowired
-    CommonMapper commonMapper;
+    CommonService commonService;
 
     @Override
     public String analysis(String segment,String keyWork) {
@@ -87,7 +87,7 @@ public class OtherApplyAddressRule implements SingleFieldAnalysis {
                 }
 
                 //解析详细地址
-                List<Map<String, Object>> arList = commonMapper.queryRegexByField("applyAddress");
+                List<Map<String, Object>> arList = commonService.queryRegexByField("applyAddress");
                 for (int i = 0; i < arList.size(); i++) {
                     Map map = arList.get(i);
                     String innerRegex = map.get("regex").toString();

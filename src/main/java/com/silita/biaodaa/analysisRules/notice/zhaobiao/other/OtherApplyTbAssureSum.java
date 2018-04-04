@@ -2,7 +2,7 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
-import com.silita.biaodaa.dao.CommonMapper;
+import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.CNNumberFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class OtherApplyTbAssureSum implements SingleFieldAnalysis{
 
     @Autowired
-    CommonMapper commonMapper;
+    CommonService commonService;
 
     @Override
     public String analysis(String segment,String keyWork) {
@@ -30,7 +30,7 @@ public class OtherApplyTbAssureSum implements SingleFieldAnalysis{
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDeposit");
         if(arList == null){
-            arList = commonMapper.queryRegexByField("applyDeposit");
+            arList = commonService.queryRegexByField("applyDeposit");
             analyzeRangeByFieldMap.put("applyDeposit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }

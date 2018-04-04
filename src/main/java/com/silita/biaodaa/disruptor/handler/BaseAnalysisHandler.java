@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.silita.biaodaa.common.CommonMethods.getClassString;
 
-public abstract class BaseHandler implements EventHandler<AnalyzeEvent> {
+public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> {
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
     protected String fieldDesc= null;

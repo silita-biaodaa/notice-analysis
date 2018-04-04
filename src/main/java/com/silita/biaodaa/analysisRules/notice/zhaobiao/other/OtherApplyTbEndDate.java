@@ -2,7 +2,7 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
-import com.silita.biaodaa.dao.CommonMapper;
+import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class OtherApplyTbEndDate implements SingleFieldAnalysis {
 
     @Autowired
-    CommonMapper commonMapper;
+    CommonService commonService;
 
     @Override
     public String analysis(String segment,String keyWord) {
@@ -40,11 +40,11 @@ public class OtherApplyTbEndDate implements SingleFieldAnalysis {
         Map<String, List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyBidDate");
         if (arList == null) {
-            arList = commonMapper.queryRegexByField("applyBidDate");
+            arList = commonService.queryRegexByField("applyBidDate");
             analyzeRangeByFieldMap.put("applyBidDate", arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         } else {
-            System.out.println("=========applyDate=======走的缓存=======");
+//            System.out.println("=========applyDate=======走的缓存=======");
         }
 
         for (int i = 0; i < arList.size(); i++) {

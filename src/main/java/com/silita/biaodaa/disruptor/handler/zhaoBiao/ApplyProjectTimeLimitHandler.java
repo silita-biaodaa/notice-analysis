@@ -2,7 +2,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyProjectTimeLimit;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
 import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Created by Administrator on 2018/3/21.
  */
 @Component
-public class ApplyProjectTimeLimitHandler extends BaseHandler{
+public class ApplyProjectTimeLimitHandler extends BaseAnalysisHandler {
 
     @Autowired
     OtherApplyProjectTimeLimit otherApplyProjectTimeLimit;

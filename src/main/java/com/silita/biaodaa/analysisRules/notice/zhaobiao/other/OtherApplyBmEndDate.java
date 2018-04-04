@@ -2,9 +2,11 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 
 import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
-import com.silita.biaodaa.dao.CommonMapper;
+import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.DateUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +24,10 @@ import java.util.regex.Pattern;
  */
 @Component
 public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
+    private Log logger = LogFactory.getLog(OtherApplyBmEndDate.class);
 
     @Autowired
-    CommonMapper commonMapper;
+    CommonService commonService;
 
     @Override
     public List analysis(String segment) {
@@ -43,11 +46,11 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
         Map<String, List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDate");
         if (arList == null) {
-            arList = commonMapper.queryRegexByField("applyDate");
+            arList = commonService.queryRegexByField("applyDate");
             analyzeRangeByFieldMap.put("applyDate", arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         } else {
-            System.out.println("=========applyDate=======走的缓存=======");
+//            System.out.println("=========applyDate=======走的缓存=======");
         }
 
         for (int i = 0; i < arList.size(); i++) {
@@ -95,8 +98,10 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                         list.add(bmEndDate);
                     }
                     //排除bmStratDate = 排除bmEndDate
-                    if (list.get(0).equals(list.get(1))) {
-                        list.clear();
+                    if(list.size()>1) {
+                        if (list.get(0).equals(list.get(1))) {
+                            list.clear();
+                        }
                     }
                 }
                 //2个时间差大于20天
@@ -116,7 +121,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                             list3.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":").replaceAll("点", ":"))));
                         }
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        logger.error(e,e);
                         continue;
                     }
                 }

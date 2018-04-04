@@ -2,7 +2,7 @@ package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
 import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
 import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyBmEndDate;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by gmy on 18/3/13.
  */
 @Component
-public class ApplyDateHandler extends BaseHandler {
+public class ApplyDateHandler extends BaseAnalysisHandler {
 
     @Autowired
     OtherApplyBmEndDate otherApplyBmEndDate;
