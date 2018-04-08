@@ -77,7 +77,12 @@ public class TestTask implements Runnable {
             esNotice.setSource(notice.getSource());
 
             Dimension dimension = notice.getDimension();
-            if(notice.getCatchType().equals(SnatchContent.ZHONG_BIAO_TYPE)) { //中标
+            String catchType = notice.getCatchType();
+            if(SnatchContent.ZHONG_BIAO_TYPE.equals(catchType)
+                    || SnatchContent.DL_ZHONG_BIAO_TYPE.equals(catchType)
+                    || SnatchContent.ZHONG_BIAO_BU_CHONG_TYPE.equals(catchType)
+                    || SnatchContent.HE_TONG_TYPE.equals(catchType)){
+                //中标
                 AnalyzeDetailZhongBiao zdzb = new AnalyzeDetailZhongBiao();
                 zdzb.setNoticeUrl(notice.getUrl());
                 zdzb.setTitle(notice.getTitle());
@@ -91,7 +96,8 @@ public class TestTask implements Runnable {
                 }
                 zhongbiaoReplaceFiled(dimension,zdzb);//接收抓取的维度信息
                 esNotice.setDetailZhongBiao(zdzb);
-            } else {
+            }else {
+                //招标
                 AnalyzeDetail ad = new AnalyzeDetail();
                 ad.setNoticeUrl(notice.getUrl());
                 ad.setTitle(notice.getTitle());
@@ -107,6 +113,7 @@ public class TestTask implements Runnable {
                 zhaobiaoReplaceFiled(dimension,ad);//接收抓取的维度信息
                 esNotice.setDetail(ad);
             }
+
         }
         return esNotice;
     }

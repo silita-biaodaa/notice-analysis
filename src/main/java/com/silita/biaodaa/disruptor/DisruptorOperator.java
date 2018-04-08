@@ -128,14 +128,23 @@ public class DisruptorOperator {
      */
     public void publish(EsNotice esNotice) {
         String type = esNotice.getType().toString();
-        if(SnatchContent.ZHAO_BIAO_TYPE.equals(type)) {
+        if(SnatchContent.ZHAO_BIAO_TYPE.equals(type)
+                || SnatchContent.OTHER_TYPE.equals(type)
+                || SnatchContent.DL_ZHAO_BIAO_TYPE.equals(type)
+                || SnatchContent.PRE_QUALIFICATION.equals(type)
+                || SnatchContent.ZI_GE_YU_SHEN_TYPE.equals(type)) {
+            //招标
             ZhaoBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
-        }else if(SnatchContent.ZHONG_BIAO_TYPE.equals(type)){
+        }else if(SnatchContent.ZHONG_BIAO_TYPE.equals(type)
+                || SnatchContent.DL_ZHONG_BIAO_TYPE.equals(type)
+                || SnatchContent.ZHONG_BIAO_BU_CHONG_TYPE.equals(type)
+                || SnatchContent.HE_TONG_TYPE.equals(type)){
+            //中标
             ZhongBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
         }else {
             //TODO:其他类型后续需要整理
             ZhaoBiaoDisruptorCreator.getProcessDisruptor().publishEvent(eventTranslator, esNotice);
-            logger.warn("其他类型，按招标逻辑处理。[type:"+esNotice.getType()+"][title:"+esNotice.getTitle()+"][url:"+esNotice.getUrl()+"]");
+            logger.warn("其他类型，暂时按招标解析逻辑处理。[type:"+esNotice.getType()+"][title:"+esNotice.getTitle()+"][url:"+esNotice.getUrl()+"]");
         }
     }
 

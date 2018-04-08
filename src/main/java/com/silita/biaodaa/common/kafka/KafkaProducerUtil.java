@@ -1,5 +1,7 @@
 package com.silita.biaodaa.common.kafka;
 
+import com.silita.biaodaa.common.Constant;
+import com.snatch.model.EsNotice;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -7,7 +9,11 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +37,16 @@ public class KafkaProducerUtil {
         } catch (IOException e) {
             log.error("producer config read error."+e,e);
         }
+    }
+
+    public void sendkafkaMsg(EsNotice es){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("deliveryId", es.getRedisId());
+        map.put("model", es);
+        map.put("start", Constant.NOTICE_START);
+        sendMsg(map);//kafka消息发送
+        log.info("kafka发送消息finished。redisId:"+es.getRedisId()+"##title:" + es.getTitle() + "##Opendate:" + es.getOpenDate() + "##catchtype-->type:" + es.getType() + "##BusinessType:" + es.getBusinessType());
+        map=null;
     }
 
     public void sendMsg(Object msg){
