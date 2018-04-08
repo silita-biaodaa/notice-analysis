@@ -1,5 +1,6 @@
 package com.silita.biaodaa.task;
 
+import com.mishu.model.Notice;
 import com.silita.biaodaa.common.SnatchContent;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.utils.MyStringUtils;

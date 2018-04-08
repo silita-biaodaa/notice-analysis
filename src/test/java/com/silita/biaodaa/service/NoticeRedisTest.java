@@ -3,7 +3,7 @@ package com.silita.biaodaa.service;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.task.TestTask;
 import com.snatch.model.EsNotice;
-import com.snatch.model.Notice;
+import com.mishu.model.Notice;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

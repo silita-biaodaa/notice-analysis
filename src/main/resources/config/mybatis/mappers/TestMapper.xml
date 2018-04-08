@@ -6,13 +6,13 @@
         select * from zhaobiao_analyze_detail where id=#{id}
     </select>
 
-    <select id="getHunanNoticeToRedis" resultType="com.snatch.model.Notice" >
+    <select id="getHunanNoticeToRedis" resultType="com.mishu.model.Notice" >
         select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,
         province,city,county,provinceCode,cityCode,countyCode,photoUrl,catchtype as `type`,
         snatchNumber,areaRank,source
-        from  mishu_analyze.hunan_notice
+        from  mishu_analyze.test_notice
         where id>=(SELECT id
-        from mishu_analyze.hunan_notice
+        from mishu_analyze.test_notice
         order by id
         limit #{param1},1)
         ORDER  by id
@@ -20,7 +20,7 @@
 
     </select>
 
-    <select id="getNoticeToRedis" resultType="com.snatch.model.Notice">
+    <select id="getNoticeToRedis" resultType="com.mishu.model.Notice">
         select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,
         province,city,county,provinceCode,cityCode,countyCode,photoUrl,catchtype as `type`,
         snatchNumber,areaRank,provinceCode as 'source'
