@@ -6,7 +6,7 @@ import com.silita.biaodaa.model.TUser;
 import com.silita.biaodaa.service.TestService;
 import com.silita.biaodaa.task.TestTask;
 import com.snatch.model.EsNotice;
-import com.mishu.model.Notice;
+import com.snatch.model.Notice;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

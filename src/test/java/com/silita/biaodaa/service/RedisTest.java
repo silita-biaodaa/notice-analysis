@@ -1,6 +1,6 @@
 package com.silita.biaodaa.service;
 
-import com.mishu.model.Notice;
+import com.snatch.model.Notice;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;

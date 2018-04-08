@@ -1,6 +1,5 @@
-package com.mishu.model;
+package com.snatch.model;
 
-import com.snatch.model.Dimension;
 import lombok.Getter;
 import lombok.Setter;
 

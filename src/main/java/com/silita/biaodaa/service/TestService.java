@@ -2,7 +2,7 @@ package com.silita.biaodaa.service;
 
 import com.silita.biaodaa.dao.TestMapper;
 import com.silita.biaodaa.model.TUser;
-import com.mishu.model.Notice;
+import com.snatch.model.Notice;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

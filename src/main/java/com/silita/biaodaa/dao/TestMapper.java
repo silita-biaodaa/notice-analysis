@@ -1,7 +1,7 @@
 package com.silita.biaodaa.dao;
 
 import com.silita.biaodaa.model.TUser;
-import com.mishu.model.Notice;
+import com.snatch.model.Notice;
 
 import java.util.List;
 
