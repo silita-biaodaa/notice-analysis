@@ -4,6 +4,7 @@ package com.silita.biaodaa.utils;
 
 
 import com.snatch.model.ZhaobiaoDetail;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class MyStringUtils {
 
 	private static final String DEFAULT_STRING = "___";
 
+	private static final String[] remit = {"网银转账","网上支付","银行保函","保险单","担保函","电汇","转账"};
 
 	public static boolean isNotNull(String str){
 		if(str !=null && !str.trim().equals("")){
@@ -26,9 +28,46 @@ public class MyStringUtils {
 		}
 	}
 
+	public static boolean isNotNull(List str){
+		if(str !=null && str.size()>0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
 	public static boolean isNull(String str){
 		return !isNotNull(str);
 	}
+
+	public static boolean isNull(List str){
+		return !isNotNull(str);
+	}
+
+
+	public static boolean isNull(Object str){
+		boolean flag=true;
+		if(str==null){
+			return flag;
+		}
+		if(str instanceof String){
+			flag= !isNotNull((String)str);
+		}else if(str instanceof List){
+			flag= !isNotNull((List)str);
+		}
+		return flag;
+	}
+
+	public static boolean isNotNull(Object str){
+		boolean flag=false;
+		if(str instanceof String){
+			flag= isNotNull((String)str);
+		}else if(str instanceof List){
+			flag= isNotNull((List)str);
+		}
+		return flag;
+	}
+
 
 	public static List<String> StringSplit(String str, int num) {
 		int length = str.length();
@@ -103,6 +142,20 @@ public class MyStringUtils {
 		content = content.replaceAll("&nbsp;","");
 		content = content.replaceAll(" ","");
 		return content;
+	}
+
+	public static String findAssureSumRemit (String str) {
+		String assureSumRemit = "";
+		for (int i = 0; i < remit.length; i++) {
+			if (str.contains(remit[i])) {
+				if (StringUtils.isBlank(assureSumRemit)) {
+					assureSumRemit = remit[i];
+				} else {
+					assureSumRemit += "、"+remit[i];
+				}
+			}
+		}
+		return assureSumRemit;
 	}
 
 }

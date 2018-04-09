@@ -26,7 +26,7 @@
   <name>notice-analysis</name>
   <groupId>com.biaodaa</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.22.6</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
@@ -44,22 +44,58 @@
     <jstl.version>1.2</jstl.version>
     <taglibs.version>1.1.2</taglibs.version>
 
-    <slf4j.version>1.6.1</slf4j.version>
-    <log4j.version>1.2.16</log4j.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <log4j.version>1.2.17</log4j.version>
 
     <fastjson.version>1.1.17</fastjson.version>
 
     <servlet-api.version>2.5</servlet-api.version>
     <jsp-api.version>2.0</jsp-api.version>
     <jta.version>1.1</jta.version>
-
+    <ehcache.version>2.6.11</ehcache.version>
+    <kafka.version>1.0.0</kafka.version>
 
 
     <webSourceDirectory>src/main/webapp</webSourceDirectory>
     <minimizedResource>true</minimizedResource>
   </properties>
 
+
+
+  <!-- 私有仓库 -->
+  <repositories>
+    <repository>
+      <id>public</id>  <!--这个ID需要与你新建的组group ID一致-->
+      <name>Public Repository</name>
+      <url>http://120.78.253.169/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
+  <!-- 自动打包 -->
+  <distributionManagement>
+    <repository>
+      <id>releases</id><!--这个ID需要与你的release仓库的Repository ID一致-->
+      <url>http://120.78.253.169/nexus/content/repositories/releases</url>
+    </repository>
+
+    <snapshotRepository>
+      <id>snapshots</id><!--这个ID需要与你的snapshots仓库的Repository ID一致-->
+      <url>http://120.78.253.169/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <dependencies>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+      <version>${ehcache.version}</version>
+    </dependency>
+
+      <dependency>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>kafka_2.11</artifactId>
+          <version>${kafka.version}</version>
+      </dependency>
 
     <!-- springmvc -->
     <dependency>
@@ -300,7 +336,7 @@
   </dependencies>
 
   <build>
-    <finalName>trasen-manage</finalName>
+    <finalName>notice-analysis</finalName>
     <plugins>
 
       <plugin>
@@ -325,10 +361,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.mybatis.generator</groupId>
         <artifactId>mybatis-generator-maven-plugin</artifactId>
         <version>1.3.2</version>
@@ -349,6 +381,14 @@
             <version>3.4.0</version>
           </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18.1</version>
+        <configuration>
+          <skipTests>true</skipTests>
+        </configuration>
       </plugin>
 
     </plugins>

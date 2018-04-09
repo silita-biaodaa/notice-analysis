@@ -1,7 +1,5 @@
 package com.silita.biaodaa.cache;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.log4j.Logger;
 
 import java.util.List;

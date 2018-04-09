@@ -1,14 +1,11 @@
 package com.silita.biaodaa.service;
 
 import com.silita.biaodaa.cache.GlobalCache;
-import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.dao.AnalyzeRangeMapper;
 import com.silita.biaodaa.utils.CNNumberFormat;
-import com.silita.biaodaa.utils.ChineseCompressUtil;
-import com.silita.biaodaa.utils.DateUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.AnalyzeDetail;
-import org.apache.commons.lang3.StringUtils;
+import com.snatch.model.AnalyzeDetailZhongBiao;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Created by zhangxiahui on 18/3/13.
  */
-@Component
+@Component//// TODO: 2018/4/2 歷史解析方法待整理刪除
 public class NoticeAnalyzeService {
 
     Logger logger = Logger.getLogger(NoticeAnalyzeService.class);
@@ -33,8 +30,12 @@ public class NoticeAnalyzeService {
     @Autowired
     AnalyzeRangeMapper analyzeRangeMapper;
 
-    private ChineseCompressUtil chineseCompressUtil = new ChineseCompressUtil();
+    @Autowired
+    CommonService commonService;
 
+    public void insertAnalyzeDetailZhongbiao(AnalyzeDetailZhongBiao analyzeDetailZhongBiao){
+        analyzeRangeMapper.insertAnalyzeDetailZhongbiao(analyzeDetailZhongBiao);
+    }
 
     /**
      * 解析保证金
@@ -48,15 +49,15 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDeposit");
         if(arList == null){
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyDeposit");
+            arList = commonService.queryRegexByField("applyDeposit");
             analyzeRangeByFieldMap.put("applyDeposit",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyDeposit=======走的缓存=======");
+//            logger.info("=========applyDeposit=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
-            String start = arList.get(i).get("rangeStart").toString();
-            String end = arList.get(i).get("rangeEnd").toString();
+            String start = arList.get(i).get("startKey").toString();
+            String end = arList.get(i).get("endKey").toString();
             int indexStart=0;
             int indexEnd=0;
             if(!"".equals(start)){
@@ -131,15 +132,15 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyProjSum");
         if(arList == null){
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyProjSum");
+            arList = commonService.queryRegexByField("applyProjSum");
             analyzeRangeByFieldMap.put("applyProjSum",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyProjSum=======走的缓存=======");
+//            logger.info("=========applyProjSum=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
-            String start = arList.get(i).get("rangeStart").toString();
-            String end = arList.get(i).get("rangeEnd").toString();
+            String start = arList.get(i).get("startKey").toString();
+            String end = arList.get(i).get("endKey").toString();
             int indexStart=0;
             int indexEnd=0;
             if(!"".equals(start)){
@@ -212,54 +213,71 @@ public class NoticeAnalyzeService {
      * 正则匹配
      * return 报名开始和结束
      */
-    public List<String> analyzeApplyDate(String html){
+    public List<String> analyzeApplyBmEndDate(String html){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
-        SimpleDateFormat df1 = new SimpleDateFormat("MM-dd");// 设置日期格式
-        List<String> list = new ArrayList<String>();
+        SimpleDateFormat df2 = new SimpleDateFormat("MM-dd");// 设置日期格式2
+        String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期格式1
+        String dateRegex2 = "(\\d{1,2}月\\d{1,2})";//匹配日期格式2
+        List<String> list = null;
+        List<String> list2 = null;
         String rangeHtml="";
 
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDate");
         if(arList == null){
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyDate");
+            arList = commonService.queryRegexByField("applyDate");
             analyzeRangeByFieldMap.put("applyDate",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyDate=======走的缓存=======");
+//            logger.info("=========applyDate=======走的缓存=======");
         }
 
-
         for (int i = 0; i < arList.size(); i++) {
-            String start = arList.get(i).get("rangeStart").toString();
-            String end = arList.get(i).get("rangeEnd").toString();
-            int indexStart=0;
-            int indexEnd=0;
-            if(!"".equals(start)){
-                indexStart = html.indexOf(start);//范围开始位置
-            }
-            if(!"".equals(end)){
-                indexEnd = html.indexOf(end);//范围结束位置
-            }
-            if(indexStart > -1 && indexEnd> -1){
-                if(indexEnd > indexStart){
-                    rangeHtml = html.substring(indexStart, indexEnd+1);//截取范围之间的文本
-                }else{
-                    if(html.length()-indexStart>=80){
-                        rangeHtml = html.substring(indexStart, indexStart+80);//截取范围开始至后100个字符
-                    }else{
-                        rangeHtml = html.substring(indexStart, html.length());//截取范围开始至后100个字符
+            String rangeRegex = arList.get(i).get("regex").toString();
+            Pattern rangePat = Pattern.compile(rangeRegex);
+            Matcher rangeMat = rangePat.matcher(html);
+            if (rangeMat.find()) {
+                list = new ArrayList<String>();
+                rangeHtml = rangeMat.group();
+                //处理
+                if(rangeHtml.contains("即日起") || rangeHtml.contains("发布之日起") || rangeHtml.contains("发布之时起")) {
+                    list.add("openDate");
+                    if(rangeHtml.contains("投标截止时间")) {
+                        list.add("tbEndDate");
+                        break;
                     }
                 }
-                String regEx = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期
-                Pattern pat = Pattern.compile(regEx);
-                Matcher mat = pat.matcher(rangeHtml);
-                list = new ArrayList<String>();
-                while (mat.find()) {
+                Pattern datePat = Pattern.compile(dateRegex);
+                Matcher dateMat = datePat.matcher(rangeHtml);
+                while (dateMat.find()) {
                     try {
-                        list.add(df.format(df.parse(mat.group().replaceAll("年", "-").replaceAll("月", "-"))));
+                        list.add(df.format(df.parse(dateMat.group().replaceAll("年", "-").replaceAll("月", "-"))));
                     } catch (ParseException e) {
                         e.printStackTrace();
                         continue;
+                    }
+                }
+                //处理这种情况 2017年 02 月 03 日至 02 月 08 日
+                if(list.size() == 1) {
+                    list2 = new ArrayList<String>();
+                    Pattern datePat2 = Pattern.compile(dateRegex2);
+                    Matcher dateMat2 = datePat2.matcher(rangeHtml);
+                    while (dateMat2.find()) {
+                        try {
+                            list2.add(df2.format(df2.parse(dateMat2.group().replaceAll("年", "-").replaceAll("月", "-"))));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            continue;
+                        }
+                    }
+                    if(list2.size()>0) {
+                        String year = list.get(0).substring(0,5);
+                        String bmEndDate = year + list2.get(list2.size()-1);
+                        list.add(bmEndDate);
+                    }
+                    //排除bmStratDate = 排除bmEndDate
+                    if(list.get(0).equals(list.get(1))) {
+                        list.clear();
                     }
                 }
                 if(list.size()>1){
@@ -267,70 +285,76 @@ public class NoticeAnalyzeService {
                 }
             }
         }
-        if(list.size() < 2) {
-            for (int i = 0; i < arList.size(); i++) {
-                String start = arList.get(i).get("rangeStart").toString();
-                String end = arList.get(i).get("rangeEnd").toString();
-                int indexStart = 0;
-                int indexEnd = 0;
-                if (!"".equals(start)) {
-                    indexStart = html.indexOf(start);//范围开始位置
+        return list;
+    }
+
+    /**
+     * 解析开标时间(投标截止时间)
+     * @param html
+     * @return
+     */
+    public String analyzeApplyTbEndDate(String html){
+        SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
+        SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
+        String dateRegex = "(\\d{4}-\\d{1,2}-\\d{1,2})|(\\d{4}年\\d{1,2}月\\d{1,2})";//匹配日期格式1
+        String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{2})|(\\d{1,2}：\\d{2})";
+        List<String> list = null;
+        List<String> list2 = null;
+        String bmEndDateAndTime = "";
+        String rangeHtml="";
+
+        Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
+        List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyBidDate");
+        if(arList == null){
+            arList = commonService.queryRegexByField("applyBidDate");
+            analyzeRangeByFieldMap.put("applyDate",arList);
+            GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
+        }else{
+//            logger.info("=========applyDate=======走的缓存=======");
+        }
+
+        for (int i = 0; i < arList.size(); i++) {
+            String rangeRegex = arList.get(i).get("regex").toString();
+            Pattern rangePat = Pattern.compile(rangeRegex);
+            Matcher rangeMat = rangePat.matcher(html);
+            if (rangeMat.find()) {
+                list = new ArrayList<String>();
+                list2 = new ArrayList<String>();
+                rangeHtml = rangeMat.group();
+                //匹配日期
+                Pattern datePat = Pattern.compile(dateRegex);
+                Matcher dateMat = datePat.matcher(rangeHtml);
+                while (dateMat.find()) {
+                    try {
+                        list.add(dfDate.format(dfDate.parse(dateMat.group().replaceAll("年", "-").replaceAll("月", "-"))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
                 }
-                if (!"".equals(end)) {
-                    indexEnd = html.indexOf(end);//范围结束位置
+                //匹配时间
+                Pattern timePat = Pattern.compile(timeRegex);
+                Matcher timeMat = timePat.matcher(rangeHtml);
+                while (timeMat.find()) {
+                    try {
+                        list2.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：",":"))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
                 }
-                if (indexStart > -1 && indexEnd > -1) {
-                    if (indexEnd > indexStart) {
-                        rangeHtml = html.substring(indexStart, indexEnd + 1);//截取范围之间的文本
-                    } else if (indexStart > indexEnd) {
-                        if (html.length() - indexStart >= 60) {
-                            rangeHtml = html.substring(indexStart, indexStart + 60);//截取范围开始至后100个字符
-                        } else {
-                            rangeHtml = html.substring(indexStart, html.length());//截取范围开始至后100个字符
-                        }
-                    }
-                    String regEx = "(\\d{1,2}-\\d{1,2})|(\\d{1,2}月\\d{1,2})";//匹配日期
-                    Pattern pat = Pattern.compile(regEx);
-                    rangeHtml = rangeHtml.replaceAll("\\s*", "");    //去空格
-                    Matcher mat = pat.matcher(rangeHtml);
-                    list = new ArrayList<String>();
-                    if (rangeHtml.contains("即日起")) {
-                        list.add("公告时间");
-                        while (mat.find()) {
-                            try {
-                                list.add(df1.format(df1.parse(mat.group().replaceAll("年", "-").replaceAll("月", "-"))));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (list.size() == 2) {
-                            break;
-                        }
-                    } else {
-                        while (mat.find()) {
-                            try {
-                                list.add(df1.format(df1.parse(mat.group().replaceAll("年", "-").replaceAll("月", "-"))));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                                continue;
-                            }
-                        }
-                        if (list.size() > 1) {
-                            break;
-                        }
-                    }
-                    if (list.size() > 1) {
-                        if (DateUtils.compareDateStr(list.get(0), list.get(1)) > 30 ) {
-                            list.clear();
-                        }
-                    }
-                    if (list.size() > 1) {
-                        break;
-                    }
+                //拼凑日期+时间
+                if(list2.size() > 0 && list.size() > 0) {
+                    bmEndDateAndTime = list.get(list.size()-1) + list2.get(list2.size()-1);
+                } else if(list.size() > 0){
+                    bmEndDateAndTime = list.get(list.size()-1);
+                }
+                if(MyStringUtils.isNotNull(bmEndDateAndTime)){
+                    break;
                 }
             }
         }
-        return list;
+        return bmEndDateAndTime;
     }
 
     public String analyzeApplyTime(String html) {
@@ -340,15 +364,15 @@ public class NoticeAnalyzeService {
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyDate");
         if(arList == null){
-            arList = analyzeRangeMapper.queryAnalyzeRangeByField("applyDate");
+            arList = commonService.queryRegexByField("applyDate");
             analyzeRangeByFieldMap.put("applyDate",arList);
             GlobalCache.getGlobalCache().setAnalyzeRangeByFieldMap(analyzeRangeByFieldMap);
         }else{
-            logger.info("=========applyDate=======走的缓存=======");
+//            logger.info("=========applyDate=======走的缓存=======");
         }
         for (int i = 0; i < arList.size(); i++) {
-            String start = arList.get(i).get("rangeStart").toString();
-            String end = arList.get(i).get("rangeEnd").toString();
+            String start = arList.get(i).get("startKey").toString();
+            String end = arList.get(i).get("endKey").toString();
             int indexStart=0;
             int indexEnd=0;
             if(!"".equals(start)){
@@ -391,70 +415,6 @@ public class NoticeAnalyzeService {
         return bmEndTime;
     }
 
-
-    /**
-     * 解析保证金汇款方式
-     * @param html 公告内容
-     * @return 保证金汇款方式
-     */
-    public String analyzeAssureSumRemit (String html) {
-        String assureSumRemit = "";
-        String content = chineseCompressUtil.getPlainText(html);
-        content = MyStringUtils.deleteHtmlTag(content);
-        String[] regexs = {
-                "(投标保证金的形式)(:|：).*?(,|。|，)",
-                "(交纳方式)(:|：).*?(,|。|，)",
-                "(投标保证金交纳方式)(:|：).*?(,|。|，)",
-                "(投标保证金缴纳方式)(:|：).*?(,|。|，)",
-                "(投标保证金递交方式)(:|：).*?(,|。|，)"
-        };
-        for (int i = 0; i < regexs.length; i++) {
-            Pattern pa = Pattern.compile(regexs[i]);
-            Matcher ma = pa.matcher(content);
-            if (ma.find()) {
-                String txt = ma.group();
-                int firstIndex = regexs[i].substring(regexs[i].indexOf("(") + 1 ,regexs[i].indexOf(")")).length() + 1;
-                txt = txt.substring(firstIndex);
-
-//                if (txt.contains(":")) {
-//                    txt = txt.substring(txt.indexOf(":")+1);
-//                } else {
-//                    txt = txt.substring(txt.indexOf("：")+1);
-//                }
-
-                if (txt.contains("投标保证金")) {
-                    txt = txt.substring(0,txt.indexOf("投标保证金"));
-                } else if (txt.contains("保证金")) {
-                    txt = txt.substring(0,txt.indexOf("保证金"));
-                } else {
-                    txt = txt.substring(0,txt.length()-1);
-                }
-
-                String regex = "[0-9一二三四五六七八九]";
-                pa = Pattern.compile(regex);
-                ma = pa.matcher(txt);
-                if (ma.find()) {
-                    txt = txt.substring(0,txt.indexOf(ma.group()));
-                }
-
-                if (!"".equals(txt) && !Constant.DEFAULT_STRING.equals(txt)) {
-                    assureSumRemit = txt;
-                    break;
-                }
-            }
-        }
-        if (StringUtils.isBlank(assureSumRemit)) {
-
-        }
-
-
-
-
-        return assureSumRemit;
-    }
-
-
-
     public void insertAnalyzeDetail(AnalyzeDetail analyzeDetail){
         analyzeRangeMapper.insertAnalyzeDetail(analyzeDetail);
     }
@@ -464,4 +424,69 @@ public class NoticeAnalyzeService {
         param.put("list",list);
         analyzeRangeMapper.batchInsertAnalyzeDetail(param);
     }
+
+    /**
+     * 解析报名地址
+     * 数据匹配
+     * return 报名地址
+     */
+    public String analyzeApplyAddress(String html) {
+        String rangeHtml="";
+        String address = null;
+        List<Map<String, Object>> arList = commonService.queryRegexByField("applyAddress");
+        for (int i = 0; i < arList.size(); i++) {
+            String start = arList.get(i).get("startKey").toString();
+            String end = arList.get(i).get("endKey").toString();
+            int indexStart=0;
+            int indexEnd=0;
+            if(!"".equals(start)){
+                indexStart = html.indexOf(start);//范围开始位置
+            }
+            if(!"".equals(end)){
+                indexEnd = html.indexOf(end);//范围结束位置
+            }
+            if(indexStart != -1 && indexEnd != -1){
+                if(indexEnd > indexStart){
+                    rangeHtml = html.substring(indexStart, indexEnd+1);//截取范围之间的文本
+                }else if(indexStart > indexEnd) {
+                    if(html.length() - indexStart >= 80){
+                        rangeHtml = html.substring(indexStart, indexStart + 80);
+                    }else{
+                        rangeHtml = html.substring(indexStart, html.length());//截取范围开始到结尾
+                    }
+                }
+                List<String> addrList = analyzeRangeMapper.queryAnalyzeRangeBmAddr();
+                for (int j = 0; j < addrList.size(); j++) {
+                    int indexNum =  rangeHtml.indexOf(addrList.get(j));
+                    if(indexNum != -1){
+                        address = addrList.get(j);
+                        break;
+                    }
+                }
+                if(!"".equals(address)){
+                    //查询标准化地址
+                    List<String> baseList = analyzeRangeMapper.queryBaseBmAddress(address);
+                    if(!baseList.isEmpty()){
+                        address = baseList.get(0);
+                    }
+                    break;
+                }
+            }
+        }
+//		if("".equals(address)) {
+        if(html.indexOf("下载招标文件") != -1 ||html.indexOf("下载获取招标文件") != -1) {
+            return "网上下载";
+        }
+        int start = html.indexOf("下载");
+        int end = html.indexOf("招标文件");
+        if((start != -1 && end != -1) && (end - start > 0 && end - start <20)) {
+            return "网上下载";
+        }
+        if(html.indexOf("在") != -1 && html.indexOf("进行网上下载") != -1) {
+            return "网上下载";
+        }
+//		}
+        return address;
+    }
+
 }

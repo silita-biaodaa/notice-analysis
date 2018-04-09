@@ -679,6 +679,30 @@ public class DateUtils {
 		}
 	}
 
+	/**
+	 * 比较2个字符串时间相差天数
+	 * @param dateTimeOne
+	 * @param dateTimeTwo
+     * @return 相差天数
+     */
+	public static int dateDifference(String dateTimeOne, String dateTimeTwo) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		int num = 1;
+		if(dateTimeOne.equals("openDate") || dateTimeTwo.equals("tbEndDate")) {
+			return 1;
+		} else {
+			try {
+				Date date1 = format.parse(dateTimeOne);
+				Date date2 = format.parse(dateTimeTwo);
+				//				num = (int) ((date1.getTime() - date2.getTime()) / (1000*3600*24));
+				num = (int) ((date1.getTime() - date2.getTime()) / (86400000));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return Math.abs(num);
+	}
+
 	public static void main(String[] args){
 		/*// 获取当月第一天和最后一天
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

@@ -1,7 +1,6 @@
 package com.silita.biaodaa.disruptor.event;
 
-import com.snatch.model.AnalyzeDetail;
-import com.snatch.model.Notice;
+import com.snatch.model.EsNotice;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +10,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AnalyzeEvent {
-
-    private AnalyzeDetail analyzeDetail;
-
-    private Notice notice;
+    private EsNotice esNotice;
 }

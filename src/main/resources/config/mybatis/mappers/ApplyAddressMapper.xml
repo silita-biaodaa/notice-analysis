@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.silita.biaodaa.dao.ApplyAddressMapper">
+
+    <select id="queryAnalyzeRangeBmAddr" resultType="String">
+        SELECT address FROM mishu_snatch.analyze_range_bmaddr
+    </select>
+
+    <select id="queryBaseBmAddress" resultType="Map" parameterType="String">
+        SELECT address
+        FROM mishu_snatch.analyze_range_bmaddr
+        WHERE id=(SELECT baseAddrId FROM mishu_snatch.analyze_range_bmaddr_alias
+				WHERE alias=#{address})
+    </select>
+
+</mapper>

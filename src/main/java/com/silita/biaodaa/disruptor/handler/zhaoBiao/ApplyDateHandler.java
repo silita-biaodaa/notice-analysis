@@ -1,58 +1,79 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
-import com.snatch.model.AnalyzeDetail;
-import com.snatch.model.Notice;
-import com.silita.biaodaa.common.Constant;
-import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
-import com.silita.biaodaa.service.NoticeAnalyzeService;
-import org.slf4j.Logger;
+import com.silita.biaodaa.analysisRules.inter.DoubleFieldAnalysis;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.other.OtherApplyBmEndDate;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
+import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zhangxiahui on 18/3/13.
+ * 解析报名开始、结束时间
+ * Created by gmy on 18/3/13.
  */
 @Component
-public class ApplyDateHandler extends BaseHandler {
-
-    Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+public class ApplyDateHandler extends BaseAnalysisHandler {
 
     @Autowired
-    NoticeAnalyzeService noticeAnalyzeService;
+    OtherApplyBmEndDate otherApplyBmEndDate;
 
+    public ApplyDateHandler() {
+        this.fieldDesc="报名开始、结束时间";
+    }
 
+    private DoubleFieldAnalysis routeRules(String source){
+        switch (source){
+            case "hunan": return otherApplyBmEndDate;
+            default:return otherApplyBmEndDate;
+        }
+    }
 
     @Override
-    public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
-        List<String> li = null;
-        AnalyzeDetail ad = event.getAnalyzeDetail();
-        Notice notice = event.getNotice();
-        try {
-            li = noticeAnalyzeService.analyzeApplyDate(notice.getContent());
-            if (li != null && li.size() > 1) {
-                logger.info("===解析["+notice.getTitle()+"]的报名时间["+li.get(0)+"]["+li.get(1)+"]===");
-                if (!"".equals(li.get(0)) && null != li.get(0)
-                        && !Constant.DEFAULT_STRING.equals(li.get(0)) && ad.getBmStartDate() == null) {
-                    ad.setBmStartDate(li.get(0));//报名时间
+    protected Object currentFieldValues(EsNotice esNotice) {
+        List<String> dateList = new ArrayList<>();
+        if(MyStringUtils.isNotNull(esNotice.getDetail().getBmStartDate())) {
+            dateList.add(esNotice.getDetail().getBmStartDate());
+        }
+        if(MyStringUtils.isNotNull(esNotice.getDetail().getBmEndDate())) {
+            dateList.add(esNotice.getDetail().getBmEndDate());
+        }
+        return dateList;
+    }
+
+    @Override
+    protected Object executeAnalysis(String stringPart, EsNotice esNotice) {
+        DoubleFieldAnalysis analysis = routeRules(esNotice.getSource());
+        return analysis.analysis(stringPart);
+    }
+
+    @Override
+    protected void saveResult(EsNotice esNotice, Object analysisResult) {
+        List<String> dateList = ( List<String>)analysisResult;
+        if(dateList.size() > 1) {
+            if(MyStringUtils.isNotNull(dateList.get(0))) {
+                if("openDate".equals(dateList.get(0))) {
+                    esNotice.getDetail().setBmStartDate(esNotice.getDetail().getGsDate());
+                } else {
+                    esNotice.getDetail().setBmStartDate(dateList.get(0));
                 }
-                if (!"".equals(li.get(1)) && null != li.get(1)
-                        && !Constant.DEFAULT_STRING.equals(li.get(1)) && ad.getBmEndDate() == null) {
-                    ad.setBmEndDate(li.get(1));//报名截止时间
-                }
-                //########报名结束时间点
-                String bmEndTime = noticeAnalyzeService.analyzeApplyTime(notice.getContent());
-                if (!"".equals(bmEndTime) && null != bmEndTime && !Constant.DEFAULT_STRING.equals(bmEndTime) && ad.getBmEndTime() == null) {
-                    ad.setBmEndTime(bmEndTime);
-                }
-            }else{
-                logger.info("===解析["+notice.getTitle()+"]的报名时间[]===");
             }
-        } catch (Exception e) {
-            System.out.println("error--li" + e.getMessage());
-            logger.error("error--li" + e, e);
+            if(MyStringUtils.isNotNull(dateList.get(1))) {
+                String bmEndDateAndTime = dateList.get(1);
+                if("tbEndDate".equals(bmEndDateAndTime)) {
+                    esNotice.getDetail().setBmEndDate(esNotice.getDetail().getTbEndDate());
+                } else {
+                    if(bmEndDateAndTime.contains(":")) {
+                        esNotice.getDetail().setBmEndDate(bmEndDateAndTime.substring(0,10));
+                        esNotice.getDetail().setBmEndTime(bmEndDateAndTime.substring(10));
+                    } else {
+                        esNotice.getDetail().setBmEndDate(bmEndDateAndTime);
+                    }
+                }
+            }
         }
     }
 }

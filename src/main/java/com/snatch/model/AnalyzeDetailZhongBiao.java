@@ -56,4 +56,8 @@ public class AnalyzeDetailZhongBiao implements Serializable {
     private String county;//县
 
     private String relationUrl; // 相关公告
+
+    private String projectTimeLimit ;
+    private String projectCompletionDate ;
+    private String block;  //   标段
 }

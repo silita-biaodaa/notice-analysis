@@ -1,11 +1,10 @@
 package com.silita.biaodaa.disruptor.handler.zhaoBiao;
 
-import com.snatch.model.AnalyzeDetail;
-import com.snatch.model.Notice;
+import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
+import com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan.HunanProjSum;
 import com.silita.biaodaa.common.Constant;
-import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
-import com.silita.biaodaa.disruptor.handler.BaseHandler;
-import com.silita.biaodaa.service.NoticeAnalyzeService;
+import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
+import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,31 +14,63 @@ import org.springframework.stereotype.Component;
  * 项目金额
  */
 @Component
-public class ApplyProjSumHandler extends BaseHandler {
+public class ApplyProjSumHandler extends BaseAnalysisHandler {
 
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
     @Autowired
-    NoticeAnalyzeService noticeAnalyzeService;
+    HunanProjSum hunanProjSum;
 
+    public ApplyProjSumHandler(){
+        this.fieldDesc="项目金额";
+    }
 
+    private SingleFieldAnalysis routeRules(String source){
+        return hunanProjSum;
+    }
 
     @Override
-    public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
-        //必须新建一个对象，否则会导致一个对象被多出引用，值备覆盖
-        String s2 = "";
-        AnalyzeDetail analyzeDetail = event.getAnalyzeDetail();
-        Notice notice = event.getNotice();
-        try {
-            s2 = noticeAnalyzeService.analyzeApplyProjSum(notice.getContent());
-            logger.info("===解析["+notice.getTitle()+"]的项目金额["+s2+"]===");
-            if (!"".equals(s2) && null != s2 && !Constant.DEFAULT_STRING.equals(s2) && analyzeDetail.getProjSum() == null) {
-                analyzeDetail.setProjSum(s2);
-                //System.out.println("f2-项目金额:" + s2);
+    protected Object currentFieldValues(EsNotice esNotice) {
+        return null;
+    }
+
+    @Override
+    protected Object executeAnalysis(String stringPart,EsNotice esNotice) {
+        if(esNotice.getTitle().indexOf("设计")>0
+                ||esNotice.getTitle().indexOf("监理")>0
+                ||esNotice.getTitle().indexOf("勘察")>0
+                ||esNotice.getTitle().indexOf("审计")>0
+                ||esNotice.getTitle().indexOf("招标代理")>0){
+            return null;
+        }
+        SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
+        String value =  analysis.analysis(stringPart,this.keyWord);
+        if(value!=null){
+            if(value.indexOf(Constant.SPLIT_STRING+"-")==0){
+                this.keyWord = value.replace(Constant.SPLIT_STRING+"-","");
+                value = null;
+            }else if(value.indexOf(Constant.SPLIT_STRING)==0){
+                this.keyValue = value.replace(Constant.SPLIT_STRING,"");
+                value = null;
+                this.keyWord = null;
             }
-        } catch (Exception e) {
-            System.out.println("error--s2");
-            logger.error("error--s2" + e, e);
+        }
+        return value;
+
+
+
+    }
+
+    @Override
+    protected void saveResult(EsNotice esNotice, Object analysisResult) {
+        if(analysisResult!=null){
+            String proJSum = analysisResult.toString();
+            if(!"".equals(proJSum)){
+                esNotice.getDetail().setProjSum(analysisResult.toString());
+
+            }
         }
     }
+
+
 }

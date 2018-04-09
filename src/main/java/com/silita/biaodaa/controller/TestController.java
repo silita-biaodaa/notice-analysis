@@ -1,10 +1,12 @@
 package com.silita.biaodaa.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.snatch.model.Notice;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.model.TUser;
 import com.silita.biaodaa.service.TestService;
+import com.silita.biaodaa.task.TestTask;
+import com.snatch.model.EsNotice;
+import com.snatch.model.Notice;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -36,6 +38,9 @@ public class TestController {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Autowired
+    TestTask testTask;
+
 
     private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
 
@@ -62,16 +67,30 @@ public class TestController {
         try {
             lock.lockInterruptibly();
             try{
-                notice = (Notice) redisTemplate.opsForList().leftPop("maofeng",0, TimeUnit.SECONDS);
+                notice = (Notice) redisTemplate.opsForList().leftPop("liuqi",0, TimeUnit.SECONDS);
+                EsNotice esNotice = testTask.noticeToEsNotice(notice);
+                disruptorOperator.publish(esNotice);
             }finally{
                 lock.unlock();
             }
-            disruptorOperator.publish(notice);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ImmutableMap.Builder<String, Object>().put("status", 1)
                 .put("msg", "成功").put("data",notice).build();
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/pushRedis", method = RequestMethod.GET)
+    public Map<String, Object> pushRedis() {
+        try {
+            testService.pushRedisNotice();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ImmutableMap.Builder<String, Object>().put("status", 1)
+                .put("msg", "push到Redis成功!").build();
     }
 
 

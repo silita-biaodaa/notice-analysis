@@ -6,8 +6,16 @@
         select * from mishu_snatch.analyze_range where field=#{field}
     </select>
 
+    <select id="queryAnalyzeRangePbMode" parameterType="String" resultType="Map">
+        SELECT anotherName, standardName FROM ${_parameter} WHERE 1 = 1
+        <!--<choose>-->
+            <!--<when test="#{province}==HuNan"> province=#{province}</when>-->
+            <!--<otherwise> province!='HuNan'</otherwise>-->
+        <!--</choose>-->
+    </select>
+
     <insert id="insertAnalyzeDetail" parameterType="com.snatch.model.AnalyzeDetail">
-        INSERT INTO mishu_analyze.analyze_detail (
+        INSERT INTO mishu_analyze.zhaobiao_analyze_detail (
         redisId,noticeUrl,title,tbAssureSum,projDq,
         projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
         bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
@@ -17,7 +25,7 @@
         otherCost,zbName,zbContactMan,zbContactWay,dlContactMan,
         dlContactWay,personRequest,shebaoRequest,yejiRequest,registrationForm,
         projectTimeLimit,projectCompletionDate,supplementNoticeNumber,supplementNoticeReason,flowStandardFlag,
-        money,block,analyzeDate)
+        money,block,analyzeDate,assureSumRemit)
         VALUES
         (#{redisId},#{noticeUrl},#{title},#{tbAssureSum},#{projDq},
         #{projXs},#{projSum},#{bmStartDate},#{bmEndDate},#{bmEndTime},
@@ -28,12 +36,12 @@
         #{otherCost},#{zbName},#{zbContactMan},#{zbContactWay},#{dlContactMan},
         #{dlContactWay},#{personRequest},#{shebaoRequest},#{yejiRequest},#{registrationForm},
         #{projectTimeLimit},#{projectCompletionDate},#{supplementNoticeNumber},#{supplementNoticeReason},#{flowStandardFlag},
-        #{money},#{block},now())
+        #{money},#{block},now(),#{assureSumRemit})
     </insert>
 
 
     <insert id="batchInsertAnalyzeDetail" parameterType="Map">
-        INSERT INTO mishu_analyze.analyze_detail (
+        INSERT INTO mishu_analyze.zhaobiao_analyze_detail (
         redisId,noticeUrl,title,tbAssureSum,projDq,
         projXs,projSum,bmStartDate,bmEndDate,bmEndTime,
         bmSite,kbSite,tbEndDate,tbEndTime,gsDate,
@@ -43,20 +51,52 @@
         otherCost,zbName,zbContactMan,zbContactWay,dlContactMan,
         dlContactWay,personRequest,shebaoRequest,yejiRequest,registrationForm,
         projectTimeLimit,projectCompletionDate,supplementNoticeNumber,supplementNoticeReason,flowStandardFlag,
-        money,block,analyzeDate)
+        money,block,analyzeDate,assureSumRemit)
         VALUES
         <foreach collection="list" index="index" item="b" separator=",">
-        (#{b.redisId},#{b.noticeUrl},#{b.title},#{b.tbAssureSum},#{b.projDq},
-        #{b.projXs},#{b.projSum},#{b.bmStartDate},#{b.bmEndDate},#{b.bmEndTime},
-        #{b.bmSite},#{b.kbSite},#{b.tbEndDate},#{b.tbEndTime},#{b.gsDate},
-        #{b.province},#{b.city},#{b.county},#{b.projType},#{b.zzRank},
-        #{b.pbMode},#{b.tbAssureEndDate},#{b.tbAssureEndTime},#{b.lyAssureSum},#{b.slProveSum},
-        #{b.assureEndDate},#{b.assureEndTime},#{b.zgCheckDate},#{b.kbStaffAsk},#{b.fileCost},
-        #{b.otherCost},#{b.zbName},#{b.zbContactMan},#{b.zbContactWay},#{b.dlContactMan},
-        #{b.dlContactWay},#{b.personRequest},#{b.shebaoRequest},#{b.yejiRequest},#{b.registrationForm},
-        #{b.projectTimeLimit},#{b.projectCompletionDate},#{b.supplementNoticeNumber},#{b.supplementNoticeReason},#{b.flowStandardFlag},
-        #{b.money},#{b.block},now())
+            (#{b.redisId},#{b.noticeUrl},#{b.title},#{b.tbAssureSum},#{b.projDq},
+            #{b.projXs},#{b.projSum},#{b.bmStartDate},#{b.bmEndDate},#{b.bmEndTime},
+            #{b.bmSite},#{b.kbSite},#{b.tbEndDate},#{b.tbEndTime},#{b.gsDate},
+            #{b.province},#{b.city},#{b.county},#{b.projType},#{b.zzRank},
+            #{b.pbMode},#{b.tbAssureEndDate},#{b.tbAssureEndTime},#{b.lyAssureSum},#{b.slProveSum},
+            #{b.assureEndDate},#{b.assureEndTime},#{b.zgCheckDate},#{b.kbStaffAsk},#{b.fileCost},
+            #{b.otherCost},#{b.zbName},#{b.zbContactMan},#{b.zbContactWay},#{b.dlContactMan},
+            #{b.dlContactWay},#{b.personRequest},#{b.shebaoRequest},#{b.yejiRequest},#{b.registrationForm},
+            #{b.projectTimeLimit},#{b.projectCompletionDate},#{b.supplementNoticeNumber},#{b.supplementNoticeReason},#{b.flowStandardFlag},
+            #{b.money},#{b.block},now(),#{assureSumRemit})
         </foreach>
+    </insert>
+
+    <select id="queryAnalyzeRangeBmAddr" resultType="String">
+        SELECT address FROM mishu_snatch.analyze_range_bmaddr
+    </select>
+
+    <select id="queryBaseBmAddress" resultType="Map" parameterType="String">
+        SELECT address
+        FROM mishu_snatch.analyze_range_bmaddr
+        WHERE id=(SELECT baseAddrId FROM mishu_snatch.analyze_range_bmaddr_alias
+				WHERE alias=#{address})
+    </select>
+
+    <insert id="insertAnalyzeDetailZhongbiao" parameterType="com.snatch.model.AnalyzeDetailZhongBiao">
+        INSERT INTO mishu_analyze.analyze_detail_zhongbiao (
+        redisId,noticeUrl,title,gsDate,
+        projSum,projDq,projXs,pbMode,projType,
+        oneName,oneUUid,oneOffer,oneProjDuty,oneProjDutyUUid,
+        oneSkillDuty,oneSgy,oneAqy,oneZly,twoName,
+        twoOffer,twoProjDuty,twoSkillDuty,twoSgy,twoAqy,
+        twoZly,threeName,threeOffer,threeProjDuty,threeSkillDuty,
+        threeSgy,threeAqy,threeZly,province,city,
+        county,block,analyzeDate)
+        VALUES
+        (#{redisId},#{noticeUrl},#{title},#{gsDate},
+        #{projSum},#{projDq},#{projXs},#{pbMode},#{projType},
+        #{oneName},#{oneUUid},#{oneOffer},#{oneProjDuty},#{oneProjDutyUUid},
+        #{oneSkillDuty},#{oneSgy},#{oneAqy},#{oneZly},#{twoName},
+        #{twoOffer},#{twoProjDuty},#{twoSkillDuty},#{twoSgy},#{twoAqy},
+        #{twoZly},#{threeName},#{threeOffer},#{threeProjDuty},#{threeSkillDuty},
+        #{threeSgy},#{threeAqy},#{threeZly},#{province},#{city},
+        #{county},#{block},now())
     </insert>
 
 </mapper>
