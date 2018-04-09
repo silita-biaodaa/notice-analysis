@@ -46,6 +46,7 @@ public class NoticeRedisTest extends ConfigTest  {
         disruptorOperator.init();
         disruptorOperator.start();
         Notice notice = null ;
+
         while (true){
             try {
                 try{
