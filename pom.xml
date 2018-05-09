@@ -26,7 +26,7 @@
   <name>notice-analysis</name>
   <groupId>com.biaodaa</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0.22.6</version>
+  <version>1.0.33.6</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
@@ -85,17 +85,34 @@
   </distributionManagement>
 
   <dependencies>
+
+    <!-- stanford nlp -->
+    <!--<dependency>-->
+      <!--<groupId>edu.stanford.nlp</groupId>-->
+      <!--<artifactId>stanford-corenlp</artifactId>-->
+      <!--<version>3.9.1</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>edu.stanford.nlp</groupId>-->
+      <!--<artifactId>stanford-corenlp</artifactId>-->
+      <!--<version>3.9.1</version>-->
+      <!--<classifier>models-chinese</classifier>-->
+    <!--</dependency>-->
+    <!--//“models-chinese”，“models-english”, “models-english-kbp”, “models-arabic”, “models-french”, “models-german” ,“models-spanish”；-->
+
+    <!--ehcache -->
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache-core</artifactId>
       <version>${ehcache.version}</version>
     </dependency>
 
-      <dependency>
-          <groupId>org.apache.kafka</groupId>
-          <artifactId>kafka_2.11</artifactId>
-          <version>${kafka.version}</version>
-      </dependency>
+    <!--kafka -->
+    <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka_2.11</artifactId>
+        <version>${kafka.version}</version>
+    </dependency>
 
     <!-- springmvc -->
     <dependency>

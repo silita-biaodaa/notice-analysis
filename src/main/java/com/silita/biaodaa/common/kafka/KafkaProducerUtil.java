@@ -6,6 +6,7 @@ import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+@Lazy
 @Component
 public class KafkaProducerUtil {
     private static Logger log = Logger.getLogger(KafkaProducerUtil.class);
@@ -41,12 +43,17 @@ public class KafkaProducerUtil {
 
     public void sendkafkaMsg(EsNotice es){
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("deliveryId", es.getRedisId());
-        map.put("model", es);
-        map.put("start", Constant.NOTICE_START);
-        sendMsg(map);//kafka消息发送
-        log.info("kafka发送消息finished。redisId:"+es.getRedisId()+"##title:" + es.getTitle() + "##Opendate:" + es.getOpenDate() + "##catchtype-->type:" + es.getType() + "##BusinessType:" + es.getBusinessType());
-        map=null;
+        try {
+            map.put("deliveryId", es.getRedisId());
+            map.put("model", es);
+            map.put("start", Constant.NOTICE_START);
+            sendMsg(map);//kafka消息发送
+            log.info("kafka发送消息finished。redisId:" + es.getRedisId() + "##title:" + es.getTitle() + "##Opendate:" + es.getOpenDate() + "##catchtype-->type:" + es.getType() + "##BusinessType:" + es.getBusinessType());
+        }catch (Exception e){
+            log.error("kafka发送消息失败。"+e.getMessage(),e);
+        }finally {
+            map=null;
+        }
     }
 
     public void sendMsg(Object msg){

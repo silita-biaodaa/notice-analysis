@@ -37,7 +37,7 @@ public class InsertAnalyzeDetailZhongBiaoHandler implements EventHandler<Analyze
             logger.error("入库" + e, e);
         }finally {
             esNotice.setDetailZhongBiao(analyzeDetailZhongBiao);
-            kafkaProducerUtil.sendkafkaMsg(esNotice);//send kafka msg
+//            kafkaProducerUtil.sendkafkaMsg(esNotice);//send kafka msg
         }
     }
 
