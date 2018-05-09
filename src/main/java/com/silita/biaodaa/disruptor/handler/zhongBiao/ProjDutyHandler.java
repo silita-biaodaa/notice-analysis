@@ -30,7 +30,7 @@ public class ProjDutyHandler extends BaseAnalysisHandler {
 
 
     @Override
-    protected String executeAnalysis(String stringPart,EsNotice esNotice) {
+    protected String executeAnalysis(String stringPart,EsNotice esNotice)  throws Exception{
         return otherProjDuty.analysis(stringPart,esNotice.getSource());
     }
 

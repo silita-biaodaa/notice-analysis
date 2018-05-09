@@ -78,7 +78,7 @@ public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> 
      * @param stringPart
      * @return
      */
-    protected abstract Object executeAnalysis(String stringPart,EsNotice esNotice);
+    protected abstract Object executeAnalysis(String stringPart,EsNotice esNotice)throws Exception;
 
     /**
      * 解析结果保存

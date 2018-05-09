@@ -3,8 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.silita.biaodaa.dao.CommonMapper">
 
-
     <select id="queryRegexByField" parameterType="String" resultType="Map">
+        select r.*
+        from mishu_analyze.analysis_regex r
+        where r.enabled=TRUE and r.field=#{field}
+        order by r.reg_type desc,r.orderNum
+    </select>
+
+    <select id="queryRegexInfoByField" parameterType="String" resultType="Map">
         select r.*,e.ext_content
         from mishu_analyze.analysis_regex r
         left join mishu_analyze.analysis_regex_extend e on r.field=e.field and r.reg_type=e.reg_type and e.enabled=true

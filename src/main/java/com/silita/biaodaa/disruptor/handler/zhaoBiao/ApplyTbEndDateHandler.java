@@ -34,7 +34,7 @@ public class ApplyTbEndDateHandler extends BaseAnalysisHandler {
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart, EsNotice esNotice) {
+    protected Object executeAnalysis(String stringPart, EsNotice esNotice)  throws Exception{
         SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
         return analysis.analysis(stringPart,null);
     }

@@ -8,6 +8,9 @@ import java.util.Map;
  */
 public interface CommonMapper {
 
+    //TODO:兼容旧逻辑，待所有维度改造完毕后删除
+    @Deprecated
     List<Map<String, Object>> queryRegexByField( String field);
 
+    List<Map<String, Object>> queryRegexInfoByField( String field);
 }

@@ -35,7 +35,7 @@ public class ApplyProjSumHandler extends BaseAnalysisHandler {
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart,EsNotice esNotice) {
+    protected Object executeAnalysis(String stringPart,EsNotice esNotice)  throws Exception{
         if(esNotice.getTitle().indexOf("设计")>0
                 ||esNotice.getTitle().indexOf("监理")>0
                 ||esNotice.getTitle().indexOf("勘察")>0

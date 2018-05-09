@@ -28,10 +28,10 @@ public class CommonService {
         return commonMapper.queryRegexByField(field);
     }
 
-    @Cacheable(value = "regexCache", key="#field+'Map'")
+    @Cacheable(value = "regexCache", key="#field+'Template'")
     public Map<String ,List<Map<String, Object>>> queryRegexMapByField( String field){
         logger.debug("###查詢數據庫queryRegexByField:"+field);
-        return sortRegList(commonMapper.queryRegexByField(field));
+        return sortRegList(commonMapper.queryRegexInfoByField(field));
     }
 
     /**

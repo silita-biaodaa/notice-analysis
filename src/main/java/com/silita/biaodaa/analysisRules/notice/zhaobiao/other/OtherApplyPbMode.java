@@ -29,7 +29,7 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
     AnalyzeRangeService analyzeRangeService;
 
     @Override
-    public String analysis(String segment,String keyWork) {
+    public String analysis(String segment,String keyWork)  throws Exception{
         String val = "";
 
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
