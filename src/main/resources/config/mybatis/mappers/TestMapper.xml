@@ -23,7 +23,7 @@
     <select id="getNoticeToRedis" resultType="com.snatch.model.Notice">
         select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,
         province,city,county,provinceCode,cityCode,countyCode,photoUrl,catchtype as `type`,
-        snatchNumber,areaRank,provinceCode as 'source'
+        snatchNumber,areaRank,source
         from test.notice
         <!--where title like '%五老村办事处仁寿里8号、10号建筑改造出新项目的招标公告%'-->
     </select>
