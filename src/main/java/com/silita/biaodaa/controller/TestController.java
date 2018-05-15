@@ -93,5 +93,20 @@ public class TestController {
                 .put("msg", "push到Redis成功!").build();
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/pushCustomRedis", method = RequestMethod.GET)
+    public Map<String, Object> pushCustomRedis(String tbName) {
+        try {
+            int total = testService.pushCustomRedisNotice(tbName);
+            return new ImmutableMap.Builder<String, Object>().put("status", 1)
+                    .put("msg", "custom push到Redis成功!").put("successCount",total).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ImmutableMap.Builder<String, Object>().put("status", 0)
+                    .put("msg", e.getMessage()).build();
+        }
+
+    }
+
 
 }

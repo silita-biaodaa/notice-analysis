@@ -40,6 +40,11 @@ public class NoticeRedisTest extends ConfigTest  {
         testService.pushHunanRedisNotice();
     }
 
+    @Test
+    public void pushCustomRedisNotice() {
+        testService.pushCustomRedisNotice("mishu_snatch.hunan");
+    }
+
 
     @Test
     public void analyzeHandler(){
