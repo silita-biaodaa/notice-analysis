@@ -55,7 +55,7 @@ public class TestService {
     }
 
     public int pushCustomRedisNotice(String tbName){
-        int pageSize =100;
+        int pageSize =10;
         int pageNum=0;
         int result=0;
         int totalCount=0;
@@ -68,6 +68,7 @@ public class TestService {
                     redisTemplate.opsForList().leftPush("liuqi", notice);
                 }
                 totalCount+=result;
+                list=null;
             }else {
                 result=0;
             }

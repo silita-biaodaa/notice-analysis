@@ -26,7 +26,7 @@
   <name>notice-analysis</name>
   <groupId>com.biaodaa</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0.33.6</version>
+  <version>1.0.33.8</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
@@ -67,7 +67,7 @@
     <repository>
       <id>public</id>  <!--这个ID需要与你新建的组group ID一致-->
       <name>Public Repository</name>
-      <url>http://120.78.253.169/nexus/content/groups/public/</url>
+      <url>http://120.78.253.169:8081/nexus/content/groups/public/</url>
     </repository>
   </repositories>
 
@@ -75,12 +75,12 @@
   <distributionManagement>
     <repository>
       <id>releases</id><!--这个ID需要与你的release仓库的Repository ID一致-->
-      <url>http://120.78.253.169/nexus/content/repositories/releases</url>
+      <url>http://120.78.253.169:8081/nexus/content/repositories/releases</url>
     </repository>
 
     <snapshotRepository>
       <id>snapshots</id><!--这个ID需要与你的snapshots仓库的Repository ID一致-->
-      <url>http://120.78.253.169/nexus/content/repositories/snapshots</url>
+      <url>http://120.78.253.169:8081/nexus/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
