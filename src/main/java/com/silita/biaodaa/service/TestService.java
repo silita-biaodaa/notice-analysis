@@ -77,6 +77,27 @@ public class TestService {
         return totalCount;
     }
 
+    public int pushCustomRedisSec(String tbName,int startNum,int tCount){
+        int pageSize =10;
+        int result=0;
+        int totalCount=0;
+        int runNum = startNum;
+        while((startNum==runNum || result>0) && totalCount<tCount) {
+            List<Notice> list = testMapper.pushCustomRedisNotice(runNum, pageSize,tbName);
+            if(list!=null && list.size()>0) {
+                result = list.size();
+                for (Notice notice : list) {
+                    redisTemplate.opsForList().leftPush("liuqi", notice);
+                }
+                totalCount+=result;
+                list=null;
+            }else {
+                result=0;
+            }
+            runNum+=pageSize;
+        }
+        return totalCount;
+    }
 
 
 }

@@ -108,5 +108,20 @@ public class TestController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/pushCustomRedisSec", method = RequestMethod.GET)
+    public Map<String, Object> pushCustomRedisSec(String tbName,int startNum,int totalCount) {
+        try {
+            int total = testService.pushCustomRedisSec(tbName,startNum,totalCount);
+            return new ImmutableMap.Builder<String, Object>().put("status", 1)
+                    .put("msg", "custom push到Redis成功!").put("successCount",total).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ImmutableMap.Builder<String, Object>().put("status", 0)
+                    .put("msg", e.getMessage()).build();
+        }
+
+    }
+
 
 }
