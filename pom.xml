@@ -26,7 +26,7 @@
   <name>notice-analysis</name>
   <groupId>com.biaodaa</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0.33.9</version>
+  <version>1.0.33.10</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
