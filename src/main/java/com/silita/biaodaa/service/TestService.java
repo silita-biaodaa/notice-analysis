@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
@@ -59,43 +60,58 @@ public class TestService {
         int pageNum=0;
         int result=0;
         int totalCount=0;
+        WeakReference<List<Notice>> list =null;
         while(pageNum==0 || result>0) {
             int start =pageNum*pageSize;
-            List<Notice> list = testMapper.pushCustomRedisNotice(start, pageSize,tbName);
-            if(list!=null && list.size()>0) {
-                result = list.size();
-                for (Notice notice : list) {
-                    redisTemplate.opsForList().leftPush("liuqi", notice);
-                }
+            list =new WeakReference(testMapper.pushCustomRedisNotice(start, pageSize,tbName));
+            if(list.get()!=null && list.get().size()>0) {
+                result = list.get().size();
+                redisTemplate.opsForList().leftPushAll("liuqi",list.get());
                 totalCount+=result;
-                list=null;
+                list.get().clear();
+                list.clear();
             }else {
                 result=0;
             }
             pageNum++;
         }
+        if(list.get()!=null) {
+            list.get().clear();
+            list.clear();
+        }
+
+        System.gc();
         return totalCount;
     }
 
     public int pushCustomRedisSec(String tbName,int startNum,int tCount){
-        int pageSize =10;
+        int pageSize =100;
         int result=0;
         int totalCount=0;
         int runNum = startNum;
+        WeakReference<List<Notice>> list =null;
         while((startNum==runNum || result>0) && totalCount<tCount) {
-            List<Notice> list = testMapper.pushCustomRedisNotice(runNum, pageSize,tbName);
-            if(list!=null && list.size()>0) {
-                result = list.size();
-                for (Notice notice : list) {
-                    redisTemplate.opsForList().leftPush("liuqi", notice);
-                }
+            list =new WeakReference(testMapper.pushCustomRedisNotice(runNum, pageSize,tbName));
+            if(list.get()!=null && list.get().size()>0) {
+                result = list.get().size();
+//                for (Notice notice : list) {
+//                    redisTemplate.opsForList().leftPush("liuqi", notice);
+//                }
+                redisTemplate.opsForList().leftPushAll("liuqi",list.get());
                 totalCount+=result;
-                list=null;
+                list.get().clear();
+                list.clear();
             }else {
                 result=0;
             }
             runNum+=pageSize;
         }
+        if(list.get()!=null) {
+            list.get().clear();
+            list.clear();
+        }
+
+        System.gc();
         return totalCount;
     }
 
