@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class RedisCacheUtil<T> {
 
     @Autowired
+    @Qualifier("jedisTemplate")
     public RedisTemplate redisTemplate;
 
     /**

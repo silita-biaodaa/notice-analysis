@@ -5,6 +5,7 @@ import com.silita.biaodaa.model.TUser;
 import com.snatch.model.Notice;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,12 @@ public class TestService {
     TestMapper testMapper;
 
     @Autowired
+    @Qualifier("jedisTemplate")
     RedisTemplate redisTemplate;
+
+    @Autowired
+    @Qualifier("jedisStringTemplate")
+    RedisTemplate jedisStringTemplate;
 
     Logger logger = Logger.getLogger(TestService.class);
 
@@ -55,7 +61,29 @@ public class TestService {
         }
     }
 
+    private synchronized boolean isContinue(String tbName){
+        String initCount="0";
+        if(!jedisStringTemplate.hasKey(tbName)) {
+            jedisStringTemplate.opsForValue().set(tbName, initCount);
+            return true;
+        }else{
+            if(initCount.equals(jedisStringTemplate.opsForValue().get(tbName))) {
+                return false;
+            }else{
+                jedisStringTemplate.opsForValue().set(tbName, initCount);
+                return true;
+            }
+        }
+    }
+
+    private void finishedPush(String tbName,int totalCount){
+        jedisStringTemplate.opsForValue().set(tbName,String.valueOf(totalCount));
+    }
+
     public int pushCustomRedisNotice(String tbName){
+        if(!isContinue(tbName)){
+            throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
+        }
         int pageSize =10;
         int pageNum=0;
         int result=0;
@@ -81,10 +109,14 @@ public class TestService {
         }
 
         System.gc();
+        finishedPush(tbName,totalCount);
         return totalCount;
     }
 
     public int pushCustomRedisSec(String tbName,int startNum,int tCount){
+        if(!isContinue(tbName)){
+            throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
+        }
         int pageSize =100;
         int result=0;
         int totalCount=0;
@@ -112,6 +144,7 @@ public class TestService {
         }
 
         System.gc();
+        finishedPush(tbName,totalCount);
         return totalCount;
     }
 
