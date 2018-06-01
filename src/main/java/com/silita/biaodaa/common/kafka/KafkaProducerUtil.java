@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -42,7 +43,8 @@ public class KafkaProducerUtil {
     }
 
     public void sendkafkaMsg(EsNotice es){
-        Map<String, Object> map = new HashMap<String, Object>();
+        SoftReference<HashMap<String, Object>> mapRef = new SoftReference<HashMap<String, Object>>(new HashMap<String, Object>());
+        Map map = mapRef.get();
         try {
             map.put("deliveryId", es.getRedisId());
             map.put("model", es);
@@ -53,6 +55,7 @@ public class KafkaProducerUtil {
             log.error("kafka发送消息失败。"+e.getMessage(),e);
         }finally {
             map=null;
+            System.gc();
         }
     }
 
