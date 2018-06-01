@@ -43,7 +43,7 @@ public class KafkaProducerUtil {
     }
 
     public void sendkafkaMsg(EsNotice es){
-        SoftReference<HashMap<String, Object>> mapRef = new SoftReference<HashMap<String, Object>>(new HashMap<String, Object>());
+        SoftReference<HashMap<String, Object>> mapRef = new SoftReference(new HashMap<String, Object>(3));
         Map map = mapRef.get();
         try {
             map.put("deliveryId", es.getRedisId());
