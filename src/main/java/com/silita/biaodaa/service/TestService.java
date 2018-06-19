@@ -80,18 +80,18 @@ public class TestService {
         jedisStringTemplate.opsForValue().set(tbName,String.valueOf(totalCount));
     }
 
-    public int pushCustomRedisNotice(String tbName){
+    public int pushCustomRedisNotice(String tbName,String title){
         if(!isContinue(tbName)){
             throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
         }
-        int pageSize =10;
+        int pageSize =100;
         int pageNum=0;
         int result=0;
         int totalCount=0;
         WeakReference<List<Notice>> list =null;
         while(pageNum==0 || result>0) {
             int start =pageNum*pageSize;
-            list =new WeakReference(testMapper.pushCustomRedisNotice(start, pageSize,tbName));
+            list =new WeakReference(testMapper.pushCustomRedisNotice(start, pageSize,tbName,title));
             if(list.get()!=null && list.get().size()>0) {
                 result = list.get().size();
                 redisTemplate.opsForList().leftPushAll("liuqi",list.get());
@@ -113,7 +113,7 @@ public class TestService {
         return totalCount;
     }
 
-    public int pushCustomRedisSec(String tbName,int startNum,int tCount){
+    public int pushCustomRedisSec(String tbName,int startNum,int tCount,String title){
         if(!isContinue(tbName)){
             throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
         }
@@ -123,7 +123,7 @@ public class TestService {
         int runNum = startNum;
         WeakReference<List<Notice>> list =null;
         while((startNum==runNum || result>0) && totalCount<tCount) {
-            list =new WeakReference(testMapper.pushCustomRedisNotice(runNum, pageSize,tbName));
+            list =new WeakReference(testMapper.pushCustomRedisNotice(runNum, pageSize,tbName,title));
             if(list.get()!=null && list.get().size()>0) {
                 result = list.get().size();
 //                for (Notice notice : list) {

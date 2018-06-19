@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by zhangxiahui on 18/3/13.
  */
 @Component
-public class TestTask implements Runnable {
+public class AnalysisTask implements Runnable {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

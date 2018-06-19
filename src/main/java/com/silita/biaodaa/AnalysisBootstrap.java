@@ -1,7 +1,7 @@
 package com.silita.biaodaa;
 
 import com.silita.biaodaa.disruptor.DisruptorOperator;
-import com.silita.biaodaa.task.TestTask;
+import com.silita.biaodaa.task.AnalysisTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
 
 
     @Autowired
-    TestTask testTask;
+    AnalysisTask analysisTask;
 
     @Autowired
     DisruptorOperator disruptorOperator;
@@ -42,7 +42,7 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
                 disruptorOperator.start();
                 try {
                     final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(9);
-                    scheduler.scheduleAtFixedRate(testTask, 0, 500, TimeUnit.MILLISECONDS);
+                    scheduler.scheduleAtFixedRate(analysisTask, 0, 500, TimeUnit.MILLISECONDS);
                     logger.info("===========任务启动完成=========");
                 } catch (Exception e) {
                     logger.info("任务启动异常", e);

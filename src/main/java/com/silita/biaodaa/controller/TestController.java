@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.model.TUser;
 import com.silita.biaodaa.service.TestService;
-import com.silita.biaodaa.task.TestTask;
+import com.silita.biaodaa.task.AnalysisTask;
 import com.snatch.model.EsNotice;
 import com.snatch.model.Notice;
 import org.apache.log4j.Logger;
@@ -41,7 +41,7 @@ public class TestController {
     RedisTemplate redisTemplate;
 
     @Autowired
-    TestTask testTask;
+    AnalysisTask analysisTask;
 
 
     private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
@@ -69,7 +69,7 @@ public class TestController {
             lock.lockInterruptibly();
             try{
                 notice = (Notice) redisTemplate.opsForList().leftPop("liuqi",0, TimeUnit.SECONDS);
-                EsNotice esNotice = testTask.noticeToEsNotice(notice);
+                EsNotice esNotice = analysisTask.noticeToEsNotice(notice);
                 disruptorOperator.publish(esNotice);
             }finally{
                 lock.unlock();
@@ -96,9 +96,9 @@ public class TestController {
 
     @ResponseBody
     @RequestMapping(value = "/pushCustomRedis", method = RequestMethod.GET)
-    public Map<String, Object> pushCustomRedis(String tbName) {
+    public Map<String, Object> pushCustomRedis(String tbName,String title) {
         try {
-            int total = testService.pushCustomRedisNotice(tbName);
+            int total = testService.pushCustomRedisNotice(tbName,title);
             return new ImmutableMap.Builder<String, Object>().put("status", 1)
                     .put("msg", "custom push到Redis成功!").put("successCount",total).build();
         } catch (Exception e) {
@@ -111,9 +111,9 @@ public class TestController {
 
     @ResponseBody
     @RequestMapping(value = "/pushCustomRedisSec", method = RequestMethod.GET)
-    public Map<String, Object> pushCustomRedisSec(String tbName,int startNum,int totalCount) {
+    public Map<String, Object> pushCustomRedisSec(String tbName,int startNum,int totalCount,String title) {
         try {
-            int total = testService.pushCustomRedisSec(tbName,startNum,totalCount);
+            int total = testService.pushCustomRedisSec(tbName,startNum,totalCount,title);
             return new ImmutableMap.Builder<String, Object>().put("status", 1)
                     .put("msg", "custom push到Redis成功!").put("successCount",total).build();
         } catch (Exception e) {

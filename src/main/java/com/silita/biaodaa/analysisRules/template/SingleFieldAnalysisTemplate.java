@@ -154,8 +154,12 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             String regex =  (String)regexMap.get("regex");
             Pattern ptn = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
             Matcher matcher = ptn.matcher(str);
+            String tmp = null;
             while (matcher.find()) {
-                str = str.replaceAll(matcher.group(), "");
+                tmp=  matcher.group();
+                if(tmp!=null && !tmp.equals(str)) {
+                    str = str.replaceAll(tmp, "");
+                }
             }
         }
         return str;

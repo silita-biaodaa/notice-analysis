@@ -12,7 +12,7 @@
         snatchNumber,areaRank,source
         from  test.test_notice
         where id>=(SELECT id
-        from test.test_notice
+        from test.hunan_notice
         order by id
         limit #{param1},1)
         ORDER  by id
@@ -25,9 +25,12 @@
         snatchNumber,areaRank,source
         from  ${param3}
         where id>=(SELECT id
-        from ${param3}
-        order by id
-        limit #{param1},1)
+            from ${param3}
+            order by id
+            limit #{param1},1)
+            <if test="param4!=null and param4!=''">
+               and  title LIKE '%${param4}%'
+            </if>
         ORDER  by id
         limit #{param2}
     </select>

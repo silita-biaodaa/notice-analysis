@@ -88,14 +88,14 @@ public class DisruptorOperator {
     public void init() {
         List<EventHandler> zhaobiaoHandlerList = new ArrayList<EventHandler>();
         zhaobiaoHandlerList.add(applyAddressHandler);
-        zhaobiaoHandlerList.add(applyAssureEndDateHandler);
-        zhaobiaoHandlerList.add(assureSumRemitHandler);
-        zhaobiaoHandlerList.add(applyDateHandler);
-        zhaobiaoHandlerList.add(applyPbModeHandler);
-        zhaobiaoHandlerList.add(applyProjectTimeLimitHandler);
-        zhaobiaoHandlerList.add(applyProjSumHandler);
-        zhaobiaoHandlerList.add(applyTbAssureSumHandler);
-        zhaobiaoHandlerList.add(applyTbEndDateHandler);
+//        zhaobiaoHandlerList.add(applyAssureEndDateHandler);
+//        zhaobiaoHandlerList.add(assureSumRemitHandler);
+//        zhaobiaoHandlerList.add(applyDateHandler);
+//        zhaobiaoHandlerList.add(applyPbModeHandler);
+//        zhaobiaoHandlerList.add(applyProjectTimeLimitHandler);
+//        zhaobiaoHandlerList.add(applyProjSumHandler);
+//        zhaobiaoHandlerList.add(applyTbAssureSumHandler);
+//        zhaobiaoHandlerList.add(applyTbEndDateHandler);
         ZhaoBiaoDisruptorCreator.initDisruptor(zhaobiaoHandlerList,insertAnalyzeDetailHandler,sendMsgHandler);
 
         List<EventHandler> zhongbiaoHandlerList = new ArrayList<EventHandler>();
