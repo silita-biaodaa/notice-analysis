@@ -19,7 +19,7 @@
 	<context:component-scan base-package="com.silita">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
-		<context:exclude-filter type="aspectj" expression="com.silita.biaodaa.AnalysisBootstrap"/>
+		<context:exclude-filter type="regex" expression="com.silita.biaodaa.AnalysisBootstrap"/>
 	</context:component-scan>
 
 	<import resource="applicationContext-datasource.xml" />

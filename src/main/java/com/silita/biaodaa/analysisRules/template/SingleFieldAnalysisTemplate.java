@@ -31,16 +31,22 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
     @Override
     public String analysis(String segment,String keyWork) throws Exception{
-        init();
-        if (MyStringUtils.isNull(fieldName)){
-            throw new Exception ("fieldName is null!");
+        String analysisRes =null;
+        try {
+            init();
+            if (MyStringUtils.isNull(fieldName)){
+                throw new Exception ("fieldName is null!");
+            }
+            analysisRes = analyzeSingleField(segment);
+        }catch (Exception e){
+            logger.error(e,e);
         }
-        return analyzeSingleField(segment);
+        return analysisRes;
     }
 
     /**
      * 同一个范围匹配结果内，在“默认精准匹配逻辑”之前执行的解析规则，可由子类实现
-     * @param regListMap
+     * @param regListMap 规则列表
      * @param matchPart
      * @param rangeRegex
      * @return
@@ -50,7 +56,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
     }
 
     /**
-     * 同一个范围匹配结果内，在“默认精准匹配逻辑”没有匹配值之后执行的解析规则，可由子类实现
+     * 在“默认精准匹配逻辑”没有匹配值之后执行的解析规则，可由子类实现
      * @param regListMap
      * @param matchPart
      * @param rangeRegex
@@ -64,7 +70,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
      * 维度解析主逻辑
      * return 维度解析结果
      */
-    public String analyzeSingleField(String html) {
+    public String analyzeSingleField(String html) throws Exception{
         String analysisResult = null;
 
         //获取该字段关联的规则
@@ -82,7 +88,8 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
                 while (outerMtr.find()) {
                     matchPart = outerMtr.group();
-                    //仅只匹配出表达式的字符段跳过
+
+                    //仅只匹配出表达式的开头部分则跳过
                     if(MyStringUtils.isNull(matchPart.replace(outerMtr.group(1),"").trim())){
                         continue;
                     }
@@ -114,6 +121,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                             } else {
                                 analysisResult = innerMtr.group();
                             }
+//                            analysisResult = innerMtr.group();
                             if (MyStringUtils.isNotNull(analysisResult)) {
                                 logger.info( "\n##默认精准匹配结果:[analysisResult:" + analysisResult + "] by " +
                                         "[rangeRegex:\""+rangeRegex+"\"][innerRegex:\"" + innerRegex + "\"]" +
@@ -123,7 +131,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                         }
                     }
 
-                    //4.默认精准匹配没有匹配出结果时，其他自定义逻辑匹配
+                    //4.精准匹配没有匹配出结果时，其他自定义逻辑匹配
                     analysisResult =afterAccurateMatch(regListMap,matchPart,rangeRegex);
                     if(MyStringUtils.isNotNull(analysisResult)){
                         break outerMtr;
@@ -150,6 +158,9 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
         if(MyStringUtils.isNull(str)){
             return null;
         }
+        //结果段落分割
+        str = splitSection(str,"</p>");
+        //输出结果过滤
         for(Map regexMap: filterResultRegList) {
             String regex =  (String)regexMap.get("regex");
             Pattern ptn = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
@@ -163,6 +174,33 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             }
         }
         return str;
+    }
+
+    /**
+     * 对字符进行分割，获取分割之后第一个有效的字符序列
+     * @param orgin 源字符串
+     * @param splitStr 分割符号
+     * @return
+     */
+    private String splitSection(String orgin, String splitStr){
+        String result = null;
+        String[] splits  = orgin.split(splitStr);
+        if(splits!=null && splits.length>1){
+            for(String firstValid: splits){
+                if(MyStringUtils.isNotNull(firstValid) && firstValid.length()>=1) {
+                    result =firstValid;
+                    break;
+                }
+            }
+        }else{
+            result = orgin;
+        }
+        return result;
+    }
+
+    public static void main(String[] args){
+//        String orgin = "<p>速度快放假</p><p>常德市公共资源交易中心五楼（常德市武陵区建设路808号泓鑫桃林商业广场）</p> <p>sdfsdf</p>";
+//        System.out.println(SingleFieldAnalysisTemplate.splitSection(orgin,"</p>"));
     }
 
 

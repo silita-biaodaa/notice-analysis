@@ -48,4 +48,15 @@ public class OtherApplyAddressRule extends SingleFieldAnalysisTemplate {
         return address;
     }
 
+    /**
+     * 无匹配出解析值，设置默认值
+     * @param regListMap
+     * @param matchPart
+     * @param rangeRegex
+     * @return
+     */
+    protected String afterAccurateMatch(Map<String ,List<Map<String, Object>>> regListMap,String matchPart,String rangeRegex){
+        return "现场报名";
+    }
+
 }

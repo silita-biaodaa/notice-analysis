@@ -26,7 +26,7 @@
   <name>notice-analysis</name>
   <groupId>com.biaodaa</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0.33.13</version>
+  <version>1.0.33.15</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
@@ -68,6 +68,11 @@
       <id>public</id>  <!--这个ID需要与你新建的组group ID一致-->
       <name>Public Repository</name>
       <url>http://120.78.253.169:8081/nexus/content/groups/public/</url>
+    </repository>
+    <repository>
+      <id>aliyun</id>
+      <name>aliyun Repository</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
     </repository>
   </repositories>
 
@@ -227,7 +232,7 @@
     <dependency>
       <groupId>tk.mybatis</groupId>
       <artifactId>mapper-spring-boot-starter</artifactId>
-      <version>RELEASE</version>
+      <version>2.0.1</version>
     </dependency>
 
     <dependency>

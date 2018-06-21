@@ -98,6 +98,9 @@ public class TestService {
                 totalCount+=result;
                 list.get().clear();
                 list.clear();
+                if(result < pageSize){
+                    break;
+                }
             }else {
                 result=0;
             }
