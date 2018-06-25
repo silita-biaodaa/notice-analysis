@@ -32,7 +32,7 @@ public class KafkaProducerUtil {
 
     @PostConstruct
     public void init() throws FileNotFoundException {
-        String path = KafkaProducerUtil.class.getClassLoader().getResource("kafka-producer.properties").getPath();
+        String path = KafkaProducerUtil.class.getClassLoader().getResource("config/kafka/kafka-producer.properties").getPath();
         FileInputStream in = new FileInputStream(path);
         try {
             properties.load(in);
@@ -42,7 +42,7 @@ public class KafkaProducerUtil {
         }
     }
 
-    public void sendkafkaMsg(EsNotice es){
+    public static void sendkafkaMsg(EsNotice es){
         SoftReference<HashMap<String, Object>> mapRef = new SoftReference(new HashMap<String, Object>(3));
         Map map = mapRef.get();
         try {
@@ -59,7 +59,7 @@ public class KafkaProducerUtil {
         }
     }
 
-    public void sendMsg(Object msg){
+    public static void sendMsg(Object msg){
         int retry = 0;
         while (producer == null && retry < 3){
             retry++;
@@ -85,7 +85,7 @@ public class KafkaProducerUtil {
 
     }
 
-    private synchronized Producer createProducer() {
+    private static synchronized Producer createProducer() {
         return new Producer<Long, Object>(new ProducerConfig(properties));
     }
 

@@ -19,7 +19,7 @@
 	<cache:annotation-driven cache-manager="cacheManager"/>
 	<!-- cacheManager工厂类，指定ehcache.xml的位置 -->
 	<bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
-		  p:configLocation="classpath:ehcache.xml" p:shared="true" />
+		  p:configLocation="classpath:config/cache/ehcache.xml" p:shared="true" />
 	<!-- 声明cacheManager -->
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
 		  p:cacheManager-ref="cacheManagerFactory" />
