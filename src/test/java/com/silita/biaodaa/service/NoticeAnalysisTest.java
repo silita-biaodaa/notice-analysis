@@ -39,7 +39,7 @@ public class NoticeAnalysisTest extends ConfigTest  {
     public void pushCustomRedisNotice() {
         //"洪江市德坤矿业贸易有限公司污染场地修复EPC项目招标公告", 两栋原烟仓库喷淋系统采购项目招标公告
         //西湖山片区开发游步道项目
-        testService.pushCustomRedisNotice("test.hunan",null);
+        testService.pushCustomRedisNotice("test.hunan","石门县人民医院北扩工程项目医学教学楼装饰工程");
         analyzeHandler();
     }
 
@@ -83,5 +83,15 @@ public class NoticeAnalysisTest extends ConfigTest  {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Autowired
+    CommonService commonService;
+
+    @Test
+    public void TestRegexClean(){
+        commonService.queryRegexMapByField("applyAddress");
+        commonService.cleanRegexCache();
+        commonService.queryRegexMapByField("applyAddress");
     }
 }

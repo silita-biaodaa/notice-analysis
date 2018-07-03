@@ -4,6 +4,7 @@ import com.silita.biaodaa.dao.CommonMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,11 @@ public class CommonService {
         return sortRegList(commonMapper.queryRegexInfoByField(field));
     }
 
+    @CacheEvict(value="regexCache", allEntries=true)
+    public void cleanRegexCache(){
+        logger.info("清理规则缓存...");
+    }
+
     /**
      * 根据reg_type对表达式进行分类
      * @param regList
@@ -58,4 +64,6 @@ public class CommonService {
         }
         return regListMap;
     }
+
+
 }

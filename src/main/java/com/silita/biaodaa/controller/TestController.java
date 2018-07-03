@@ -3,6 +3,7 @@ package com.silita.biaodaa.controller;
 import com.google.common.collect.ImmutableMap;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.model.TUser;
+import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.service.TestService;
 import com.silita.biaodaa.task.AnalysisTask;
 import com.snatch.model.EsNotice;
@@ -42,6 +43,9 @@ public class TestController {
 
     @Autowired
     AnalysisTask analysisTask;
+
+    @Autowired
+    CommonService commonService;
 
 
     private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
@@ -122,6 +126,14 @@ public class TestController {
                     .put("msg", e.getMessage()).build();
         }
 
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/cleanRegexCache", method = RequestMethod.GET)
+    public Map cleanRegexCache(){
+        commonService.cleanRegexCache();
+        return new ImmutableMap.Builder<String, Object>().put("status", 0)
+                .put("msg", "清理规则缓存成功！").build();
     }
 
 

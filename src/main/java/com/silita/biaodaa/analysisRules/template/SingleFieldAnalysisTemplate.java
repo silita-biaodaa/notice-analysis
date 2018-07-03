@@ -79,6 +79,11 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             List<Map<String, Object>> rangeList = regListMap.get("range");//范围匹配规则
             List<Map<String, Object>> accurateList = regListMap.get("accurate");//精准匹配规则
             List<Map<String, Object>> filterResultRegList= regListMap.get("filterResult");//结果过滤规则
+            logger.debug("##########启用规则数量################");
+            logger.debug("rangeList:"+rangeList.size());
+            logger.debug("accurateList:"+accurateList.size());
+            logger.debug("filterResultRegList:"+filterResultRegList.size());
+            logger.debug("#####################################");
             //1.范围匹配
             outerMtr: for(Map rangeMap:rangeList) {
                 String rangeRegex=(String)rangeMap.get("regex")+rangeMap.get("ext_content");
