@@ -93,7 +93,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
                 while (outerMtr.find()) {
                     matchPart = outerMtr.group();
-
+                    logger.debug("1.范围匹配-->扫描段落："+matchPart);
                     //仅只匹配出表达式的开头部分则跳过
                     if(MyStringUtils.isNull(matchPart.replace(outerMtr.group(1),"").trim())){
                         continue;
@@ -102,6 +102,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                     //2.精准匹配前的业务规则匹配，匹配出值则跳过后续匹配
                     analysisResult =beforeAccurateMatch(regListMap,matchPart,rangeRegex);
                     if(MyStringUtils.isNotNull(analysisResult)){
+                        logger.debug("2.精准匹配前的自定义业务规则已匹配:"+analysisResult);
                         break outerMtr;
                     }
 
@@ -111,14 +112,13 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                         Pattern innerPtn = Pattern.compile(innerRegex,Pattern.CASE_INSENSITIVE);
                         Matcher innerMtr = innerPtn.matcher(matchPart);
 
-                        logger.debug(html + "\n[regex:" + innerRegex + "][groupCount:" + innerMtr.groupCount() + "]");
+                        logger.debug("3.精确匹配-->扫描段落："+matchPart + "\n[regex:" + innerRegex + "][groupCount:" + innerMtr.groupCount() + "]");
                         while (innerMtr.find()) {
                             int gCount = innerMtr.groupCount();
                             if (innerMtr.groupCount() > 2) {
                                 try {
                                     analysisResult = innerMtr.group().replaceFirst(innerMtr.group(1), "").replaceFirst(innerMtr.group(gCount), "");//去掉首尾
                                 }catch (Exception e){
-//                                logger.error(e.getMessage(),e);
                                     analysisResult = innerMtr.group().replaceFirst(innerMtr.group(1), "");
                                 }
                             } else if (innerMtr.groupCount() > 1) {
@@ -128,9 +128,9 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                             }
 //                            analysisResult = innerMtr.group();
                             if (MyStringUtils.isNotNull(analysisResult)) {
-                                logger.info( "\n##默认精准匹配结果:[analysisResult:" + analysisResult + "] by " +
+                                logger.info( "3.1 精准规则匹配结果:[analysisResult:" + analysisResult + "] by " +
                                         "[rangeRegex:\""+rangeRegex+"\"][innerRegex:\"" + innerRegex + "\"]" +
-                                        "[groupCount:" + innerMtr.groupCount() + "]\n##被解析片段：" + matchPart );
+                                        "[groupCount:" + innerMtr.groupCount() + "]\n##匹配段落：" + matchPart );
                                 break outerMtr;
                             }
                         }
@@ -139,6 +139,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                     //4.精准匹配没有匹配出结果时，其他自定义逻辑匹配
                     analysisResult =afterAccurateMatch(regListMap,matchPart,rangeRegex);
                     if(MyStringUtils.isNotNull(analysisResult)){
+                        logger.debug("4.精准无匹配结果时，自定义匹配值:"+analysisResult);
                         break outerMtr;
                     }
                 }
@@ -147,7 +148,9 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
             //5.过滤解析结果无效字符
             if(MyStringUtils.isNotNull(analysisResult)) {
+                logger.info("5.1 结果过滤前："+analysisResult);
                 analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
+                logger.info("5.2 结果过滤完成后："+analysisResult);
             }
         }
         return analysisResult;
