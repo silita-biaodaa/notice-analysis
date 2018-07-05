@@ -59,6 +59,7 @@ public class KafkaProducerUtil {
         }
     }
 
+
     public static void sendMsg(Object msg){
         int retry = 0;
         while (producer == null && retry < 3){
@@ -76,6 +77,37 @@ public class KafkaProducerUtil {
         if(producer != null){
             if(topic!=null) {
                 producer.send(new KeyedMessage<Long, Object>(topic, System.nanoTime(), msg));
+            }else{
+                log.error("topic is null"+topic);
+            }
+        }else{
+            log.error("kafka producer is null");
+        }
+
+    }
+
+    /**
+     * 指定分区进行发送消息
+     * @param msg
+     * @param partKey
+     */
+    public static void sendMsg(Object msg,Object partKey){
+        int retry = 0;
+        while (producer == null && retry < 3){
+            retry++;
+            producer = createProducer();
+            if (producer == null) {
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                }catch (Exception e){
+                    log.error(e,e);
+                }
+            }
+        }
+
+        if(producer != null){
+            if(topic!=null) {
+                producer.send(new KeyedMessage<Long, Object>(topic, System.nanoTime(),partKey, msg));
             }else{
                 log.error("topic is null"+topic);
             }

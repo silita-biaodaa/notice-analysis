@@ -53,7 +53,7 @@
     <jsp-api.version>2.0</jsp-api.version>
     <jta.version>1.1</jta.version>
     <ehcache.version>2.6.11</ehcache.version>
-    <kafka.version>1.0.0</kafka.version>
+    <kafka.version>1.1.0</kafka.version>
 
 
     <webSourceDirectory>src/main/webapp</webSourceDirectory>

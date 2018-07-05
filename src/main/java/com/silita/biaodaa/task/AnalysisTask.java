@@ -1,61 +1,54 @@
 package com.silita.biaodaa.task;
 
 import com.silita.biaodaa.common.SnatchContent;
+import com.silita.biaodaa.common.kafka.KafkaConsumerBase;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
+import com.silita.biaodaa.utils.LoggerUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by zhangxiahui on 18/3/13.
  */
 @Component
-public class AnalysisTask implements Runnable {
+public class AnalysisTask extends KafkaConsumerBase implements Runnable {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     DisruptorOperator disruptorOperator;
 
-    @Autowired
-    @Qualifier("jedisTemplate")
-    RedisTemplate redisTemplate;
-
-
-    private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
+    protected void msgHandle(Object msg)throws Exception{
+        if(msg instanceof Notice) {
+            Notice notice= (Notice)msg;
+            LoggerUtils.showJVM("接收爬虫(kafka)消息:[redisid:"+notice.getRedisId()+"][source:"+notice.getSource()+"][ur:"+notice.getUrl()+"]"
+                    + "[title:"+notice.getTitle()+"] [Opendate:"+notice.getOpendate()+"]");
+            try {
+                //notice转化为EsNotice
+                EsNotice esNotice = noticeToEsNotice(notice);
+                disruptorOperator.publish(esNotice);
+            }catch (Exception e){
+                logger.error(e.getMessage(),e);
+            }
+        }else{
+            logger.debug("接收到其他类型akka消息，跳过.msg className:"+msg.getClass());
+        }
+    }
 
 
     @Override
     public void run() {
-        logger.info("=================定时任务测试执行=============");
-
+        logger.info("=================启动接收任务线程=============");
         try {
-            Notice notice= takeFromHead(0);
-            //notice转化为EsNotice
-            EsNotice esNotice = noticeToEsNotice(notice);
-            disruptorOperator.publish(esNotice);
+            super.init();
         } catch (Exception e) {
-            logger.error("定时任务出错",e);
-        }
-
-
-    }
-
-    public Notice takeFromHead(int timeout) throws InterruptedException{
-        lock.lockInterruptibly();
-        try{
-            return (Notice) redisTemplate.opsForList().leftPop("liuqi",timeout, TimeUnit.SECONDS);
-        }finally{
-            lock.unlock();
+            logger.error("接收任务线程出错"+e.getMessage(),e);
+        }finally {
+            logger.info("=================接收任务线程执行完毕=============");
         }
     }
 
@@ -200,8 +193,5 @@ public class AnalysisTask implements Runnable {
         }
         return ad;
     }
-
-
-
 
 }
