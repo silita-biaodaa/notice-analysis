@@ -85,6 +85,37 @@ public class KafkaProducerUtil {
 
     }
 
+    /**
+     * 指定发送消息的分区
+     * @param msg
+     * @param partKey 分区key值
+     */
+    public static void sendMsg(Object msg,Object partKey){
+        int retry = 0;
+        while (producer == null && retry < 3){
+            retry++;
+            producer = createProducer();
+            if (producer == null) {
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                }catch (Exception e){
+                    log.error(e,e);
+                }
+            }
+        }
+
+        if(producer != null){
+            if(topic!=null) {
+                producer.send(new KeyedMessage<Long, Object>(topic, System.nanoTime(),partKey, msg));
+            }else{
+                log.error("topic is null"+topic);
+            }
+        }else{
+            log.error("kafka producer is null");
+        }
+
+    }
+
     private static synchronized Producer createProducer() {
         return new Producer<Long, Object>(new ProducerConfig(properties));
     }
