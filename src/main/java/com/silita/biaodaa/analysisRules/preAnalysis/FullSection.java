@@ -1,6 +1,7 @@
 package com.silita.biaodaa.analysisRules.preAnalysis;
 
 import com.silita.biaodaa.analysisRules.inter.PreAnalysisRule;
+import com.silita.biaodaa.utils.HtmlTagUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;
 import org.jsoup.Jsoup;
@@ -24,10 +25,10 @@ public class FullSection implements PreAnalysisRule {
         if(MyStringUtils.isNull(esNotice.getContent())){
             throw new Exception("公告内容为空。[esNotice.getContent():"+esNotice.getContent()+"]");
         }
-        String plainHtml = getPlainText(esNotice.getContent());
-        String[] main = {plainHtml};
+        String[] main = {HtmlTagUtils.clearInvalidTag(esNotice.getContent())};
         return main;
     }
+
 
     public String getPlainText(String str) {
         Document element = Jsoup.parse(str);

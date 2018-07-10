@@ -24,9 +24,9 @@
   <packaging>war</packaging>
 
   <name>notice-analysis</name>
-  <groupId>com.biaodaa</groupId>
+  <groupId>com.silita</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0.33.17</version>
+  <version>1.0.33.18</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
