@@ -26,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by zhangxiahui on 17/5/26.
+ * 提供测试导数等入口
  */
 @Controller
 @RequestMapping("/test")
@@ -46,7 +47,6 @@ public class TestController {
 
     @Autowired
     CommonService commonService;
-
 
     private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
 
@@ -79,7 +79,7 @@ public class TestController {
                 lock.unlock();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e,e);
         }
         return new ImmutableMap.Builder<String, Object>().put("status", 1)
                 .put("msg", "成功").put("data",notice).build();
@@ -92,7 +92,7 @@ public class TestController {
         try {
             testService.pushRedisNotice();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e,e);
         }
         return new ImmutableMap.Builder<String, Object>().put("status", 1)
                 .put("msg", "push到Redis成功!").build();
@@ -106,7 +106,7 @@ public class TestController {
             return new ImmutableMap.Builder<String, Object>().put("status", 1)
                     .put("msg", "custom push到Redis成功!").put("successCount",total).build();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e,e);
             return new ImmutableMap.Builder<String, Object>().put("status", 0)
                     .put("msg", e.getMessage()).build();
         }
@@ -121,7 +121,7 @@ public class TestController {
             return new ImmutableMap.Builder<String, Object>().put("status", 1)
                     .put("msg", "custom push到Redis成功!").put("successCount",total).build();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e,e);
             return new ImmutableMap.Builder<String, Object>().put("status", 0)
                     .put("msg", e.getMessage()).build();
         }
