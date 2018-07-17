@@ -11,6 +11,8 @@ public class HtmlTagUtils {
         content = content.replaceAll("(style|class|align)+?=*?\".*\"","");//去除样式属性
         content = content.replaceAll("<!--[\\s\\S\\W\\w.]*-->","");//去除样式属性
         content = content.replaceAll("&.*?;","");//去除转义字符'
+        content = content.replaceAll("[  ]*","");//剔除空格
+        content = content.replaceAll("\\n\\n","");//剔除连续换行符
         return content;
     }
 }
