@@ -59,6 +59,7 @@ public class KafkaProducerUtil {
         }
     }
 
+
     public static void sendMsg(Object msg){
         int retry = 0;
         while (producer == null && retry < 3){

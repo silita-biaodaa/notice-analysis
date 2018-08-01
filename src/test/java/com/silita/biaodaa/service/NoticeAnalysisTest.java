@@ -40,6 +40,7 @@ public class NoticeAnalysisTest extends ConfigTest  {
         //"洪江市德坤矿业贸易有限公司污染场地修复EPC项目招标公告", 两栋原烟仓库喷淋系统采购项目招标公告
         //西湖山片区开发游步道项目
         //石门县人民医院北扩工程
+        //testService.pushCustomRedisNotice("test.hunan","石门");
         //grunt 新民市2015年度农业综合开发土地治理存量资金项目第一标段、第二标段、第三标段施工
         testService.pushCustomRedisNotice("test.liaon",null);
 //        testService.pushCustomRedisSec("test.liaon",0,100,null);

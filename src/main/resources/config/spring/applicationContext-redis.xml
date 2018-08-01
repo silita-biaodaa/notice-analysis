@@ -21,6 +21,7 @@
         <property name="hostName" value="${redis.host}"/>
         <property name="port" value="${redis.port}"/>
         <property name="password" value="${redis.password}"/>
+        <property name="database" value="${redis.database}"/>
         <property name="poolConfig" ref="poolConfig"/>
     </bean>
 
