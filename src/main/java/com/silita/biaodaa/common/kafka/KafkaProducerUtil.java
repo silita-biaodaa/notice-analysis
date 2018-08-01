@@ -87,9 +87,9 @@ public class KafkaProducerUtil {
     }
 
     /**
-     * 指定分区进行发送消息
+     * 指定发送消息的分区
      * @param msg
-     * @param partKey
+     * @param partKey 分区key值
      */
     public static void sendMsg(Object msg,Object partKey){
         int retry = 0;

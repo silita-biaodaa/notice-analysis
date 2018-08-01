@@ -55,7 +55,7 @@ public class DisruptorOperator {
 
     //----中標start------
     @Autowired
-    OneNameHandler oneNameHandler;
+    FirstCandidateHandler firstCandidateHandler;
 
     @Autowired
     TwoNameHandler twoNameHandler;
@@ -99,7 +99,7 @@ public class DisruptorOperator {
         ZhaoBiaoDisruptorCreator.initDisruptor(zhaobiaoHandlerList,insertAnalyzeDetailHandler,sendMsgHandler);
 
         List<EventHandler> zhongbiaoHandlerList = new ArrayList<EventHandler>();
-        zhongbiaoHandlerList.add(oneNameHandler);
+        zhongbiaoHandlerList.add(firstCandidateHandler);
         zhongbiaoHandlerList.add(twoNameHandler);
         zhongbiaoHandlerList.add(threeNameHandler);
         zhongbiaoHandlerList.add(projDutyHandler);

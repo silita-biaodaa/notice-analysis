@@ -46,9 +46,9 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
     /**
      * 同一个范围匹配结果内，在“默认精准匹配逻辑”之前执行的解析规则，可由子类实现
-     * @param regListMap 规则列表
-     * @param matchPart
-     * @param rangeRegex
+     * @param regListMap 规则集合
+     * @param matchPart 解析字符片段
+     * @param rangeRegex 外层（范围匹配）命中规则
      * @return
      */
     protected String beforeAccurateMatch(Map<String ,List<Map<String, Object>>> regListMap,String matchPart,String rangeRegex){
@@ -57,13 +57,81 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
     /**
      * 在“默认精准匹配逻辑”没有匹配值之后执行的解析规则，可由子类实现
-     * @param regListMap
-     * @param matchPart
-     * @param rangeRegex
+     * @param regListMap 规则集合
+     * @param matchPart 解析字符片段
+     * @param rangeRegex 外层（范围匹配）命中规则
      * @return
      */
     protected String afterAccurateMatch(Map<String ,List<Map<String, Object>>> regListMap,String matchPart,String rangeRegex){
         return null;
+    }
+
+    /**
+     * 解析值，有效性检验（具体规则子类实现）
+     * @param regListMap 规则集合
+     * @param analysisResult 解析结果值
+     * @return
+     */
+    protected String verifyAnalysisResult(Map<String ,List<Map<String, Object>>> regListMap,String analysisResult){
+        return analysisResult;
+    }
+
+    /**
+     *
+     * @param regListMap 规则集合
+     * @param matchPart 解析片段
+     * @param rangeRegex 外层匹配命中的规则
+     * @return
+     */
+    private String  innertMatchRules( Map<String ,List<Map<String, Object>>> regListMap,String matchPart,String rangeRegex){
+        String result = null;
+        List<Map<String, Object>> accurateList = regListMap.get("accurate");//精准匹配规则
+
+        //1.精准匹配前,自定义规则（子类实现）
+        result =beforeAccurateMatch(regListMap,matchPart,rangeRegex);
+        if(MyStringUtils.isNotNull(result)){
+            logger.debug("2.精准匹配前的自定义业务规则已匹配:"+result);
+            return result;
+        }
+
+        //2.默认精准匹配
+        for (Map accurateMap:accurateList) {
+            String innerRegex = accurateMap.get("regex").toString();
+            Pattern innerPtn = Pattern.compile(innerRegex,Pattern.CASE_INSENSITIVE);
+            Matcher innerMtr = innerPtn.matcher(matchPart);
+
+            logger.debug("3.精确匹配-->扫描段落："+matchPart + "\n[regex:" + innerRegex + "][groupCount:" + innerMtr.groupCount() + "]");
+            while (innerMtr.find()) {
+                int gCount = innerMtr.groupCount();
+                if (innerMtr.groupCount() > 2) {
+                    try {
+                        result = innerMtr.group().replaceFirst(innerMtr.group(1), "").replaceFirst(innerMtr.group(gCount), "");//去掉首尾
+                    }catch (Exception e){
+                        result = innerMtr.group().replaceFirst(innerMtr.group(1), "");
+                    }
+                } else if (innerMtr.groupCount() > 1) {
+                    result = innerMtr.group().replaceFirst(innerMtr.group(1), "");//去掉首
+                } else {
+                    result = innerMtr.group();
+                }
+//                            result = innerMtr.group();
+                if (MyStringUtils.isNotNull(result)) {
+                    logger.info( "3.1 精准规则匹配结果:[result:" + result + "] by " +
+                            "[rangeRegex:\""+rangeRegex+"\"][innerRegex:\"" + innerRegex + "\"]" +
+                            "[groupCount:" + innerMtr.groupCount() + "]\n##匹配段落：" + matchPart );
+                    return result;
+                }
+            }
+        }
+
+        //3.精准匹配没有匹配出结果时，其他自定义逻辑匹配
+        result =afterAccurateMatch(regListMap,matchPart,rangeRegex);
+        if(MyStringUtils.isNotNull(result)){
+            logger.debug("3.精准无匹配结果时，自定义匹配值:"+result);
+            return result;
+        }else{//无匹配结果
+            return result;
+        }
     }
 
     /**
@@ -80,77 +148,55 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             List<Map<String, Object>> accurateList = regListMap.get("accurate");//精准匹配规则
             List<Map<String, Object>> filterResultRegList= regListMap.get("filterResult");//结果过滤规则
             logger.debug("##########启用规则数量################");
-            logger.debug("rangeList:"+rangeList.size());
+            if(rangeList!=null) {
+                logger.debug("rangeList:" + rangeList.size());
+            }
             logger.debug("accurateList:"+accurateList.size());
             logger.debug("filterResultRegList:"+filterResultRegList.size());
             logger.debug("#####################################");
-            //1.范围匹配
-            outerMtr: for(Map rangeMap:rangeList) {
-                String rangeRegex=(String)rangeMap.get("regex")+rangeMap.get("ext_content");
-                Pattern outerPtn = Pattern.compile(rangeRegex,Pattern.CASE_INSENSITIVE);
-                Matcher outerMtr = outerPtn.matcher(html);
-                String matchPart = null;
 
-                while (outerMtr.find()) {
-                    matchPart = outerMtr.group();
-                    logger.debug("1.范围匹配-->扫描段落："+matchPart);
-                    //仅只匹配出表达式的开头部分则跳过
-                    if(MyStringUtils.isNull(matchPart.replace(outerMtr.group(1),"").trim())){
-                        continue;
-                    }
+            // 1.1范围匹配判断
+            if(rangeList!=null && rangeList.size()>0) {
+                outerMtr:
+                for (Map rangeMap : rangeList) {
+                    String rangeRegex = (String) rangeMap.get("regex") + rangeMap.get("ext_content");
+                    Pattern outerPtn = Pattern.compile(rangeRegex, Pattern.CASE_INSENSITIVE);
+                    Matcher outerMtr = outerPtn.matcher(html);
+                    String matchPart = null;
 
-                    //2.精准匹配前的业务规则匹配，匹配出值则跳过后续匹配
-                    analysisResult =beforeAccurateMatch(regListMap,matchPart,rangeRegex);
-                    if(MyStringUtils.isNotNull(analysisResult)){
-                        logger.debug("2.精准匹配前的自定义业务规则已匹配:"+analysisResult);
-                        break outerMtr;
-                    }
-
-                    //3.默认精准匹配
-                    for (Map accurateMap:accurateList) {
-                        String innerRegex = accurateMap.get("regex").toString();
-                        Pattern innerPtn = Pattern.compile(innerRegex,Pattern.CASE_INSENSITIVE);
-                        Matcher innerMtr = innerPtn.matcher(matchPart);
-
-                        logger.debug("3.精确匹配-->扫描段落："+matchPart + "\n[regex:" + innerRegex + "][groupCount:" + innerMtr.groupCount() + "]");
-                        while (innerMtr.find()) {
-                            int gCount = innerMtr.groupCount();
-                            if (innerMtr.groupCount() > 2) {
-                                try {
-                                    analysisResult = innerMtr.group().replaceFirst(innerMtr.group(1), "").replaceFirst(innerMtr.group(gCount), "");//去掉首尾
-                                }catch (Exception e){
-                                    analysisResult = innerMtr.group().replaceFirst(innerMtr.group(1), "");
-                                }
-                            } else if (innerMtr.groupCount() > 1) {
-                                analysisResult = innerMtr.group().replaceFirst(innerMtr.group(1), "");//去掉首
-                            } else {
-                                analysisResult = innerMtr.group();
-                            }
-//                            analysisResult = innerMtr.group();
-                            if (MyStringUtils.isNotNull(analysisResult)) {
-                                logger.info( "3.1 精准规则匹配结果:[analysisResult:" + analysisResult + "] by " +
-                                        "[rangeRegex:\""+rangeRegex+"\"][innerRegex:\"" + innerRegex + "\"]" +
-                                        "[groupCount:" + innerMtr.groupCount() + "]\n##匹配段落：" + matchPart );
-                                break outerMtr;
-                            }
+                    while (outerMtr.find()) {
+                        matchPart = outerMtr.group();
+                        logger.debug("1.范围匹配-->扫描段落：" + matchPart);
+                        //仅只匹配出表达式的开头部分则跳过
+                        if (MyStringUtils.isNull(matchPart.replace(outerMtr.group(1), "").trim())) {
+                            continue;
                         }
-                    }
 
-                    //4.精准匹配没有匹配出结果时，其他自定义逻辑匹配
-                    analysisResult =afterAccurateMatch(regListMap,matchPart,rangeRegex);
-                    if(MyStringUtils.isNotNull(analysisResult)){
-                        logger.debug("4.精准无匹配结果时，自定义匹配值:"+analysisResult);
-                        break outerMtr;
+                        //1.2内层匹配规则
+                        analysisResult = innertMatchRules(regListMap, matchPart, rangeRegex);
+                        if (MyStringUtils.isNotNull(analysisResult)) {
+                            //命中规则，停止执行其他规则
+                            break outerMtr;
+                        }
+
                     }
+                    matchPart = null;
                 }
-                matchPart=null;
+            }else{
+                //1.1 无范围匹配
+                logger.debug("无范围匹配规则，直接进行（内层）规则匹配");
+                analysisResult = innertMatchRules(regListMap, html, null);
+            }
+            //2.解析结果过滤
+            if(MyStringUtils.isNotNull(analysisResult)) {
+                logger.info("3.1 结果过滤前："+analysisResult);
+                analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
+                logger.info("3.2 结果过滤完成后："+analysisResult);
             }
 
-            //5.过滤解析结果无效字符
+            //3.解析结果有效性检验，检验失败返回空
             if(MyStringUtils.isNotNull(analysisResult)) {
-                logger.info("5.1 结果过滤前："+analysisResult);
-                analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
-                logger.info("5.2 结果过滤完成后："+analysisResult);
+                analysisResult = verifyAnalysisResult(regListMap,analysisResult);
             }
         }
         return analysisResult;

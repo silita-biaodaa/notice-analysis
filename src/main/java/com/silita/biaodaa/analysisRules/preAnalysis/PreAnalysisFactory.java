@@ -19,6 +19,7 @@ public class PreAnalysisFactory {
     public PreAnalysisRule getPreAnalysisRule(String clsName){
         switch (clsName){
             case "ApplyAddressHandler":return fullSection;
+            case "FirstCandidateHandler":return fullSection;
             default: return splitSection;
         }
     }

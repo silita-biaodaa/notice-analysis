@@ -1,5 +1,6 @@
 package com.silita.biaodaa.service;
 
+import com.silita.biaodaa.utils.HtmlTagUtils;
 import org.junit.Test;
 
 import java.util.regex.Matcher;
@@ -139,6 +140,68 @@ public class RegexTest {
         Matcher m = p.matcher(INPUT);
         INPUT = m.replaceAll(REPLACE);
         System.out.println(INPUT);
+    }
+    String content="<div class=\"xiangxiyekuang\"><p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">受岳阳市人民代表大会常务委员会办公室的委托，对岳阳市人大常委会机关主任会议室电子会议系统建设项目进行公开招标采购，欢迎符合资格条件、有实力并对此有兴趣的供应商前来投标。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">一、项目名称：岳阳市人大常委会机关主任会议室电子会议系统建设项目<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">二、政府采购编号：岳财市采计【2018】000064号 &nbsp;&nbsp;委托代理编号：HNTC2018ZB0304<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">三、预算上限：1541000元<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">四、采购方式：公开招标<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">五、评标办法：综合评分法<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">六、投标人资格要求：<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1、投标单位基本资格条件：投标单位必须是符合《中华人民共和国政府采购法》第二十二条的合格投标单位且能提供：<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.1、企业在工商部门注册的有效“营业执照”；事业单位提供“事业单位法人证书”；非企业专业服务机构提供“执业许可证”等证明文件；个体工商户提供“个体工商户营业执照”；如供应商是自然人，需提供有效的自然人身份证。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.2、投标人为法人的，提供2017年度经审计的财务报告,或其基本开户银行出具的资信证明。部分其他组织和自然人如无经审计的财务报告可以提供其近3个月的报表，或其基本开户银行出具的资信证明。（提供财政部门认可的政府采购专业担保机构出具的有投标担保函的不需要提供其他财务状况报告）。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.3、提供社会保险登记证或参加政府采购活动前三个月内缴纳社会保险的凭据（专用收据或社会保险缴纳清单）；（依法不需要缴纳社会保障资金的，提供相应文件证明）。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.4、提供参加政府采购采购活动前三年内，在经营活动中没有重大违法记录的书面声明函。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.5、提供在信用中国网站查询投标人无重大失信行为等被禁止投标的记录。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.6、法律、行政法规规定的其他条件。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">2、投标人特定资格条件：具有电子与智能化工程专业承包贰级（含贰级）以上资质。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">3、本项目不接受联合体投标、中标转让。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">七、获取招标文件的时间、地点、方式及招标文件售价：<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.有意投标供应商必须办理数字CA,投标人在网上注册应对所提供的证件和证明材料的真实性承担法律责任。<br>\n" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;2.本次招标只支持网上支付标书费报名并从系统中下载招标文件。（联系电话：0730-8181091）<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">3.招标文件售价：人民币400元/份，只支持网银支付。本项目只有网上购买标书，投标人才有资格生成投标保证金账号，缴纳保证金。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">4、招标文件提供期限：2018年03月23日至2018年03月30日。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">八、投标保证金：<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1.投标保证金交纳：人民币叁万元整（￥30000.00元）<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">（1）缴纳时间：2018年4月12日中午12时前（含）（北京时间），以岳阳市公共资源交易中心保证金支付系统到账时间为准（保证金咨询电话：0730-8882193）<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">（2）缴纳方式：投标保证金应以投标人银行账户转账等非现金形式递交。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">账户名：岳阳市公共资源交易中心<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">开户行：投标人在网上可自行选择保证金专户银行账户。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">账号：投标人随机获取对应本项目（标段）投标保证金子账号<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">1）投标人在岳阳市公共资源交易网（ggzy.yueyang.gov.cn）选择“投标单位登入”（首次登入需注册,完成注册并绑定投标人CA等相关手续后进入交易系统），投标人选择对应项目进行投标操作，生成对应本项目（标段）的投标保证金子账号。该账号为投标人缴纳本项目（标段）投标保证金的唯一账号，请注意保密。（投标人必须办理湖南CA数字证书才能完成登入及后续操作）<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">2）投标人在提交保证金时，应按照随机获取的保证金子账号信息准确填写银行账单（投标保证金只能从投标人的银行基本户转出），投标人可通过登入系统查询保证金到账及退还情况。 <o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">（3）CA数字证书办理<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">岳阳市公共资源交易中心404室（岳阳市政府政务服务中心4楼）电话：0730-8181828。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">九、投标截止时间、开标时间及地点：<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">兹定于2018年04月13日09：00时（北京时间）在岳阳市公共资源交易中心四楼开标大厅公开开标，逾期送达的或者未送达指定地点的投标文件将拒绝接收。届时请投标人的法定代表人或其委托代理人出席开标仪式。<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">十、采购项目联系人姓名和电话：<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">采 购 人：岳阳市人民代表大会常务委员会办公室 <o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">联 系 人：陈颖<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">电 &nbsp;&nbsp; 话：18673028099<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">代理机构：湖南同创工程项目管理有限公司 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">地 &nbsp;&nbsp;&nbsp;址：岳阳市岳阳楼区五里牌第一世家1102<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">联 系 人：高女士 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<o:p></o:p></p>\n" +
+            "<p style=\"text-align: justify; line-height: 2; text-indent: 2em; font-family: 宋体; font-size: 12pt; margin-top: 0px; margin-bottom: 0px; -ms-text-justify: inter-ideograph;\">电 &nbsp;&nbsp;&nbsp;话：0730-8201199<o:p></o:p></p>\n" +
+            "&nbsp;&nbsp;&nbsp;</div>";
+
+    @Test
+    public void cleanHtmlTag(){
+
+//        string regexstr = @"<[^>]*>"; //去除所有的标签
+//
+//        @"<script[^>]*?>.*?</script >"; //去除所有脚本，中间部分也删除
+//
+//        string regexstr = @"<img[^>]*>"; //去除图片的正则
+//
+//        string regexstr = @"<(?!br).*?>"; //去除所有标签，只剩br
+//
+//        string regexstr = @"<table[^>]*?>.*?</table>"; //去除table里面的所有内容
+//
+//        string regexstr = @"<(?!img|br|p|/p).*?>"; //去除所有标签，只剩img,br,p
+
+        content = HtmlTagUtils.clearInvalidTag(content);
+        System.out.println(content);
     }
 
 
