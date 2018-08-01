@@ -4,6 +4,8 @@ import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,8 @@ import java.util.regex.Pattern;
  */
 @Component
 public class OtherApplyTbEndDate implements SingleFieldAnalysis {
+
+    private Log logger = LogFactory.getLog(OtherApplyTbEndDate.class);
 
     @Autowired
     CommonService commonService;
@@ -80,7 +84,7 @@ public class OtherApplyTbEndDate implements SingleFieldAnalysis {
                             list2.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":").replaceAll("点", ":"))));
                         }
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        logger.error(e,e);
                         continue;
                     }
                 }
