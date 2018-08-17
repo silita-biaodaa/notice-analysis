@@ -3,6 +3,7 @@ package com.silita.biaodaa.disruptor.handler;
 import com.lmax.disruptor.EventHandler;
 import com.silita.biaodaa.analysisRules.inter.PreAnalysisRule;
 import com.silita.biaodaa.analysisRules.preAnalysis.PreAnalysisFactory;
+import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.silita.biaodaa.common.CommonMethods.getClassString;
+import static com.silita.biaodaa.common.Constant.PROCESS_INFO;
 
 public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> {
     Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
@@ -35,6 +37,9 @@ public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> 
     public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
         EsNotice esNotice = event.getEsNotice();
         routePreAnalysisRule();
+        if(Constant.IS_DEBUG) {
+            PROCESS_INFO.put("0", "开始解析[title:"+esNotice.getTitle()+"]\n[url:"+esNotice.getUrl()+"]");
+        }
         if(MyStringUtils.isNull(currentFieldValues(esNotice))) {
             String[] list = preAnalysisRule.buildAnalysisList(esNotice,"</p>","</td>");
             Object s3 = null;
@@ -45,6 +50,9 @@ public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> 
                     if(MyStringUtils.isNull(s3)) {
                         if(MyStringUtils.isNotNull(list[i])){
                             s3 = executeAnalysis(list[i],esNotice);
+                            if(Constant.IS_DEBUG) {
+                                PROCESS_INFO.put("99", "[" + esNotice.getTitle() + "]解析完毕");
+                            }
                             if(MyStringUtils.isNotNull(s3)) {
                                 break;
                             }

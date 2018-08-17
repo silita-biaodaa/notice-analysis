@@ -1,7 +1,11 @@
 package com.silita.biaodaa.service;
 
+import com.silita.biaodaa.common.kafka.KafkaProducerUtil;
 import com.silita.biaodaa.dao.TestMapper;
+import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
+import com.silita.biaodaa.disruptor.handler.zhongBiao.FirstCandidateHandler;
 import com.silita.biaodaa.model.TUser;
+import com.snatch.model.EsNotice;
 import com.snatch.model.Notice;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Map;
+
+import static com.silita.biaodaa.common.Constant.PROCESS_INFO;
 
 /**
  * Created by zhangxiahui on 18/3/13.
@@ -31,14 +38,17 @@ public class TestService {
 
     Logger logger = Logger.getLogger(TestService.class);
 
+    @Autowired
+    KafkaProducerUtil kafkaProducerUtil;
+
     public TUser getTestName(String id){
         return testMapper.getTestName(id);
     }
 
     public void pushRedisNotice(){
         List<Notice> list = testMapper.getNoticeToRedis();
-        for(Notice notice : list){
-            redisTemplate.opsForList().leftPush("liuqi",notice);
+        if(list!=null && list.size()>0) {
+            sendAnalysisMsg(list);
         }
     }
 
@@ -51,9 +61,7 @@ public class TestService {
             List<Notice> list = testMapper.getHunanNoticeToRedis(start, pageSize);
             if(list!=null && list.size()>0) {
                 result = list.size();
-                for (Notice notice : list) {
-                    redisTemplate.opsForList().leftPush("liuqi", notice);
-                }
+                sendAnalysisMsg(list);
             }else {
                 result=0;
             }
@@ -94,7 +102,7 @@ public class TestService {
             list =new WeakReference(testMapper.pushCustomRedisNotice(start, pageSize,tbName,title));
             if(list.get()!=null && list.get().size()>0) {
                 result = list.get().size();
-                redisTemplate.opsForList().leftPushAll("liuqi",list.get());
+                sendAnalysisMsg(list.get());
                 totalCount+=result;
                 list.get().clear();
                 list.clear();
@@ -116,6 +124,13 @@ public class TestService {
         return totalCount;
     }
 
+    private void sendAnalysisMsg(List<Notice> list){
+        redisTemplate.opsForList().leftPushAll("liuqi",list);
+        for(Notice n: list) {
+            kafkaProducerUtil.sendkafkaMsg(n, "test_crawler_queue");
+        }
+    }
+
     public int pushCustomRedisSec(String tbName,int startNum,int tCount,String title){
         if(!isContinue(tbName)){
             throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
@@ -132,7 +147,7 @@ public class TestService {
 //                for (Notice notice : list) {
 //                    redisTemplate.opsForList().leftPush("liuqi", notice);
 //                }
-                redisTemplate.opsForList().leftPushAll("liuqi",list.get());
+                sendAnalysisMsg(list.get());
                 totalCount+=result;
                 list.get().clear();
                 list.clear();
@@ -149,6 +164,27 @@ public class TestService {
         System.gc();
         finishedPush(tbName,totalCount);
         return totalCount;
+    }
+
+    public List debugNoticeList(String tbName,String title){
+        int pageSize =1000;
+        WeakReference<List<Notice>> list=new WeakReference(testMapper.pushCustomRedisNotice(0, pageSize,tbName,title));
+        return list.get();
+    }
+
+    @Autowired
+    FirstCandidateHandler fcd;
+
+    public Map analysisProbe(EsNotice esNotice){
+        AnalyzeEvent ae = new AnalyzeEvent();
+        ae.setEsNotice(esNotice);
+        PROCESS_INFO.clear();
+        try {
+            fcd.onEvent(ae, 0, false);
+        }catch(Exception e){
+            logger.error(e,e);
+        }
+        return PROCESS_INFO;
     }
 
 

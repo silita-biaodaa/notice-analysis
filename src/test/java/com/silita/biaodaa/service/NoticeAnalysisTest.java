@@ -1,5 +1,6 @@
 package com.silita.biaodaa.service;
 
+import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.task.AnalysisTask;
 import com.snatch.model.EsNotice;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,9 +46,28 @@ public class NoticeAnalysisTest extends ConfigTest  {
         //石门县人民医院北扩工程
         //testService.pushCustomRedisNotice("test.hunan","石门");
         //grunt 新民市2015年度农业综合开发土地治理存量资金项目第一标段、第二标段、第三标段施工
-        testService.pushCustomRedisNotice("test.liaon",null);
+        testService.pushCustomRedisNotice("test.liaon","沈阳地铁六号线一期工程土建工程初步设计及施工图设计（合同包四：人防工程）沈阳地铁六号线一期工程土建工程初步设计及施工图设计");
 //        testService.pushCustomRedisSec("test.liaon",0,100,null);
         analyzeHandler();
+    }
+
+    @Test
+    public void testAnalysisProbe(){
+        Constant.IS_DEBUG=true;
+        List<Notice> list = testService.debugNoticeList("test.notice","绥阳县2018年新增千亿斤粮食产能规划田间工程建设项目（平坝村）中标公示");
+        for (Notice n:list) {
+            EsNotice esNotice = AnalysisTask.noticeToEsNotice(n);
+            Map result = testService.analysisProbe(esNotice);
+            if(result!=null && result.keySet().size()>0){
+                Iterator ite = result.keySet().iterator();
+                while(ite.hasNext()){
+                    String key = ite.next().toString();
+                    String val = result.get(key).toString();
+                    System.out.println(key+"###"+val);
+                }
+            }
+
+        }
     }
 
 

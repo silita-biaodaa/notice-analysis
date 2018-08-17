@@ -52,7 +52,7 @@ public class AnalysisTask extends KafkaConsumerBase implements Runnable {
         }
     }
 
-    public EsNotice noticeToEsNotice(Notice notice){
+    public static EsNotice noticeToEsNotice(Notice notice){
         EsNotice esNotice = null;
         if (notice != null) {
             esNotice = new EsNotice();
@@ -114,7 +114,7 @@ public class AnalysisTask extends KafkaConsumerBase implements Runnable {
     }
 
 
-    private void zhaobiaoReplaceFiled(Dimension dimension, AnalyzeDetail ad) {
+    private static void zhaobiaoReplaceFiled(Dimension dimension, AnalyzeDetail ad) {
         if (dimension != null) {
             if (MyStringUtils.isNotDefaultStringAndNull(dimension.getProjDq())) {
                 ad.setProjDq(dimension.getProjDq());
@@ -164,7 +164,7 @@ public class AnalysisTask extends KafkaConsumerBase implements Runnable {
         }
     }
 
-    private AnalyzeDetailZhongBiao zhongbiaoReplaceFiled(Dimension dimension, AnalyzeDetailZhongBiao ad) {
+    private static AnalyzeDetailZhongBiao zhongbiaoReplaceFiled(Dimension dimension, AnalyzeDetailZhongBiao ad) {
         if (dimension!= null) {
             if (MyStringUtils.isNotDefaultStringAndNull(dimension.getOneOffer())) {
                 ad.setOneOffer(dimension.getOneOffer());

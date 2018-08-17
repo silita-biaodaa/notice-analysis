@@ -1,6 +1,7 @@
 package com.silita.biaodaa.controller;
 
 import com.google.common.collect.ImmutableMap;
+import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
 import com.silita.biaodaa.model.TUser;
 import com.silita.biaodaa.service.CommonService;
@@ -13,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -110,7 +114,6 @@ public class TestController {
             return new ImmutableMap.Builder<String, Object>().put("status", 0)
                     .put("msg", e.getMessage()).build();
         }
-
     }
 
     @ResponseBody
@@ -136,5 +139,29 @@ public class TestController {
                 .put("msg", "清理规则缓存成功！").build();
     }
 
+    /**
+     * 解析过程调试页
+     * @param tbName
+     * @param title
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/analysisProbe", method = RequestMethod.GET)
+    public String  analysisProbe(String tbName,String title,Model model){
+        Constant.IS_DEBUG=true;
+        List<Map> infoList = new ArrayList<Map>();
+        try {
+            List<Notice> list = testService.debugNoticeList(tbName,title);
+            for (Notice n:list) {
+                EsNotice esNotice = AnalysisTask.noticeToEsNotice(n);
+                Map result = testService.analysisProbe(esNotice);
+                infoList.add(result);
+            }
+            model.addAttribute("infoList",infoList);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+        }
+        return "pages/analysisInfo";
+    }
 
 }

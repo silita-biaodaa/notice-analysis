@@ -32,7 +32,6 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
     DisruptorOperator disruptorOperator;
 
 
-
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {

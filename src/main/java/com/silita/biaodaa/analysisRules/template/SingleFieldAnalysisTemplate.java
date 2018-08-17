@@ -1,8 +1,10 @@
 package com.silita.biaodaa.analysisRules.template;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
+import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
+import com.silita.biaodaa.utils.RedisCacheUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.silita.biaodaa.common.Constant.PROCESS_INFO;
+
 /**
  * 解析模板类（单字段解析）
  */
 public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis {
 
     private Log logger = LogFactory.getLog(SingleFieldAnalysisTemplate.class);
+
+    @Autowired
+    private RedisCacheUtil redisCacheUtil;
+
+    private String keyPre= "analysis_";
 
     @Autowired
     CommonService commonService;
@@ -90,7 +99,10 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
         //1.精准匹配前,自定义规则（子类实现）
         result =beforeAccurateMatch(regListMap,matchPart,rangeRegex);
         if(MyStringUtils.isNotNull(result)){
-            logger.debug("2.精准匹配前的自定义业务规则已匹配:"+result);
+            logger.debug("2.精准匹配前的自定义业务规则匹配值:"+result);
+            if(Constant.IS_DEBUG) {
+                PROCESS_INFO.put("2","精准匹配前的自定义业务规则匹配值:"+result);
+            }
             return result;
         }
 
@@ -118,7 +130,12 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                 if (MyStringUtils.isNotNull(result)) {
                     logger.info( "3.1 精准规则匹配结果:[result:" + result + "] by " +
                             "[rangeRegex:\""+rangeRegex+"\"][innerRegex:\"" + innerRegex + "\"]" +
-                            "[groupCount:" + innerMtr.groupCount() + "]\n##匹配段落：" + matchPart );
+                            "[groupCount:" + innerMtr.groupCount() + "]");
+                    logger.debug("##匹配段落：" + matchPart );
+                    if(Constant.IS_DEBUG){
+                        PROCESS_INFO.put("3.1","[解析字段："+fieldName+"]\n[范围匹配规则:"+rangeRegex+"]\n[精确规则:" + innerRegex + "]" +
+                                "\n[groupCount:" + innerMtr.groupCount() + "]\n[解析结果:"+result+"]");
+                    }
                     return result;
                 }
             }
@@ -127,7 +144,10 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
         //3.精准匹配没有匹配出结果时，其他自定义逻辑匹配
         result =afterAccurateMatch(regListMap,matchPart,rangeRegex);
         if(MyStringUtils.isNotNull(result)){
-            logger.debug("3.精准无匹配结果时，自定义匹配值:"+result);
+            logger.debug("4.精准无匹配结果时，自定义匹配值:"+result);
+            if(Constant.IS_DEBUG) {
+                PROCESS_INFO.put("4", "精准无匹配结果时，自定义匹配值" + result);
+            }
             return result;
         }else{//无匹配结果
             return result;
@@ -172,7 +192,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                             continue;
                         }
 
-                        //1.2内层匹配规则
+                        //1.内层匹配规则
                         analysisResult = innertMatchRules(regListMap, matchPart, rangeRegex);
                         if (MyStringUtils.isNotNull(analysisResult)) {
                             //命中规则，停止执行其他规则
@@ -192,11 +212,18 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                 logger.info("3.1 结果过滤前："+analysisResult);
                 analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
                 logger.info("3.2 结果过滤完成后："+analysisResult);
+
+                if(Constant.IS_DEBUG){
+                    PROCESS_INFO.put("5","结果过滤完成后："+analysisResult);
+                }
             }
 
             //3.解析结果有效性检验，检验失败返回空
             if(MyStringUtils.isNotNull(analysisResult)) {
                 analysisResult = verifyAnalysisResult(regListMap,analysisResult);
+                if(Constant.IS_DEBUG){
+                    PROCESS_INFO.put("6","解析结果有效性检验："+analysisResult);
+                }
             }
         }
         return analysisResult;
