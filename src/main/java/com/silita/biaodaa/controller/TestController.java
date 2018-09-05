@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -69,24 +70,45 @@ public class TestController {
                 .put("msg", "成功").put("data",user).build();
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/testTask", method = RequestMethod.GET)
-    public Map<String, Object> testTask() {
+    private void runAnalysis(int count){
+//        disruptorOperator.start();
+        for(int i=0;i<count;i++){
+            runOneAnalysis();
+        }
+    }
+
+    private Notice runOneAnalysis(){
         Notice notice = null ;
         try {
-            lock.lockInterruptibly();
-            try{
-                notice = (Notice) redisTemplate.opsForList().leftPop("liuqi",0, TimeUnit.SECONDS);
-                EsNotice esNotice = analysisTask.noticeToEsNotice(notice);
-                disruptorOperator.publish(esNotice);
-            }finally{
-                lock.unlock();
-            }
+            notice = (Notice) redisTemplate.opsForList().leftPop("liuqi",0, TimeUnit.SECONDS);
+            EsNotice esNotice = analysisTask.noticeToEsNotice(notice);
+            disruptorOperator.publish(esNotice);
         } catch (Exception e) {
             logger.error(e,e);
         }
+        return notice;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/testTask", method = RequestMethod.GET)
+    public Map<String, Object> testTask(int count) {
+        runAnalysis(count);
+//        disruptorOperator.start();
+        Map resultMap = new HashMap();
+        resultMap.put("msg","解析启动成功");
+        resultMap.put("count",count);
+        return resultMap;
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "/testOneTask", method = RequestMethod.GET)
+    public Map<String, Object> testOneTask() {
+//        disruptorOperator.start();
+        Notice notice = runOneAnalysis();
         return new ImmutableMap.Builder<String, Object>().put("status", 1)
-                .put("msg", "成功").put("data",notice).build();
+                .put("msg", "成功").put("data",notice.getTitle()+"##type:"+notice.getCatchType()).build();
     }
 
 

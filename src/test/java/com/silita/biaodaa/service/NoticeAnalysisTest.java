@@ -46,7 +46,7 @@ public class NoticeAnalysisTest extends ConfigTest  {
         //石门县人民医院北扩工程
         //testService.pushCustomRedisNotice("test.hunan","石门");
         //grunt 新民市2015年度农业综合开发土地治理存量资金项目第一标段、第二标段、第三标段施工
-        testService.pushCustomRedisNotice("test.liaon","沈阳地铁六号线一期工程土建工程初步设计及施工图设计（合同包四：人防工程）沈阳地铁六号线一期工程土建工程初步设计及施工图设计");
+        testService.pushCustomRedisNotice("test.test_hunan_repeat",null);
 //        testService.pushCustomRedisSec("test.liaon",0,100,null);
         analyzeHandler();
     }
