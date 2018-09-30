@@ -20,6 +20,25 @@ public class MyStringUtils {
 
 	private static final String[] remit = {"网银转账","网上支付","银行保函","保险单","担保函","电汇","转账"};
 
+	/**
+	 * 对字符串中的转移字符增加'\'
+	 * @param s
+	 * @return
+	 */
+	public static String convertESC(String s){
+		String[] e = {"(","（","）",")"};
+		for (int i=0; i<e.length;i++){
+			int si = s.indexOf(e[i]);
+			do {
+				if(si !=-1){
+					s = s.substring(0,si)+"\\"+s.substring(si);
+				}
+				si = s.indexOf(e[i],si+2);
+			}while (si!=-1);
+		}
+		return s;
+	}
+
 	public static boolean isNotNull(String str){
 		if(str !=null && !str.trim().equals("")){
 			return true;

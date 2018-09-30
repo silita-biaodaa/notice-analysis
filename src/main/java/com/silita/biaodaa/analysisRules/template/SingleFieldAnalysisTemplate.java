@@ -21,7 +21,7 @@ import static com.silita.biaodaa.common.Constant.PROCESS_INFO;
  */
 public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis {
 
-    private Log logger = LogFactory.getLog(SingleFieldAnalysisTemplate.class);
+    private static Log logger = LogFactory.getLog(SingleFieldAnalysisTemplate.class);
 
     @Autowired
     private RedisCacheUtil redisCacheUtil;
@@ -47,8 +47,13 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                 throw new Exception ("fieldName is null!");
             }
             analysisRes = analyzeSingleField(segment);
+            if(analysisRes!=null && analysisRes.length()>100){
+                analysisRes=analysisRes.substring(0,100);
+            }
         }catch (Exception e){
             logger.error(e,e);
+        }catch (Error re){
+            logger.error(re,re);
         }
         return analysisRes;
     }
@@ -241,6 +246,8 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
         }
         //结果段落分割
         str = splitSection(str,"</p>");
+        str = str.replaceFirst("\\n","");
+        str = str.trim();
         //输出结果过滤
         for(Map regexMap: filterResultRegList) {
             String regex =  (String)regexMap.get("regex");
@@ -250,6 +257,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             while (matcher.find()) {
                 tmp=  matcher.group();
                 if(tmp!=null && !tmp.equals(str)) {
+                    tmp = MyStringUtils.convertESC(tmp);
                     str = str.replaceAll(tmp, "");
                 }
             }

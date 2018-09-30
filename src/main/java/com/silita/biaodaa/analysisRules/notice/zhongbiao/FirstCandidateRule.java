@@ -35,7 +35,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
             Pattern ptn = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
             Matcher matcher = ptn.matcher(analysisResult);
             if(!matcher.find()){
-                logger.debug("解析结果验证失败，返回null。[analysisResult:"+analysisResult+"][regex:"+regex+"]");
+                logger.info("解析结果验证失败，返回null。[analysisResult:"+analysisResult+"][regex:"+regex+"]");
                 return null;
             }
         }

@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import static com.silita.biaodaa.common.Constant.PROCESS_INFO;
 
@@ -36,7 +38,7 @@ public class TestService {
     @Qualifier("jedisStringTemplate")
     RedisTemplate jedisStringTemplate;
 
-    Logger logger = Logger.getLogger(TestService.class);
+    public static Logger logger = Logger.getLogger(TestService.class);
 
     @Autowired
     KafkaProducerUtil kafkaProducerUtil;
@@ -85,53 +87,78 @@ public class TestService {
     }
 
     private void finishedPush(String tbName,int totalCount){
+        if(totalCount==0){
+            totalCount=-1;
+        }
         jedisStringTemplate.opsForValue().set(tbName,String.valueOf(totalCount));
     }
 
-    public int pushCustomRedisNotice(String tbName,String title){
-        if(!isContinue(tbName)){
-            throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
-        }
-        int pageSize =100;
-        int pageNum=0;
-        int result=0;
-        int totalCount=0;
-        WeakReference<List<Notice>> list =null;
-        while(pageNum==0 || result>0) {
-            int start =pageNum*pageSize;
-            list =new WeakReference(testMapper.pushCustomRedisNotice(start, pageSize,tbName,title));
-            if(list.get()!=null && list.get().size()>0) {
-                result = list.get().size();
-                sendAnalysisMsg(list.get());
-                totalCount+=result;
+    public int pushCustomRedisNotice(String tbName,String title,String source){
+        int totalCount = 0;
+        try {
+            if (!isContinue(tbName)) {
+                throw new RuntimeException("导数失败，" + tbName + "导数任务正在进行中或已完成导数，可查看redis：" + tbName);
+            }
+            int pageSize = 100;
+            int pageNum = 0;
+            int result = 0;
+            WeakReference<List<Notice>> list = null;
+            while (pageNum == 0 || result > 0) {
+                int start = pageNum * pageSize;
+                list = new WeakReference(testMapper.pushCustomRedisNotice(start, pageSize, tbName, title,source));
+                if (list.get() != null && list.get().size() > 0) {
+                    result = list.get().size();
+                    sendAnalysisMsg(list.get());// 模拟爬虫，生成解析队列
+                    totalCount += result;
+                    list.get().clear();
+                    list.clear();
+                    if (result < pageSize) {
+                        break;
+                    }
+                } else {
+                    result = 0;
+                }
+                pageNum++;
+            }
+            if (list.get() != null) {
                 list.get().clear();
                 list.clear();
-                if(result < pageSize){
-                    break;
-                }
-            }else {
-                result=0;
             }
-            pageNum++;
+            System.gc();
+            finishedPush(tbName, totalCount);
+        }catch(Exception e){
+            totalCount = -1;
+            jedisStringTemplate.delete(tbName);
+            logger.error(e,e);
         }
-        if(list.get()!=null) {
-            list.get().clear();
-            list.clear();
-        }
-
-        System.gc();
-        finishedPush(tbName,totalCount);
+        logger.info("共发送数据条数："+totalCount);
         return totalCount;
     }
 
-    private void sendAnalysisMsg(List<Notice> list){
-        redisTemplate.opsForList().leftPushAll("liuqi",list);
-        for(Notice n: list) {
-            kafkaProducerUtil.sendkafkaMsg(n, "test_crawler_queue");
+    public static String topicCrawler = null;
+
+    static {
+        String path = TestService.class.getClassLoader().getResource("config/kafka/kafka-consumer.properties").getPath();
+        try {
+            logger.info("crawler topic path:"+path);
+            Properties p = new Properties();
+            p.load(new FileInputStream(path));
+            topicCrawler = p.getProperty("topic");
+            logger.info("设置爬虫topic成功[topic:"+topicCrawler+"]");
+        }catch (Exception e){
+            logger.error("设置爬虫topic出错"+e,e);
         }
     }
 
-    public int pushCustomRedisSec(String tbName,int startNum,int tCount,String title){
+
+    private void sendAnalysisMsg(List<Notice> list){
+//        redisTemplate.opsForList().leftPushAll("liuqi",list); 数据写入redis
+        for(Notice n: list) {
+            kafkaProducerUtil.sendkafkaMsg(n, topicCrawler);
+        }
+    }
+
+    public int pushCustomRedisSec(String tbName,int startNum,int tCount,String title,String source){
         if(!isContinue(tbName)){
             throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
         }
@@ -141,7 +168,7 @@ public class TestService {
         int runNum = startNum;
         WeakReference<List<Notice>> list =null;
         while((startNum==runNum || result>0) && totalCount<tCount) {
-            list =new WeakReference(testMapper.pushCustomRedisNotice(runNum, pageSize,tbName,title));
+            list =new WeakReference(testMapper.pushCustomRedisNotice(runNum, pageSize,tbName,title,source));
             if(list.get()!=null && list.get().size()>0) {
                 result = list.get().size();
 //                for (Notice notice : list) {
@@ -163,12 +190,13 @@ public class TestService {
 
         System.gc();
         finishedPush(tbName,totalCount);
+        logger.info("共发送数据条数："+totalCount);
         return totalCount;
     }
 
     public List debugNoticeList(String tbName,String title){
         int pageSize =1000;
-        WeakReference<List<Notice>> list=new WeakReference(testMapper.pushCustomRedisNotice(0, pageSize,tbName,title));
+        WeakReference<List<Notice>> list=new WeakReference(testMapper.pushCustomRedisNotice(0, pageSize,tbName,title,null));
         return list.get();
     }
 

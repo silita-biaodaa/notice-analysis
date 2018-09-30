@@ -126,9 +126,9 @@ public class TestController {
 
     @ResponseBody
     @RequestMapping(value = "/pushCustomRedis", method = RequestMethod.GET)
-    public Map<String, Object> pushCustomRedis(String tbName,String title) {
+    public Map<String, Object> pushCustomRedis(String tbName,String title,String source) {
         try {
-            int total = testService.pushCustomRedisNotice(tbName,title);
+            int total = testService.pushCustomRedisNotice(tbName,title,source);
             return new ImmutableMap.Builder<String, Object>().put("status", 1)
                     .put("msg", "custom push到Redis成功!").put("successCount",total).build();
         } catch (Exception e) {
@@ -140,9 +140,9 @@ public class TestController {
 
     @ResponseBody
     @RequestMapping(value = "/pushCustomRedisSec", method = RequestMethod.GET)
-    public Map<String, Object> pushCustomRedisSec(String tbName,int startNum,int totalCount,String title) {
+    public Map<String, Object> pushCustomRedisSec(String tbName,int startNum,int totalCount,String title,String source) {
         try {
-            int total = testService.pushCustomRedisSec(tbName,startNum,totalCount,title);
+            int total = testService.pushCustomRedisSec(tbName,startNum,totalCount,title,source);
             return new ImmutableMap.Builder<String, Object>().put("status", 1)
                     .put("msg", "custom push到Redis成功!").put("successCount",total).build();
         } catch (Exception e) {

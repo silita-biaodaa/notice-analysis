@@ -26,6 +26,9 @@
         from  ${param3}
         where id>=(SELECT id
             from ${param3}
+            <if test="param5!=null and param5!=''">
+                WHERE source=#{param5}
+            </if>
             order by id
             limit #{param1},1)
             <if test="param4!=null and param4!=''">

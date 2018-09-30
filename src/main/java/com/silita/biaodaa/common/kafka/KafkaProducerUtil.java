@@ -1,12 +1,14 @@
 package com.silita.biaodaa.common.kafka;
 
+import com.silita.biaodaa.analysisRules.template.SingleFieldAnalysisTemplate;
 import com.silita.biaodaa.common.Constant;
 import com.snatch.model.EsNotice;
 import com.snatch.model.Notice;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @Lazy
 @Component
 public class KafkaProducerUtil {
-    private static Logger log = Logger.getLogger(KafkaProducerUtil.class);
+    private static Log log = LogFactory.getLog(SingleFieldAnalysisTemplate.class);
 
     private static Producer producer = null;
 

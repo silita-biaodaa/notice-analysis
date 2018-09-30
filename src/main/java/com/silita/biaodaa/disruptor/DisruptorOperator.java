@@ -100,9 +100,9 @@ public class DisruptorOperator {
 
         List<EventHandler> zhongbiaoHandlerList = new ArrayList<EventHandler>();
         zhongbiaoHandlerList.add(firstCandidateHandler);
-        zhongbiaoHandlerList.add(twoNameHandler);
-        zhongbiaoHandlerList.add(threeNameHandler);
-        zhongbiaoHandlerList.add(projDutyHandler);
+//        zhongbiaoHandlerList.add(twoNameHandler);
+//        zhongbiaoHandlerList.add(threeNameHandler);
+//        zhongbiaoHandlerList.add(projDutyHandler);
         ZhongBiaoDisruptorCreator.initDisruptor(zhongbiaoHandlerList,insertAnalyzeDetailZhongBiaoHandler,sendMsgHandler);
     }
 

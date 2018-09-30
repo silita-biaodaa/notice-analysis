@@ -45,10 +45,17 @@ public class NoticeAnalysisTest extends ConfigTest  {
         //西湖山片区开发游步道项目
         //石门县人民医院北扩工程
         //testService.pushCustomRedisNotice("test.hunan","石门");
-        //grunt 新民市2015年度农业综合开发土地治理存量资金项目第一标段、第二标段、第三标段施工
-        testService.pushCustomRedisNotice("test.test_hunan_repeat",null);
-//        testService.pushCustomRedisSec("test.liaon",0,100,null);
-        analyzeHandler();
+        //grunt 新民市2015年度农业综合开发土地治理存量资金项目第一标段、第二标段、第三标段施工 \
+        // "嘉禾县2018年普通公路安防工程施工招标公告test"
+        //华联社区棚户区改造二期项目2#3#楼F中标候选人公示
+        //title like '%鼎城区韩公渡镇改扩翻建配套设施建设项目招标公告%'
+        //"华联社区棚户区改造二期项目2#3#楼"
+//        testService.pushCustomRedisNotice("test.test_hunan_repeat",null);导入湖南样本数据
+        //新化县上渡办事处中心学校（中心小学校区）弱电系统及教学办公设备采购更正公告  宁乡市双江口镇草溪渔场至千龙湖公路改造项目施工澄清公告
+//        testService.pushCustomRedisNotice("test.quanguo918",null,null);//导入全国样本数据
+//        testService.pushCustomRedisSec("test.liaon",0,100,null,null);葫芦岛市南票渔山新区小区围墙及门卫工程施工
+        testService.pushCustomRedisNotice("test.liaon",null,null);
+//        analyzeHandler();
     }
 
     @Test
@@ -91,7 +98,7 @@ public class NoticeAnalysisTest extends ConfigTest  {
 
 
     /**
-     * 测试解析任务
+     * 测试解析任务,从redis获取
      */
     @Test
     public void analyzeHandler(){
