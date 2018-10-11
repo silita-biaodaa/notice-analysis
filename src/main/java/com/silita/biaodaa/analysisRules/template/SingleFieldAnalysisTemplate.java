@@ -281,6 +281,9 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                     break;
                 }
             }
+            if(result==null){
+                result = orgin;
+            }
         }else{
             result = orgin;
         }

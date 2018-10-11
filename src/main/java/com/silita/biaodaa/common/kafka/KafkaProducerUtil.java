@@ -87,7 +87,7 @@ public class KafkaProducerUtil {
             } else {
                 sendMsg(map);//kafka消息发送
             }
-            log.info("kafka[topic:"+topic+"]发送消息finished。redisId:" + es.getRedisId() + "##title:" + es.getTitle() + "##Opendate:" + es.getOpenDate() + "##catchtype-->type:" + es.getType() + "##BusinessType:" + es.getBusinessType());
+            log.info("kafka[topic:"+topic+"]发送消息finished。[areaRank:"+es.getAreaRank()+"]redisId:" + es.getRedisId() + "##title:" + es.getTitle() + "##Opendate:" + es.getOpenDate() + "##catchtype-->type:" + es.getType() + "##BusinessType:" + es.getBusinessType());
         }catch (Exception e){
             log.error("kafka发送消息失败。"+e.getMessage(),e);
         }finally {

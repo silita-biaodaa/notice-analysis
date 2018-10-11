@@ -121,7 +121,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
                             list3.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":").replaceAll("点", ":"))));
                         }
                     } catch (ParseException e) {
-                        logger.error(e,e);
+                        logger.warn("[timeMat.group():"+timeMat.group()+"]"+e,e);
                         continue;
                     }
                 }

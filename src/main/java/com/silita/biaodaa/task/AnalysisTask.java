@@ -26,7 +26,7 @@ public class AnalysisTask extends KafkaConsumerBase implements Runnable {
         if(msg instanceof Notice) {
             Notice notice= (Notice)msg;
             LoggerUtils.showJVM("接收爬虫(kafka)消息:[redisid:"+notice.getRedisId()+"][source:"+notice.getSource()+"][ur:"+notice.getUrl()+"]"
-                    + "[title:"+notice.getTitle()+"] [Opendate:"+notice.getOpendate()+"]");
+                    + "[title:"+notice.getTitle()+"] [Opendate:"+notice.getOpendate()+"][areaRank:"+notice.getAreaRank()+"]");
             try {
                 //notice转化为EsNotice
                 EsNotice esNotice = noticeToEsNotice(notice);
