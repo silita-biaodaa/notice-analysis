@@ -44,7 +44,7 @@ public class ApplyProjSumHandler extends BaseAnalysisHandler {
             return null;
         }
         SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
-        String value =  analysis.analysis(stringPart,this.keyWord);
+        String value =  analysis.analysis(stringPart,esNotice,this.keyWord);
         if(value!=null){
             if(value.indexOf(Constant.SPLIT_STRING+"-")==0){
                 this.keyWord = value.replace(Constant.SPLIT_STRING+"-","");

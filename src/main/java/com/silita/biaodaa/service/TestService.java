@@ -131,7 +131,7 @@ public class TestService {
             jedisStringTemplate.delete(tbName);
             logger.error(e,e);
         }
-        logger.info("共发送数据条数："+totalCount);
+        logger.info("###########共发送数据条数："+totalCount);
         return totalCount;
     }
 
@@ -190,7 +190,7 @@ public class TestService {
 
         System.gc();
         finishedPush(tbName,totalCount);
-        logger.info("共发送数据条数："+totalCount);
+        logger.info("@@###########共发送数据条数："+totalCount);
         return totalCount;
     }
 

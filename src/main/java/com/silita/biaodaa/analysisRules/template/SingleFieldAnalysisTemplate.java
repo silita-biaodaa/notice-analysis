@@ -5,6 +5,7 @@ import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.silita.biaodaa.utils.RedisCacheUtil;
+import com.snatch.model.EsNotice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +40,14 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
     protected abstract void init();
 
     @Override
-    public String analysis(String segment,String keyWork) throws Exception{
+    public String analysis(String segment, EsNotice esNotice, String keyWork) throws Exception{
         String analysisRes =null;
         try {
             init();
             if (MyStringUtils.isNull(fieldName)){
                 throw new Exception ("fieldName is null!");
             }
-            analysisRes = analyzeSingleField(segment);
+            analysisRes = analyzeSingleField(segment,esNotice);
             if(analysisRes!=null && analysisRes.length()>100){
                 analysisRes=analysisRes.substring(0,100);
             }
@@ -86,7 +87,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
      * @param analysisResult 解析结果值
      * @return
      */
-    protected String verifyAnalysisResult(Map<String ,List<Map<String, Object>>> regListMap,String analysisResult){
+    protected String verifyAnalysisResult(EsNotice esNotice,Map<String ,List<Map<String, Object>>> regListMap,String analysisResult){
         return analysisResult;
     }
 
@@ -163,7 +164,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
      * 维度解析主逻辑
      * return 维度解析结果
      */
-    public String analyzeSingleField(String html) throws Exception{
+    public String analyzeSingleField(String html,EsNotice esNotice) throws Exception{
         String analysisResult = null;
 
         //获取该字段关联的规则
@@ -191,7 +192,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
                     while (outerMtr.find()) {
                         matchPart = outerMtr.group();
-                        logger.debug("1.范围匹配-->扫描段落：" + matchPart);
+                        logger.debug("1.[title:"+esNotice.getTitle()+"]范围匹配-->扫描段落：" + matchPart);
                         //仅只匹配出表达式的开头部分则跳过
                         if (MyStringUtils.isNull(matchPart.replace(outerMtr.group(1), "").trim())) {
                             continue;
@@ -209,25 +210,29 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                 }
             }else{
                 //1.1 无范围匹配
-                logger.debug("无范围匹配规则，直接进行（内层）规则匹配");
+                logger.debug("[title:"+esNotice.getTitle()+"]无范围匹配规则，直接进行（内层）规则匹配");
                 analysisResult = innertMatchRules(regListMap, html, null);
             }
             //2.解析结果过滤
             if(MyStringUtils.isNotNull(analysisResult)) {
-                logger.info("3.1 结果过滤前："+analysisResult);
+                logger.info("3.1 [title:"+esNotice.getTitle()+"]结果过滤前："+analysisResult);
                 analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
-                logger.info("3.2 结果过滤完成后："+analysisResult);
+                logger.info("3.2 [title:"+esNotice.getTitle()+"]结果过滤完成后："+analysisResult);
 
                 if(Constant.IS_DEBUG){
-                    PROCESS_INFO.put("5","结果过滤完成后："+analysisResult);
+                    PROCESS_INFO.put("5","[title:"+esNotice.getTitle()+"]结果过滤完成后："+analysisResult);
                 }
             }
 
             //3.解析结果有效性检验，检验失败返回空
             if(MyStringUtils.isNotNull(analysisResult)) {
-                analysisResult = verifyAnalysisResult(regListMap,analysisResult);
+                try {
+                    analysisResult = verifyAnalysisResult(esNotice, regListMap, analysisResult);
+                }catch(Exception e){
+                    logger.error("[title:"+esNotice.getTitle()+"]解析结果有效性检验出错！"+e,e);
+                }
                 if(Constant.IS_DEBUG){
-                    PROCESS_INFO.put("6","解析结果有效性检验："+analysisResult);
+                    PROCESS_INFO.put("6","[title:"+esNotice.getTitle()+"]解析结果有效性检验结果[analysisResult："+analysisResult+"]");
                 }
             }
         }

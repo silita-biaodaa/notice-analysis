@@ -3,6 +3,7 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.service.AnalyzeRangeService;
+import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class HunanApplyPbMode implements SingleFieldAnalysis {
     AnalyzeRangeService analyzeRangeService;
 
     @Override
-    public String analysis(String segment,String keyWork) {
+    public String analysis(String segment, EsNotice esNotice, String keyWork) {
         String val = "";
 
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();

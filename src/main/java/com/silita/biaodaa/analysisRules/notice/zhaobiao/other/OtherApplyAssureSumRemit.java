@@ -4,6 +4,7 @@ import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class OtherApplyAssureSumRemit implements SingleFieldAnalysis {
     CommonService commonService;
 
     @Override
-    public String analysis(String segment,String keyWork) {
+    public String analysis(String segment, EsNotice esNotice, String keyWork) {
         String assureSumRemit = "";
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
         List<Map<String, Object>> arList = analyzeRangeByFieldMap.get("applyAssureSumRemit");

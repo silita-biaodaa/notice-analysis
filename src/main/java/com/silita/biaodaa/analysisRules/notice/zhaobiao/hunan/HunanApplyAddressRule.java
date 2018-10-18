@@ -4,6 +4,7 @@ import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.dao.ApplyAddressMapper;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.service.NoticeAnalyzeService;
+import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class HunanApplyAddressRule implements SingleFieldAnalysis {
     CommonService commonService;
 
     @Override
-    public String analysis(String segment,String keyWord) {
+    public String analysis(String segment, EsNotice esNotice, String keyWord) {
         String rangeHtml="";
         String address = null;
         List<Map<String, Object>> arList = commonService.queryRegexByField("applyAddress");

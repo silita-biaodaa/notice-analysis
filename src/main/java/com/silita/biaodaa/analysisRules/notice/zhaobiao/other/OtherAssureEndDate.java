@@ -4,6 +4,7 @@ import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.EsNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class OtherAssureEndDate implements SingleFieldAnalysis {
     CommonService commonService;
 
     @Override
-    public String analysis(String segment, String keyWork) {
+    public String analysis(String segment, EsNotice esNotice, String keyWork) {
         segment = segment.replaceAll("<[^>]+>", "").replaceAll(" style=\\\"(.*?)\\\"", "");
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");

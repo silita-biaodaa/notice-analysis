@@ -6,6 +6,7 @@ import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.CNNumberFormat;
 import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.EsNotice;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,7 @@ public class HunanProjSum implements SingleFieldAnalysis {
      * return 项目金额
      */
     @Override
-    public String analysis(String html,String keyWord) {
+    public String analysis(String html, EsNotice esNotice, String keyWord) {
         html = html.replaceAll("<[^>]+>", "");
         String rangeHtml="";
         String deposit = "";

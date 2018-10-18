@@ -2,6 +2,7 @@ package com.silita.biaodaa.utils;
 
 
 import java.io.*;
+import java.util.UUID;
 
 public class BeanUtils {
     private BeanUtils(){}
@@ -66,5 +67,9 @@ public class BeanUtils {
         }
 
         return obj;
+    }
+
+    public static String buildId(){
+        return UUID.randomUUID().toString().replaceAll("-","");
     }
 }

@@ -7,8 +7,15 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!-- 加载redis配置文件 -->
-    <context:property-placeholder location="classpath:config/analysis.properties" />
+    <!-- 加载配置文件 -->
+    <bean id="propertyConfigurer" class="com.silita.biaodaa.common.config.CustomizedPropertyConfigurer" >
+        <property name="fileEncoding" value="utf-8" />
+        <property name="locations">
+            <list>
+                <value>classpath:config/analysis.properties</value>
+            </list>
+        </property>
+    </bean>
 
     <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
         <!-- 数据库驱动，应对双11，改大的，为线上连接数 -->

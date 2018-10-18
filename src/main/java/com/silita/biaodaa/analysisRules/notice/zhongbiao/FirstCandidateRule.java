@@ -1,7 +1,11 @@
 package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
 import com.silita.biaodaa.analysisRules.template.SingleFieldAnalysisTemplate;
+import com.silita.biaodaa.common.config.CustomizedPropertyConfigurer;
 import com.silita.biaodaa.service.CommonService;
+import com.silita.biaodaa.service.CompanyService;
+import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.EsNotice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +27,44 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
     @Autowired
     CommonService commonService;
 
+    @Autowired
+    CompanyService companyService;
+
     @Override
     protected void init() {
         this.fieldName="firstCandidate";
     }
 
-    protected String verifyAnalysisResult(Map<String ,List<Map<String, Object>>> regListMap,String analysisResult){
+    protected String verifyAnalysisResult(EsNotice esNotice,Map<String , List<Map<String, Object>>> regListMap, String analysisResult){
+        //根据规则校验解析结果
         List<Map<String, Object>> verifyRuleList = regListMap.get("verifyResult");
         for(Map<String, Object> verifyRule:verifyRuleList){
             String regex = verifyRule.get("regex").toString();
             Pattern ptn = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
             Matcher matcher = ptn.matcher(analysisResult);
             if(!matcher.find()){
-                logger.info("解析结果验证失败，返回null。[analysisResult:"+analysisResult+"][regex:"+regex+"]");
-                return null;
+                logger.info("解析结果[analysisResult:"+analysisResult+"]，表达式验证失败，返回null。[regex:"+regex+"]");
+                analysisResult= null;
+                break;
             }
         }
+
+        if(MyStringUtils.isNotNull(analysisResult)) {
+            //根据企业名称库,校验解析结果
+            String corpFilterStatus = (String) CustomizedPropertyConfigurer.getContextProperty("analysis.corpName.filter");
+            if (corpFilterStatus != null && corpFilterStatus.equals("true")) {
+                logger.info("校验企业名称库开始。。。[title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"][source:"+esNotice.getSource()+"]");
+                boolean isExists = companyService.existsCorpName(analysisResult);
+                if(!isExists){
+                    companyService.saveSuspectCompanyName(fieldName,analysisResult,esNotice);
+                    logger.warn("企业名称库匹配失败[analysisResult:"+analysisResult+"]");
+                    analysisResult=null;
+
+                }
+                logger.info("校验企业名称库结束。。。[title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
+            }
+        }
+
         return analysisResult;
     }
 

@@ -31,7 +31,7 @@ public class FirstCandidateHandler extends BaseAnalysisHandler {
 
     @Override
     protected String executeAnalysis(String stringPart,EsNotice esNotice) throws Exception {
-        return firstCandidateRule.analysis(stringPart,esNotice.getSource());
+        return firstCandidateRule.analysis(stringPart,esNotice,null);
     }
 
     @Override
