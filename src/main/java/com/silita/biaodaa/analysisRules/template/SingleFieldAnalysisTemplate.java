@@ -91,6 +91,17 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
         return analysisResult;
     }
 
+
+    /**
+     * 个性化过滤/截取规则，由子类实现
+     * @param analysisResult
+     * @param esNotice
+     * @return
+     */
+    protected String customfilterResult(String analysisResult,EsNotice esNotice) {
+        return analysisResult;
+    }
+
     /**
      *
      * @param regListMap 规则集合
@@ -215,10 +226,11 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             }
             //2.解析结果过滤
             if(MyStringUtils.isNotNull(analysisResult)) {
-                logger.info("3.1 [title:"+esNotice.getTitle()+"]结果过滤前："+analysisResult);
+                logger.info("3.1 解析结果过滤前：[title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
                 analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
-                logger.info("3.2 [title:"+esNotice.getTitle()+"]结果过滤完成后："+analysisResult);
-
+                logger.info("3.2 解析结果规则过滤后： [title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
+                analysisResult = customfilterResult(analysisResult, esNotice);
+                logger.info("3.3 解析结果自定义过滤后： [title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
                 if(Constant.IS_DEBUG){
                     PROCESS_INFO.put("5","[title:"+esNotice.getTitle()+"]结果过滤完成后："+analysisResult);
                 }

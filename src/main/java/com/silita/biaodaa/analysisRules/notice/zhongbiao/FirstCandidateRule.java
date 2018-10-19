@@ -30,6 +30,8 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
     @Autowired
     CompanyService companyService;
 
+    private static final String[] endKeys = {"公司","研究院"};
+
     @Override
     protected void init() {
         this.fieldName="firstCandidate";
@@ -65,6 +67,26 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
             }
         }
 
+        return analysisResult;
+    }
+
+    protected String customfilterResult(String analysisResult,EsNotice esNotice){
+        //判断是否以公司关键字结尾，如果匹配到的关键字不是字符串的结尾，则进行截取处理。
+        if(MyStringUtils.isNotNull(analysisResult)){
+            int len = analysisResult.length();
+            for(String endKey: endKeys){
+                int kIdx = analysisResult.indexOf(endKey);
+                int kLen = endKey.length();
+                if(kIdx!= -1){
+                    if((kIdx+kLen) < len){//满足截取条件
+                        analysisResult=analysisResult.substring(0,kIdx+kLen);
+                        break;
+                    }
+                }else{
+                    continue;
+                }
+            }
+        }
         return analysisResult;
     }
 

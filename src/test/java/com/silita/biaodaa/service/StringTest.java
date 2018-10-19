@@ -1,20 +1,23 @@
 package com.silita.biaodaa.service;
 
+import com.silita.biaodaa.utils.MyStringUtils;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by 91567 on 2018/3/20.
  */
 public class StringTest {
-    public static void main(String[] args) {
-        String dateStr = "2017-03-12";
-        System.out.println(dateStr.substring(0,4));
+    private static final String[] endKeys = {"公司","研究院"};
 
-        Map ss= new HashMap();
-        System.out.println(ss.keySet().size());
+
+    public static void main(String[] args) {
+//        String dateStr = "2017-03-12";
+//        System.out.println(dateStr.substring(0,4));
+//
+//        Map ss= new HashMap();
+//        System.out.println(ss.keySet().size());
+        String s = "单位名称新疆成汇工程管理研究院有限投标报价小写217800.00大写贰拾壹公司万柒仟捌佰圆整投标工期107(日历天)质量标准合格总监姓名刘永恒注册级别房屋建筑工程";
+        System.out.println(customfilterResult(s));
     }
 
     @Test
@@ -47,4 +50,25 @@ public class StringTest {
         }
         return s;
     }
+
+    protected static String customfilterResult(String analysisResult){
+        if(MyStringUtils.isNotNull(analysisResult)){
+            int len = analysisResult.length();
+            for(String endKey: endKeys){
+                int kIdx = analysisResult.indexOf(endKey);
+                int kLen = endKey.length();
+                if(kIdx!= -1){
+                    if((kIdx+kLen) < len){//满足截取条件
+                        analysisResult=analysisResult.substring(0,kIdx+kLen);
+                        break;
+                    }
+                }else{
+                    continue;
+                }
+            }
+        }
+        return analysisResult;
+    }
 }
+
+
