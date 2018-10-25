@@ -33,7 +33,7 @@ public class ZhongBiaoDisruptorCreator {
         }
     };
 
-    private static final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 1024*1024;
 
     //TODO 需要根据其他因素调整线程数量
     private static final int THREAD_NUM = 8;

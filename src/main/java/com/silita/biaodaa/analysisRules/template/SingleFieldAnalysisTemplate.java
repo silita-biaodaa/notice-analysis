@@ -103,13 +103,13 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
     }
 
     /**
-     *
+     * @param esNotice 公告对象
      * @param regListMap 规则集合
      * @param matchPart 解析片段
      * @param rangeRegex 外层匹配命中的规则
      * @return
      */
-    private String  innertMatchRules( Map<String ,List<Map<String, Object>>> regListMap,String matchPart,String rangeRegex){
+    private String  innertMatchRules(EsNotice esNotice,Map<String ,List<Map<String, Object>>> regListMap,String matchPart,String rangeRegex){
         String result = null;
         List<Map<String, Object>> accurateList = regListMap.get("accurate");//精准匹配规则
 
@@ -210,7 +210,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                         }
 
                         //1.内层匹配规则
-                        analysisResult = innertMatchRules(regListMap, matchPart, rangeRegex);
+                        analysisResult = innertMatchRules(esNotice,regListMap, matchPart, rangeRegex);
                         if (MyStringUtils.isNotNull(analysisResult)) {
                             //命中规则，停止执行其他规则
                             break outerMtr;
@@ -222,7 +222,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             }else{
                 //1.1 无范围匹配
                 logger.debug("[title:"+esNotice.getTitle()+"]无范围匹配规则，直接进行（内层）规则匹配");
-                analysisResult = innertMatchRules(regListMap, html, null);
+                analysisResult = innertMatchRules(esNotice,regListMap, html, null);
             }
             //2.解析结果过滤
             if(MyStringUtils.isNotNull(analysisResult)) {
@@ -242,6 +242,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                     analysisResult = verifyAnalysisResult(esNotice, regListMap, analysisResult);
                 }catch(Exception e){
                     logger.error("[title:"+esNotice.getTitle()+"]解析结果有效性检验出错！"+e,e);
+                    analysisResult=null;
                 }
                 if(Constant.IS_DEBUG){
                     PROCESS_INFO.put("6","[title:"+esNotice.getTitle()+"]解析结果有效性检验结果[analysisResult："+analysisResult+"]");

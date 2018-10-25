@@ -11,14 +11,11 @@ import java.util.regex.Pattern;
  */
 public class RegexTest {
     public static void main(String args[]) {
-//        String str = "8.3招标文件获取地点：日照市公共资源交易中心（日照市国际金融中心B座2楼，烟台路与济南路交汇处）报名与购买招标文件。 HELLO ";
-//        String pattern = "(EL)+/S*";
-//
-//        Pattern r = Pattern.compile(pattern);
-//        Matcher m = r.matcher(str);
-//        System.out.println(m.matches());
-
-//        test2();
+        String s = "2017年扶余市增盛，，镇高。标准农田公司建设sd ";
+        //获取双引号之间的内容: (?<=\").*?(?=\")
+        //匹配公司开始之后的内容，b
+        String regex = "(?<=公司).*";
+        System.out.println(testReg(s,regex));
     }
 
     @Test
@@ -63,6 +60,26 @@ public class RegexTest {
             System.out.println("end(): "+m.end());
             System.out.println(content.substring(m.start(),m.end()));
         }
+    }
+
+    private static String testReg(String s,String r){
+        System.out.println("origin value:"+s);
+        String v = null;
+        Pattern ptn = Pattern.compile(r);
+        Matcher m = ptn.matcher(s);
+        System.out.println("m.matches():"+m.matches());
+        boolean fm= m.find();
+        System.out.println("m.find():"+fm);
+        if (fm) {
+            v = m.group();
+            System.out.println("value:"+v);
+
+            System.out.println("m.group(0) :" + m.group(0) );
+            for(int i=0; i<m.groupCount();i++){
+                System.out.println("m.group("+i+") :" + m.group(i) );
+            }
+        }
+        return v;
     }
 
     private static void test2(){
