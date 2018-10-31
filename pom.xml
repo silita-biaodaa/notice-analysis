@@ -24,9 +24,9 @@
   <packaging>war</packaging>
 
   <name>notice-analysis</name>
-  <groupId>com.biaodaa</groupId>
+  <groupId>com.silita</groupId>
   <artifactId>notice-analysis</artifactId>
-  <version>1.0.22.6</version>
+  <version>1.0.33.31</version>
 
   <properties>
     <spring.version>4.1.6.RELEASE</spring.version>
@@ -53,7 +53,7 @@
     <jsp-api.version>2.0</jsp-api.version>
     <jta.version>1.1</jta.version>
     <ehcache.version>2.6.11</ehcache.version>
-    <kafka.version>1.0.0</kafka.version>
+    <kafka.version>1.1.0</kafka.version>
 
 
     <webSourceDirectory>src/main/webapp</webSourceDirectory>
@@ -67,7 +67,12 @@
     <repository>
       <id>public</id>  <!--这个ID需要与你新建的组group ID一致-->
       <name>Public Repository</name>
-      <url>http://120.78.253.169/nexus/content/groups/public/</url>
+      <url>http://120.78.253.169:8081/nexus/content/groups/public/</url>
+    </repository>
+    <repository>
+      <id>aliyun</id>
+      <name>aliyun Repository</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
     </repository>
   </repositories>
 
@@ -75,27 +80,44 @@
   <distributionManagement>
     <repository>
       <id>releases</id><!--这个ID需要与你的release仓库的Repository ID一致-->
-      <url>http://120.78.253.169/nexus/content/repositories/releases</url>
+      <url>http://120.78.253.169:8081/nexus/content/repositories/releases</url>
     </repository>
 
     <snapshotRepository>
       <id>snapshots</id><!--这个ID需要与你的snapshots仓库的Repository ID一致-->
-      <url>http://120.78.253.169/nexus/content/repositories/snapshots</url>
+      <url>http://120.78.253.169:8081/nexus/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
   <dependencies>
+
+    <!-- stanford nlp -->
+    <!--<dependency>-->
+      <!--<groupId>edu.stanford.nlp</groupId>-->
+      <!--<artifactId>stanford-corenlp</artifactId>-->
+      <!--<version>3.9.1</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>edu.stanford.nlp</groupId>-->
+      <!--<artifactId>stanford-corenlp</artifactId>-->
+      <!--<version>3.9.1</version>-->
+      <!--<classifier>models-chinese</classifier>-->
+    <!--</dependency>-->
+    <!--//“models-chinese”，“models-english”, “models-english-kbp”, “models-arabic”, “models-french”, “models-german” ,“models-spanish”；-->
+
+    <!--ehcache -->
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache-core</artifactId>
       <version>${ehcache.version}</version>
     </dependency>
 
-      <dependency>
-          <groupId>org.apache.kafka</groupId>
-          <artifactId>kafka_2.11</artifactId>
-          <version>${kafka.version}</version>
-      </dependency>
+    <!--kafka -->
+    <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka_2.11</artifactId>
+        <version>${kafka.version}</version>
+    </dependency>
 
     <!-- springmvc -->
     <dependency>
@@ -210,7 +232,7 @@
     <dependency>
       <groupId>tk.mybatis</groupId>
       <artifactId>mapper-spring-boot-starter</artifactId>
-      <version>RELEASE</version>
+      <version>2.0.1</version>
     </dependency>
 
     <dependency>

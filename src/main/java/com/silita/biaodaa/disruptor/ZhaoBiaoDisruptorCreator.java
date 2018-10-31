@@ -7,6 +7,7 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.silita.biaodaa.disruptor.exception.AnalyzeException;
+import com.silita.biaodaa.disruptor.handler.SendMsgHandler;
 import com.silita.biaodaa.disruptor.handler.zhaoBiao.InsertAnalyzeDetailHandler;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class ZhaoBiaoDisruptorCreator {
         }
     };
 
-    private static final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 1024*1024;
 
     //TODO 需要根据其他因素调整线程数量
     private static final int THREAD_NUM = 20;
@@ -42,7 +43,7 @@ public class ZhaoBiaoDisruptorCreator {
      * 利用spring完成初始化，singleton
      */
     public static synchronized void initDisruptor(
-            List<EventHandler> zhaobiaoHandlerList,InsertAnalyzeDetailHandler insertAnalyzeDetailHandler) {
+            List<EventHandler> zhaobiaoHandlerList,InsertAnalyzeDetailHandler insertAnalyzeDetailHandler,SendMsgHandler sendMsgHandler) {
         if (processDisruptor == null) {
             EventHandler[] handlers = new EventHandler[zhaobiaoHandlerList.size()];
             logger.info("..........ZhaoBiaoDisruptorCreator init..........\nDISRUPTOR BUFFER_SIZE:" + BUFFER_SIZE + " THREAD_NUM:" + THREAD_NUM);
@@ -50,7 +51,7 @@ public class ZhaoBiaoDisruptorCreator {
             processDisruptor.handleExceptionsWith(new AnalyzeException());
             zhaobiaoHandlerList.toArray(handlers);
             processDisruptor.handleEventsWith(handlers)
-                    .then(insertAnalyzeDetailHandler);
+                    .then(insertAnalyzeDetailHandler).then(sendMsgHandler);
             logger.info("..........ZhaoBiaoDisruptorCreator init success..........");
         }
     }

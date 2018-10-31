@@ -30,8 +30,8 @@ public class ThreeNameHandler extends BaseAnalysisHandler {
 
 
     @Override
-    protected String executeAnalysis(String stringPart,EsNotice esNotice) {
-        return otherThreeName.analysis(stringPart,esNotice.getSource());
+    protected String executeAnalysis(String stringPart,EsNotice esNotice)  throws Exception{
+        return otherThreeName.analysis(stringPart,esNotice,null);
     }
 
     @Override

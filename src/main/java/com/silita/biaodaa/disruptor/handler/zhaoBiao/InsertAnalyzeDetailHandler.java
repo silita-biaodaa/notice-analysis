@@ -37,7 +37,7 @@ public class InsertAnalyzeDetailHandler implements EventHandler<AnalyzeEvent> {
             logger.error("招標公告入库" + e, e);
         }finally {
             esNotice.setDetail(analyzeDetail);
-            kafkaProducerUtil.sendkafkaMsg(esNotice);//send kafka msg
+//            kafkaProducerUtil.sendkafkaMsg(esNotice);//send kafka msg
         }
     }
 

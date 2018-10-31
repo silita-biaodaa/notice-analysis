@@ -1,63 +1,58 @@
 package com.silita.biaodaa.task;
 
 import com.silita.biaodaa.common.SnatchContent;
+import com.silita.biaodaa.common.kafka.KafkaConsumerBase;
 import com.silita.biaodaa.disruptor.DisruptorOperator;
+import com.silita.biaodaa.utils.LoggerUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by zhangxiahui on 18/3/13.
  */
 @Component
-public class TestTask implements Runnable {
+public class AnalysisTask extends KafkaConsumerBase implements Runnable {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     DisruptorOperator disruptorOperator;
 
-    @Autowired
-    RedisTemplate redisTemplate;
-
-
-    private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
+    protected void msgHandle(Object msg)throws Exception{
+        if(msg instanceof Notice) {
+            Notice notice= (Notice)msg;
+            LoggerUtils.showJVM("接收爬虫(kafka)消息:[redisid:"+notice.getRedisId()+"][source:"+notice.getSource()+"][ur:"+notice.getUrl()+"]"
+                    + "[title:"+notice.getTitle()+"] [Opendate:"+notice.getOpendate()+"][areaRank:"+notice.getAreaRank()+"]");
+            try {
+                //notice转化为EsNotice
+                EsNotice esNotice = noticeToEsNotice(notice);
+                disruptorOperator.publish(esNotice);
+            }catch (Exception e){
+                logger.error(e.getMessage(),e);
+            }
+        }else{
+            logger.debug("接收到其他类型akka消息，跳过.msg className:"+msg.getClass());
+        }
+    }
 
 
     @Override
     public void run() {
-        logger.info("=================定时任务测试执行=============");
-
+        logger.info("=================启动接收任务线程=============");
         try {
-            Notice notice= takeFromHead(0);
-            //notice转化为EsNotice
-            EsNotice esNotice = noticeToEsNotice(notice);
-            disruptorOperator.publish(esNotice);
+            super.init();
         } catch (Exception e) {
-            logger.error("定时任务出错",e);
-        }
-
-
-    }
-
-    public Notice takeFromHead(int timeout) throws InterruptedException{
-        lock.lockInterruptibly();
-        try{
-            return (Notice) redisTemplate.opsForList().leftPop("liuqi",timeout, TimeUnit.SECONDS);
-        }finally{
-            lock.unlock();
+            logger.error("接收任务线程出错"+e.getMessage(),e);
+        }finally {
+            logger.info("=================接收任务线程执行完毕=============");
         }
     }
 
-    public EsNotice noticeToEsNotice(Notice notice){
+    public static EsNotice noticeToEsNotice(Notice notice){
         EsNotice esNotice = null;
         if (notice != null) {
             esNotice = new EsNotice();
@@ -119,7 +114,7 @@ public class TestTask implements Runnable {
     }
 
 
-    private void zhaobiaoReplaceFiled(Dimension dimension, AnalyzeDetail ad) {
+    private static void zhaobiaoReplaceFiled(Dimension dimension, AnalyzeDetail ad) {
         if (dimension != null) {
             if (MyStringUtils.isNotDefaultStringAndNull(dimension.getProjDq())) {
                 ad.setProjDq(dimension.getProjDq());
@@ -169,7 +164,7 @@ public class TestTask implements Runnable {
         }
     }
 
-    private AnalyzeDetailZhongBiao zhongbiaoReplaceFiled(Dimension dimension, AnalyzeDetailZhongBiao ad) {
+    private static AnalyzeDetailZhongBiao zhongbiaoReplaceFiled(Dimension dimension, AnalyzeDetailZhongBiao ad) {
         if (dimension!= null) {
             if (MyStringUtils.isNotDefaultStringAndNull(dimension.getOneOffer())) {
                 ad.setOneOffer(dimension.getOneOffer());
@@ -198,8 +193,5 @@ public class TestTask implements Runnable {
         }
         return ad;
     }
-
-
-
 
 }

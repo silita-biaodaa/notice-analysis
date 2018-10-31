@@ -35,7 +35,7 @@ public class ApplyProjSumHandler extends BaseAnalysisHandler {
     }
 
     @Override
-    protected Object executeAnalysis(String stringPart,EsNotice esNotice) {
+    protected Object executeAnalysis(String stringPart,EsNotice esNotice)  throws Exception{
         if(esNotice.getTitle().indexOf("设计")>0
                 ||esNotice.getTitle().indexOf("监理")>0
                 ||esNotice.getTitle().indexOf("勘察")>0
@@ -44,7 +44,7 @@ public class ApplyProjSumHandler extends BaseAnalysisHandler {
             return null;
         }
         SingleFieldAnalysis analysis = routeRules(esNotice.getSource());
-        String value =  analysis.analysis(stringPart,this.keyWord);
+        String value =  analysis.analysis(stringPart,esNotice,this.keyWord);
         if(value!=null){
             if(value.indexOf(Constant.SPLIT_STRING+"-")==0){
                 this.keyWord = value.replace(Constant.SPLIT_STRING+"-","");

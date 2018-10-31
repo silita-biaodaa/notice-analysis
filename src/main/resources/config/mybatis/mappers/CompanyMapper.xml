@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.silita.biaodaa.dao.CompanyMapper">
+    <select id="existsCompany" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM mishu.tb_company
+        WHERE com_name=#{param1}
+    </select>
+
+    <insert id="insertSuspectCompanyName" parameterType="Map">
+        INSERT INTO mishu.tb_suspect_company_name
+        (pkid,analysis_field,filter_com_name,nt_title,nt_url,source)
+        VALUES
+        (#{id},#{field},#{com_name},#{title},#{url},#{source})
+    </insert>
+</mapper>

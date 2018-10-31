@@ -30,8 +30,8 @@ public class TwoNameHandler extends BaseAnalysisHandler {
 
 
     @Override
-    protected String executeAnalysis(String stringPart,EsNotice esNotice) {
-        return otherTwoName.analysis(stringPart,esNotice.getSource());
+    protected String executeAnalysis(String stringPart,EsNotice esNotice)  throws Exception{
+        return otherTwoName.analysis(stringPart,esNotice,null);
     }
 
     @Override

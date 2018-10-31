@@ -21,10 +21,11 @@
         <property name="hostName" value="${redis.host}"/>
         <property name="port" value="${redis.port}"/>
         <property name="password" value="${redis.password}"/>
+        <property name="database" value="${redis.database}"/>
         <property name="poolConfig" ref="poolConfig"/>
     </bean>
 
-    <!-- redis操作模板 -->
+    <!-- redis队列数据操作模板 -->
     <bean id="jedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="jedisConnectionFactory" />
         <property name="keySerializer">
@@ -34,6 +35,17 @@
         <property name="valueSerializer">
             <bean
                     class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </property>
+    </bean>
+
+    <!-- String opreration -->
+    <bean id="jedisStringTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
         </property>
     </bean>
 </beans>

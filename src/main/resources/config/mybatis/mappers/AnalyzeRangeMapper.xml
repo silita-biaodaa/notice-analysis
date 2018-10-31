@@ -79,7 +79,7 @@
     </select>
 
     <insert id="insertAnalyzeDetailZhongbiao" parameterType="com.snatch.model.AnalyzeDetailZhongBiao">
-        INSERT INTO mishu_analyze.analyze_detail_zhongbiao (
+        INSERT INTO mishu_analyze.zhongbiao_analyze_detail (
         redisId,noticeUrl,title,gsDate,
         projSum,projDq,projXs,pbMode,projType,
         oneName,oneUUid,oneOffer,oneProjDuty,oneProjDutyUUid,

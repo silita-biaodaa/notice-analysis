@@ -3,8 +3,9 @@ package com.silita.biaodaa.analysisRules.notice.zhaobiao.other;
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.analysisRules.notice.zhaobiao.hunan.HunanApplyPbMode;
 import com.silita.biaodaa.cache.GlobalCache;
-import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.service.AnalyzeRangeService;
+import com.silita.biaodaa.service.CommonService;
+import com.snatch.model.EsNotice;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
     AnalyzeRangeService analyzeRangeService;
 
     @Override
-    public String analysis(String segment,String keyWork) {
+    public String analysis(String segment, EsNotice esNotice, String keyWork)  throws Exception{
         String val = "";
 
         Map<String,List<Map<String, Object>>> analyzeRangeByFieldMap = GlobalCache.getGlobalCache().getAnalyzeRangeByFieldMap();
@@ -47,7 +48,7 @@ public class OtherApplyPbMode implements SingleFieldAnalysis {
             }
         }
         if (StringUtils.isBlank(val)) {
-            val = hunanApplyPbMode.analysis(segment,null);
+            val = hunanApplyPbMode.analysis(segment,esNotice,null);
         }
         return val;
     }

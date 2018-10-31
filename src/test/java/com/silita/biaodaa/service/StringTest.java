@@ -3,59 +3,72 @@ package com.silita.biaodaa.service;
 import com.silita.biaodaa.utils.MyStringUtils;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by 91567 on 2018/3/20.
  */
 public class StringTest {
+    private static final String[] endKeys = {"公司","研究院"};
+
 
     public static void main(String[] args) {
-        String dateStr = "2017-03-12";
-        System.out.println(dateStr.substring(0,4));
+//        String dateStr = "2017-03-12";
+//        System.out.println(dateStr.substring(0,4));
+//
+//        Map ss= new HashMap();
+//        System.out.println(ss.keySet().size());
+        String s = "单位名称新疆成汇工程管理研究院有限投标报价小写217800.00大写贰拾壹公司万柒仟捌佰圆整投标工期107(日历天)质量标准合格总监姓名刘永恒注册级别房屋建筑工程";
+        System.out.println(customfilterResult(s));
     }
 
     @Test
-    public void test(){
-        String ss = "网上</p>";
-        System.out.println(ss.length());
+    public void repTest(){
+        String s = "城市交通设计研究院；<br>第二中标候选人：大连市市政设计研究院有限责任公司；<br>第三中标候选人：大连理工大学土木建筑设计研究院有限公司(联合体：中冶沈勘工程技术有限公司)。</p>";
+        String r = ")";
+        if(r.equals(")")){
+            r = "["+r+"]";
+        }
+        s.replaceFirst(r,"");
+
     }
 
     @Test
-    public void testDate()throws Exception{
-        String rangeHtml="\n" +
-                "开标时间倒计时\t\n" +
-                "18\t\t19\t\t56\t\t04\t\n" +
-                "投标保证金缴纳截止时间:2018-04-23 09:00:00开标时间:2018-04-23 09:00:00\n" +
-                " \n" +
-                "沅江市共华镇中心小学教师周转房项目\n" +
-                "施工招标公告\n" +
-                " \n" +
-                "1.招标条件\n" +
-                "本招标项目沅江市共华镇中心小学教师周转房项目。已由沅江市发展和改革局以沅发改核【2018】23号文件批准建设，建设资金来自财政资金，招标人为沅江市共华镇中心小学，招标代理机构为湖南广大天平工程项目管理有限公司，项目已具备招标条件，现对该项目的施工进行公开招标。\n" +
-                "2.项目概况与招标范围\n" +
-                "2.1  项目名称：沅江市共华镇中心小学教师周转房项目\n" +
-                "2.2  建设地点：沅江市共华镇\n" +
-                "2.3  规    模：本工程包括建筑工程、装饰装修工程，安装工程,总建筑面积1259.23平方米，建筑层数四层，结构形式为砖混结构，总投资约254.46万元。\n" +
-                "2.4  工期要求：120日历天。\n" +
-                "2.5  质量要求：达到合格工程标准。\n" +
-                "2.6  保修要求：按照国务院279号令、建设部80号令。\n" +
-                "   2.7  招标范围：沅江市共华镇中心小学教师周转房项目，包括建筑工程、装饰装修工程及安装工程等，具体内容详见工程量清单和施工图纸。\n" +
-                "2.8  标段划分：1个标段\n" +
-                "3.投标人资格要求";
-        String timeRegex = "(\\d{1,2}:\\d{2})|(\\d{1,2}时\\d{0,2})|(\\d{1,2}：\\d{2})|(\\d{1,2}点\\d{0,2})";
-        //匹配时间
-        Pattern timePat = Pattern.compile(timeRegex);
-        Matcher timeMat = timePat.matcher(rangeHtml);
-        while (timeMat.find()) {
-            if (MyStringUtils.isNull(timeMat.group().replaceAll("\\d{0,2}时", ""))) {
+    public void testESC(){
+        String t = "速度快(放假)sdfk速度快（sd sdk）111222222222222222(代收款)";
+        System.out.println(convertESC(t));
+    }
 
-            } else {
-                SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
-                dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":").replaceAll("点", ":")));
+    private String convertESC(String s){
+        String[] e = {"(","（","）",")"};
+        for (int i=0; i<e.length;i++){
+            int si = s.indexOf(e[i]);
+            do {
+                if(si !=-1){
+                    s = s.substring(0,si)+"\\"+s.substring(si);
+                }
+                si = s.indexOf(e[i],si+2);
+            }while (si!=-1);
+        }
+        return s;
+    }
+
+    protected static String customfilterResult(String analysisResult){
+        if(MyStringUtils.isNotNull(analysisResult)){
+            int len = analysisResult.length();
+            for(String endKey: endKeys){
+                int kIdx = analysisResult.indexOf(endKey);
+                int kLen = endKey.length();
+                if(kIdx!= -1){
+                    if((kIdx+kLen) < len){//满足截取条件
+                        analysisResult=analysisResult.substring(0,kIdx+kLen);
+                        break;
+                    }
+                }else{
+                    continue;
+                }
             }
         }
+        return analysisResult;
     }
 }
+
+

@@ -2,6 +2,7 @@ package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
 import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.service.CommonService;
+import com.snatch.model.EsNotice;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class OtherProjDuty implements SingleFieldAnalysis {
     CommonService commonService;
 
     @Override
-    public String analysis(String html,String keyWork) {
+    public String analysis(String html, EsNotice esNotice, String keyWork) {
         String rangeHtml="";
         String projDuty = "";
         List<Map<String, Object>> arList = commonService.queryRegexByField("projDuty");

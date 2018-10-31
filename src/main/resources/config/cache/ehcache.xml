@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="config/ehcache.xsd" updateCheck="false">
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false">
     <!--
          defaultCache:默认的缓存配置信息,如果不加特殊说明,则所有对象按照此配置项处理
          maxElementsInMemory:设置了缓存的上限,最多存储多少个记录对象

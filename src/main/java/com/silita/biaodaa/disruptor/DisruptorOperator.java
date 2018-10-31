@@ -4,6 +4,7 @@ import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.silita.biaodaa.common.SnatchContent;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
+import com.silita.biaodaa.disruptor.handler.SendMsgHandler;
 import com.silita.biaodaa.disruptor.handler.zhaoBiao.*;
 import com.silita.biaodaa.disruptor.handler.zhongBiao.*;
 import com.snatch.model.EsNotice;
@@ -54,7 +55,7 @@ public class DisruptorOperator {
 
     //----中標start------
     @Autowired
-    OneNameHandler oneNameHandler;
+    FirstCandidateHandler firstCandidateHandler;
 
     @Autowired
     TwoNameHandler twoNameHandler;
@@ -68,6 +69,9 @@ public class DisruptorOperator {
     @Autowired
     InsertAnalyzeDetailZhongBiaoHandler insertAnalyzeDetailZhongBiaoHandler;
     //----中標end------
+
+    @Autowired
+    SendMsgHandler sendMsgHandler;
 
 
     private static EventTranslatorOneArg<AnalyzeEvent,EsNotice> eventTranslator = new EventTranslatorOneArg<AnalyzeEvent,EsNotice>() {
@@ -92,14 +96,14 @@ public class DisruptorOperator {
         zhaobiaoHandlerList.add(applyProjSumHandler);
         zhaobiaoHandlerList.add(applyTbAssureSumHandler);
         zhaobiaoHandlerList.add(applyTbEndDateHandler);
-        ZhaoBiaoDisruptorCreator.initDisruptor(zhaobiaoHandlerList,insertAnalyzeDetailHandler);
+        ZhaoBiaoDisruptorCreator.initDisruptor(zhaobiaoHandlerList,insertAnalyzeDetailHandler,sendMsgHandler);
 
         List<EventHandler> zhongbiaoHandlerList = new ArrayList<EventHandler>();
-        zhongbiaoHandlerList.add(oneNameHandler);
-        zhongbiaoHandlerList.add(twoNameHandler);
-        zhongbiaoHandlerList.add(threeNameHandler);
-        zhongbiaoHandlerList.add(projDutyHandler);
-        ZhongBiaoDisruptorCreator.initDisruptor(zhongbiaoHandlerList,insertAnalyzeDetailZhongBiaoHandler);
+        zhongbiaoHandlerList.add(firstCandidateHandler);
+//        zhongbiaoHandlerList.add(twoNameHandler);
+//        zhongbiaoHandlerList.add(threeNameHandler);
+//        zhongbiaoHandlerList.add(projDutyHandler);
+        ZhongBiaoDisruptorCreator.initDisruptor(zhongbiaoHandlerList,insertAnalyzeDetailZhongBiaoHandler,sendMsgHandler);
     }
 
     /**

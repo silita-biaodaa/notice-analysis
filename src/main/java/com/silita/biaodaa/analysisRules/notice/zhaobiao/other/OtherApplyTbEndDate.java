@@ -4,6 +4,9 @@ import com.silita.biaodaa.analysisRules.inter.SingleFieldAnalysis;
 import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.EsNotice;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +25,13 @@ import java.util.regex.Pattern;
 @Component
 public class OtherApplyTbEndDate implements SingleFieldAnalysis {
 
+    private Log logger = LogFactory.getLog(OtherApplyTbEndDate.class);
+
     @Autowired
     CommonService commonService;
 
     @Override
-    public String analysis(String segment,String keyWord) {
+    public String analysis(String segment, EsNotice esNotice, String keyWord) {
         segment = segment.replaceAll("<[^>]+>", "").replaceAll(" style=\\\"(.*?)\\\"", "");
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
@@ -80,7 +85,7 @@ public class OtherApplyTbEndDate implements SingleFieldAnalysis {
                             list2.add(dfTime.format(dfTime.parse(timeMat.group().replaceAll("时", ":").replaceAll("：", ":").replaceAll("点", ":"))));
                         }
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        logger.error(e,e);
                         continue;
                     }
                 }
