@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class OtherProjDuty implements SingleFieldAnalysis {
 
-    Logger logger = Logger.getLogger(OtherProjDuty.class);
+    public static Logger logger = Logger.getLogger(OtherProjDuty.class);
 
     @Autowired
     CommonService commonService;
