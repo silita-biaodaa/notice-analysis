@@ -40,7 +40,8 @@ public class MyStringUtils {
 	}
 
 	public static boolean isNotNull(String str){
-		if(str !=null && !str.trim().equals("")){
+		if(str !=null
+				&& str.replaceAll("[  ]","").length()>0){
 			return true;
 		}else{
 			return false;

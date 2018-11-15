@@ -5,6 +5,7 @@ import com.silita.biaodaa.cache.GlobalCache;
 import com.silita.biaodaa.service.CommonService;
 import com.silita.biaodaa.utils.DateUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
+import com.snatch.model.EsNotice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class OtherApplyBmEndDate implements DoubleFieldAnalysis {
     CommonService commonService;
 
     @Override
-    public List analysis(String segment) {
+    public List analysis(EsNotice esNotice,String segment) {
         segment = segment.replaceAll("<[^>]+>", "").replaceAll(" style=\\\"(.*?)\\\"", "");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
         SimpleDateFormat df2 = new SimpleDateFormat("MM-dd");// 设置日期格式2

@@ -40,7 +40,8 @@ public class AnalysisBootstrap implements ApplicationListener<ApplicationEvent> 
                 disruptorOperator.start();
                 try {
                     final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-                    scheduler.scheduleAtFixedRate(analysisTask, 0, 500, TimeUnit.MILLISECONDS);
+                    scheduler.schedule(analysisTask,100,TimeUnit.MILLISECONDS);
+//                    scheduler.scheduleAtFixedRate(analysisTask, 0, 500, TimeUnit.MILLISECONDS);
                     logger.info("===========任务启动完成=========");
                 } catch (Exception e) {
                     logger.info("任务启动异常", e);

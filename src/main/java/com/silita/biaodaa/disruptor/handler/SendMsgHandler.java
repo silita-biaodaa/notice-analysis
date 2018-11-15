@@ -19,7 +19,13 @@ public class SendMsgHandler implements EventHandler<AnalyzeEvent> {
     @Override
     public void onEvent(AnalyzeEvent event, long sequence, boolean endOfBatch) throws Exception {
         EsNotice esNotice = event.getEsNotice();
-        kafkaProducerUtil.sendkafkaMsg(esNotice,null);//send kafka msg
+        try {
+            kafkaProducerUtil.sendkafkaMsg(esNotice, null);//send kafka msg
+        }finally {
+            esNotice=null;
+            event=null;
+        }
+
     }
 
 
