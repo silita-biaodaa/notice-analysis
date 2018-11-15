@@ -9,13 +9,25 @@ import java.util.regex.Pattern;
 /**
  * Created by dh on 2018/3/21.
  */
-public class RegexTest {
+public class RegexTest extends ConfigTest {
+
     public static void main(String args[]) {
-        String s = "2017年扶余市增盛，，镇高。标准农田公司建设sd ";
-        //获取双引号之间的内容: (?<=\").*?(?=\")
+        String s = "公司2017年扶余市增盛，，镇高。标准农田建设sd";
+        //获取双引号之间的内容: (?<=开始字符).*?(?=结束字符)
         //匹配公司开始之后的内容，b
-        String regex = "(?<=公司).*";
+        String regex = "(?<=公司).*(?=公司)?";
         System.out.println(testReg(s,regex));
+
+    }
+
+    @Test
+    public void testReplace(){
+        String s = "公司2017年。扶余市1111增盛。。。镇高。标准农。公司";
+        String rgx = "(公司)|[。]";
+//        StringBuffer sb = new StringBuffer(s);
+//        Pattern p = Pattern.compile(rgx);
+        s = s.replaceAll(rgx,"");
+        System.out.println(s);
     }
 
     @Test
@@ -82,7 +94,8 @@ public class RegexTest {
         return v;
     }
 
-    private static void test2(){
+    @Test
+    public void test2(){
 
         // 按指定模式在字符串查找
         String line = "This order was placed for QT3000! OK?";

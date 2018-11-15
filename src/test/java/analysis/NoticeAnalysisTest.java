@@ -44,7 +44,7 @@ public class NoticeAnalysisTest extends ConfigTest {
      */
     @Test
     public void pushCustomRedisNotice() {
-        String title ="新疆博乐市肉牛良种场建设项目--监理中标候选人公示";
+        String title ="隆阳区第一中学女生宿舍楼建设项目";
         title =null;
         //dev_zhongbiao_20181031_all
 //        title = "河北建投新能源有限公司生产及技术改造工程中标候选人公示";dev_zhaobiao_20181024_all

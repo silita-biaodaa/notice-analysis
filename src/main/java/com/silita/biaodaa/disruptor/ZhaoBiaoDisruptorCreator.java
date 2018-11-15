@@ -33,10 +33,10 @@ public class ZhaoBiaoDisruptorCreator {
         }
     };
 
-    private static final int BUFFER_SIZE = 1024*4;
+    private static final int BUFFER_SIZE = 1024*2;
 
     //TODO 需要根据其他因素调整线程数量
-    private static final int THREAD_NUM = 20;
+    private static final int THREAD_NUM = 15;
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(THREAD_NUM);
 
     /**

@@ -75,8 +75,9 @@ public class NoticeTableAnalysis implements TableAnalysis{
             List<AnalysisField>  afLists = recognitionStyleData(tbArray);
             if(afLists.size()>0) {
                 resMap = new HashMap<String, String>();
+                //// TODO: 2018/11/12 多个value时需要解析挑选
                 for(AnalysisField af: afLists){
-                    resMap.put(af.getTitle(),Arrays.deepToString(af.getValues()));
+                    resMap.put(af.getTitle(),af.getValues()[0]);
                 }
             }
         }catch(Exception e){
@@ -86,6 +87,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
             if(resMap!=null) {
                 logger.info("###resMap:"+resMap.toString());
             }
+            segment=null;
         }
         return resMap;
     }

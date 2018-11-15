@@ -46,7 +46,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
             Map<String,String> resMap = noticeTableAnalysis.analysis(esNotice, esNotice.getContent());
             if(resMap !=null && resMap.size()>0){
                 res = resMap.get(NoticeTableAnalysis.FD_ONE_NAME);
-                if(res != null){
+                if(res != null && res.length()>100){
                     res = res.substring(0,100);
                 }
             }
