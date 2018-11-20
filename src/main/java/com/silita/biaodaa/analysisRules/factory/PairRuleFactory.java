@@ -13,14 +13,14 @@ import static com.silita.biaodaa.analysisRules.notice.NoticeTableAnalysis.*;
 public class PairRuleFactory {
     public static List<PairRule> pairRuleList =null;
 
-    public static Object lock;
+    public static Object lock=new Object();
 
-    public static List<PairRule>  getPairRuleList(int style){
+    public static List<PairRule>  getPairRuleList(){
         if(pairRuleList==null) {
             synchronized (lock) {
                 if(pairRuleList==null) {
-                    //横向：成对匹配规则
                     List<PairRule> pairRules = new ArrayList<PairRule>();
+                    //成对匹配规则
                     pairRules.add(new PairRule("(编号)", "\\d{5,}", FD_PJ_NO));
                     pairRules.add(new PairRule("(工程名称|项目名称)", ".{2,}(工程|项目)", FD_PJ_NAME));
                     pairRules.add(new PairRule("(日期|时间)", "^[1-9]\\d{3}(年|-)(0[1-9]|1[0-2])(月|-)([1-9]|0[1-9]|[1-2][0-9]|3[0-1])(日)?\\s*((2[0-3]|[0-1]\\d|[0-9])(:|时|点)([0-5]\\d|[0-9])(:|分)?([0-5]\\d|[0-5])?)?$"

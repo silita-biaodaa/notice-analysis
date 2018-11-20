@@ -8,14 +8,31 @@ import java.util.Arrays;
  */
 public class AnalysisField {
     private String title;
+
     private String[] values;
+
+    /** 数据抽取方式  1：横向 2：纵向*/
+    private int extractStyle;
 
     public AnalysisField() {
     }
 
-    public AnalysisField(String title, String[] values) {
+    public AnalysisField(int extractStyle) {
+        this.extractStyle = extractStyle;
+    }
+
+    public AnalysisField(String title, String[] values, int extractStyle) {
         this.title = title;
         this.values = values;
+        this.extractStyle = extractStyle;
+    }
+
+    public int getExtractStyle() {
+        return extractStyle;
+    }
+
+    public void setExtractStyle(int extractStyle) {
+        this.extractStyle = extractStyle;
     }
 
     public String getTitle() {

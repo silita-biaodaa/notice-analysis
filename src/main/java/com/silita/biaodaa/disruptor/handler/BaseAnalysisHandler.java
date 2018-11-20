@@ -5,16 +5,18 @@ import com.silita.biaodaa.analysisRules.inter.PreAnalysisRule;
 import com.silita.biaodaa.analysisRules.preAnalysis.PreAnalysisFactory;
 import com.silita.biaodaa.common.Constant;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
+import com.silita.biaodaa.utils.LoggerUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.snatch.model.EsNotice;
-import org.slf4j.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.silita.biaodaa.common.CommonMethods.getClassString;
 import static com.silita.biaodaa.common.Constant.PROCESS_INFO;
 
 public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> {
-    Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+
+    private Logger logger = Logger.getLogger(this.getClass());
 
     protected String fieldDesc= null;
 
@@ -46,6 +48,7 @@ public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> 
             this.keyWord = null;
             this.keyValue = null;
             try {
+                //根据分段循环解析
                 for(int i=0;i<list.length;i++) {
                     if(MyStringUtils.isNull(s3)) {
                         if(MyStringUtils.isNotNull(list[i])){
@@ -64,9 +67,9 @@ public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> 
                 }else if(MyStringUtils.isNotNull(keyValue)){
                     saveResult(esNotice,keyValue);
                 }
-                logger.info("[title:"+esNotice.getTitle()+"]，[url:"+esNotice.getUrl()+"][fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]");
+                LoggerUtils.infoTrace("[fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]",esNotice,logger);
             } catch (Exception e) {
-                logger.error("[title:"+esNotice.getTitle()+"]，[url:"+esNotice.getUrl()+"][fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]"+ e.getMessage(),e);
+                LoggerUtils.errorTrace("[fieldDesc:"+fieldDesc+"][feildValue:"+s3+"]",e,esNotice,logger);
             }finally {
                 list=null;
             }

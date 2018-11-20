@@ -43,7 +43,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
     protected String beforeAccurateMatch(EsNotice esNotice,String matchPart,Map<String ,List<Map<String, Object>>> regListMap,String rangeRegex){
         String res = null;
         try {
-            Map<String,String> resMap = noticeTableAnalysis.analysis(esNotice, esNotice.getContent());
+            Map<String,String> resMap = esNotice.getTbAnalysisMap();
             if(resMap !=null && resMap.size()>0){
                 res = resMap.get(NoticeTableAnalysis.FD_ONE_NAME);
                 if(res != null && res.length()>100){
@@ -52,6 +52,8 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
             }
         }catch (Exception e){
             logger.error("第一中标候选人,表格解析异常"+e,e);
+        }finally {
+            logger.info("表格解析结果："+res);
         }
         return res;
     }

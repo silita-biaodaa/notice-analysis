@@ -27,6 +27,28 @@ public class LoggerUtils {
         }
     }
 
+    public static void infoTrace(String info, EsNotice n,Logger logObj){
+        if(logObj==null){
+            logObj= logger;
+        }
+        if(n!=null) {
+            logObj.info(info + "[title:" + n.getTitle() + "][redis:" + n.getRedisId() + "][source:" + n.getSource() + "][url:"+n.getUrl()+"]");
+        }else{
+            logObj.info(info);
+        }
+    }
+
+    public static void errorTrace(String info,Exception e, EsNotice n,Logger logObj){
+        if(logObj==null){
+            logObj= logger;
+        }
+        if(n!=null) {
+            logObj.error(e.getMessage()+"##"+info + "[title:" + n.getTitle() + "][redis:" + n.getRedisId() + "][source:" + n.getSource() + "][url:"+n.getUrl()+"]",e);
+        }else{
+            logObj.error(info,e);
+        }
+    }
+
     public static String buildRow(String [] arr){
         StringBuilder sb = new StringBuilder();
         for(int y=0; y<arr.length;y++){
@@ -35,17 +57,18 @@ public class LoggerUtils {
         return sb.toString();
     }
 
-    public static void infoArray(String[][] array){
+    public static String infoArray(String[][] array){
         StringBuilder sb = new StringBuilder("\n");
         for(int x=0; x<array.length;x++){
             sb.append("第"+(x+1)+"行");
             for(int y=0; y<array[x].length;y++){
                 logger.debug("array["+x+"]["+y+"]:"+array[x][y]);
-                sb.append("||||"+array[x][y]);
+                sb.append("||"+array[x][y]);
             }
             sb.append("\n");
         }
-        logger.info(sb.toString());
+        logger.debug(sb.toString());
+        return sb.toString();
     }
 
 

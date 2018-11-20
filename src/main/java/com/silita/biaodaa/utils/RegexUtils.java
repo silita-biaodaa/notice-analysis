@@ -13,6 +13,12 @@ import java.util.regex.Pattern;
 public class RegexUtils {
     private static Logger logger = Logger.getLogger(RegexUtils.class);
 
+    /**
+     * 判断字符是否有匹配的值。
+     * @param s
+     * @param regex
+     * @return
+     */
     public static boolean matchExists(String s,String regex){
         boolean isExists =false;
         try {
@@ -47,6 +53,29 @@ public class RegexUtils {
             }
         }
         return matchList;
+    }
+
+    /**
+     * 提取匹配表达式的值
+     * @param s
+     * @param regex
+     * @return
+     */
+    public static String matchValue(String s,String regex){
+        String mStr=null;
+        try {
+            if(s != null) {
+                Pattern ptn = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+                Matcher mt = ptn.matcher(s);
+                if (mt.find()) {
+                    mStr = mt.group();
+                    logger.debug("group:" + mt.group());
+                }
+            }
+        }catch(Exception e){
+            logger.error(e,e);
+        }
+        return mStr;
     }
 
 }

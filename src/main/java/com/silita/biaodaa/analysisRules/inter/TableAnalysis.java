@@ -12,7 +12,7 @@ import java.util.Map;
  * 表格内容解析接口
  */
 public interface TableAnalysis {
-    Map<String, String> analysis(EsNotice esNotice, String segment)  throws Exception;
+    Map<String, String> analysis(EsNotice esNotice, String segment,String flag)  throws Exception;
 
     /**
      * 格式化html中的二维表
@@ -20,7 +20,7 @@ public interface TableAnalysis {
      * @return
      * @throws Exception
      */
-    List<List<AnalysisTd>> parseContent(String segment)throws Exception;
+    List<List<AnalysisTd>> parseContent(String segment,String flag)throws Exception;
 
     /**
      * 识别表格类型 1：纵向型；2：横向型
