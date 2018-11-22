@@ -1,18 +1,35 @@
 package com.silita.biaodaa.analysisRules.vo;
 
+import com.silita.biaodaa.utils.MyStringUtils;
+
 import java.util.Arrays;
 
 /**
- * 表格中的元素实体
+ * 表格解析元素实体
  * Created by dh on 2018/10/30.
  */
 public class AnalysisField {
-    private String title;
 
+    private int maxLength = 200;
+
+    /** 疑似 表头（label）*/
+    private boolean delete;
+
+    /** 疑似 表头（label）*/
+    private String title;
+    /** 标准字段描述*/
+    private String desc;
+    /** 疑似 对应值*/
     private String[] values;
 
     /** 数据抽取方式  1：横向 2：纵向*/
     private int extractStyle;
+
+    /** 标题关键值*/
+    private String titleKey;
+
+    /** 标题附带字符*/
+    private String titleAttach;
 
     public AnalysisField() {
     }
@@ -21,10 +38,43 @@ public class AnalysisField {
         this.extractStyle = extractStyle;
     }
 
-    public AnalysisField(String title, String[] values, int extractStyle) {
-        this.title = title;
-        this.values = values;
+    public AnalysisField(String title, String[] values, String desc, int extractStyle) {
+        this.title = MyStringUtils.controllLength(title,maxLength);
+        this.values = MyStringUtils.controllLength(values,maxLength);
+        this.desc = desc;
         this.extractStyle = extractStyle;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
+    public String getTitleKey() {
+        return titleKey;
+    }
+
+    public void setTitleKey(String titleKey) {
+        this.titleKey = titleKey;
+    }
+
+    public String getTitleAttach() {
+        return titleAttach;
+    }
+
+    public void setTitleAttach(String titleAttach) {
+        this.titleAttach = titleAttach;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public int getExtractStyle() {
@@ -40,7 +90,7 @@ public class AnalysisField {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = MyStringUtils.controllLength(title,maxLength);
     }
 
     public String[] getValues() {
@@ -48,7 +98,7 @@ public class AnalysisField {
     }
 
     public void setValues(String[] values) {
-        this.values = values;
+        this.values = MyStringUtils.controllLength(values,maxLength);
     }
 
     public void addValue(String v){

@@ -2,6 +2,7 @@ package com.silita.biaodaa.analysisRules.notice;
 
 import com.silita.biaodaa.analysisRules.inter.TableAnalysis;
 import com.silita.biaodaa.analysisRules.vo.*;
+import com.silita.biaodaa.common.config.CustomizedPropertyConfigurer;
 import com.silita.biaodaa.service.TableAnalysisService;
 import com.silita.biaodaa.utils.HtmlTagUtils;
 import com.silita.biaodaa.utils.LoggerUtils;
@@ -20,7 +21,7 @@ import java.util.*;
 
 import static com.silita.biaodaa.analysisRules.factory.PairRuleFactory.getPairRuleList;
 import static com.silita.biaodaa.utils.LoggerUtils.buildRow;
-import static com.silita.biaodaa.utils.RegexUtils.matchExists;
+import static com.silita.biaodaa.utils.RegexUtils.matchValue;
 
 /**
  * 表格解析逻辑类
@@ -29,6 +30,9 @@ import static com.silita.biaodaa.utils.RegexUtils.matchExists;
 @Component
 public class NoticeTableAnalysis implements TableAnalysis{
     private Logger logger = Logger.getLogger(this.getClass());
+
+    private static final String TABLE_LOG_FLAG =  (String)CustomizedPropertyConfigurer.getContextProperty("analysis.table.logs");
+
     /** 数据抽取来源：行式*/
     public static final int EXTRACT_STYLE_ROW=1;
 
@@ -65,13 +69,20 @@ public class NoticeTableAnalysis implements TableAnalysis{
 
     public static final String FD_ORDER="排序";
 
+    /** 中标公告：表格范围优先规则*/
+    public static final String TB_RANGE_BID ="(?<=(" +
+            "谈判情况|中标结果|中标候选人|中标（成交）结果|参与谈判情况" +
+            "|推荐中标候选人名单|参与询价情况|成交结果信息" +
+            "|供应商提交响应文件情况|报价及综合得分排序表" +
+            "))[\\s\\S.]*<table.*?>[\\s\\S.]*?</table.*?>";
+
     /**
-     * 中标，有效表格判定关键字
+     * 中标: 有效表格判定关键字
      */
     public static final String[] VALID_TABLE_KEYS = {"名称","单位","工程"
             ,"项目","标段","报价","第一","名次"
             ,"标段","投标","排名","得分","工期"
-            ,"中标候选人"};
+            ,"中标候选人","供应商名称","投标报价"};
 
     @Autowired
     private TableAnalysisService tableAnalysisService;
@@ -80,53 +91,74 @@ public class NoticeTableAnalysis implements TableAnalysis{
     public Map<String, String> analysis(EsNotice esNotice, String segment,String flag) throws Exception {
         LoggerUtils.debugTrace("表格解析开始",esNotice,logger);
         segment = HtmlTagUtils.clearTagByTable(segment);
-        logger.debug("segment:"+segment);
         Map<String, String> resMap = null;
         try {
             //解析html，获取有效表格
             List<List<AnalysisTd>> tableContent = parseContent(segment,flag);
             if(tableContent==null){
-                logger.info("tableSize is null...");
-                return resMap;
+                logger.debug("tableSize is null...");
+                return null;
             }else {
 
-                logger.info("tableSize:" + tableContent.size());
+                logger.debug("tableSize:" + tableContent.size());
                 //把实体转换为标准的二维表
                 String[][] tbArray = mappingArray(tableContent);
                 //打印映射的二维表
                 String tableString = LoggerUtils.infoArray(tbArray);
 
                 //行、列式表格数据抽取
-                logger.info("行式表格数据抽取开始。。。");
+                logger.debug("行式表格数据抽取开始。。。");
                 //按有效值进行结对判断
                 List<AnalysisField> rowStyleList =extractRowData(tbArray);
                 //行式表格结果展示
                 String rowListString = debugShow(rowStyleList);
 
-                logger.info("列式表格数据抽取开始。。。");
-                List<AnalysisField> colStyleList =extracColumnData(tbArray);
+                logger.debug("列式表格数据抽取开始。。。");
+                List<AnalysisField> colStyleList = extractColumnData(tbArray);
                 //列式表格结果展示
                 String colListString = debugShow(colStyleList);
 
-                //行，列匹配数据合并
-                List<AnalysisField> afLists= new ArrayList<AnalysisField>(rowStyleList);
-                afLists.addAll(colStyleList);
-
-                boolean hasResult = false;
-                if (afLists.size() > 0) {
-                    hasResult = true;
+                if (rowStyleList.size() > 0 || colStyleList.size() > 0) {
                     resMap = new HashMap<String, String>();
-                    //// TODO: 2018/11/12 多个value时需要联合多个维度判断挑选
-                    for (AnalysisField af : afLists) {
-                        resMap.put(af.getTitle(), af.getValues()[0]);
+                    //需要提取的字段
+                    String[] fields = {FD_ONE_NAME,FD_ONE_OFFER,FD_TIIME_LIMIT,FD_TIMES,FD_PJ_NAME,FD_PJ_NO,FD_SEGMENT,FD_ORDER};
+                    for(String desc: fields){
+                        Map temp = filterFiedValues(rowStyleList,colStyleList,desc);
+                        if(temp!=null)
+                        resMap.putAll(temp);
                     }
                 }
 
-                //仅存在table解析的，进行记录表格解析日志
-                insertAnalysisLog(esNotice,hasResult,tableString,
-                        rowListString,rowStyleList.size(),
-                        colListString,colStyleList.size(),
-                        (resMap!=null? resMap.toString():null));
+//                //行，列匹配数据合并
+//                List<AnalysisField> afLists= new ArrayList<AnalysisField>(rowStyleList);
+//                afLists.addAll(colStyleList);
+//                //从横，纵向结果中筛选对应字段的值
+//                boolean haresMapsResult = false;
+//                if (afLists.size() > 0) {
+//                    hasResult = true;
+//                    resMap = new HashMap<String, String>();
+//                    for (AnalysisField af : afLists) {
+//                        resMap.put(af.getTitle(), af.getValues()[0]);
+//                    }
+//                }
+
+                if("true".equalsIgnoreCase(TABLE_LOG_FLAG)) {
+                    tableString = MyStringUtils.controllLength(tableString,2000);
+                    rowListString = MyStringUtils.controllLength(rowListString,1500);
+                    colListString = MyStringUtils.controllLength(colListString,1500);
+                    //table标签解析的公告，记录解析日志
+                    insertAnalysisLog(esNotice,(resMap !=null && resMap.size()>0), tableString,
+                            rowListString, rowStyleList.size(),
+                            colListString, colStyleList.size(),
+                            ((resMap != null && resMap.size()>0) ? resMap.toString() : null));
+
+                    //清理对象
+                    rowListString = null;
+                    colListString = null;
+                    rowStyleList=null;
+                    colStyleList = null;
+                    tableString = null;
+                }
             }
 
         }catch(Exception e){
@@ -137,6 +169,89 @@ public class NoticeTableAnalysis implements TableAnalysis{
                 logger.info("###resMap:"+resMap.toString());
             }
             segment=null;
+        }
+        return resMap;
+    }
+
+
+    private Map<String,String> filterFiedValues(List<AnalysisField> rowStyleList,List<AnalysisField> colStyleList,String fieldDesc){
+        Map<String,String> resMap = null;
+        int rowCount=0,colCount=0;
+        List<AnalysisField> targetListRow = new ArrayList<>();
+        List<AnalysisField> targetListCol = new ArrayList<>();
+        try {
+            //收集、比对横，纵表格的命中数量
+            for (AnalysisField af : rowStyleList) {
+                if (af.getDesc().equals(fieldDesc)) {
+                    af.setDelete(true);
+                    rowCount++;
+                    targetListRow.add(af);
+                }
+            }
+            for (AnalysisField af : colStyleList) {
+                if (af.getDesc().equals(fieldDesc)) {
+                    af.setDelete(true);
+                    colCount++;
+                    targetListCol.add(af);
+                }
+            }
+
+            if (colCount > rowCount) {
+                resMap =buildFieldMap(targetListCol,fieldDesc);
+            } else {
+                resMap =buildFieldMap(targetListRow,fieldDesc);
+            }
+        }catch (Exception e){
+            logger.error(e,e);
+        }finally {
+            targetListRow =null;
+            targetListCol=null;
+        }
+        return  resMap;
+    }
+
+    /**
+     * 多值筛选：第一中标候选人
+     * @param fieldList
+     * @return
+     */
+    private AnalysisField filterOneName(List<AnalysisField> fieldList){
+        //判断title中的序号信息
+        String oneRegex = "(第)?(一|1|壹)";
+        for(AnalysisField af : fieldList){
+            if(af.getTitleAttach() !=null
+                    && RegexUtils.matchExists(af.getTitleAttach(), oneRegex)) {
+                    return af;
+            }
+        }
+        //无序号取队列第一个
+        return fieldList.get(0);
+    }
+
+    /**
+     * 返回某类解析字段的值
+     * @param fieldList
+     * @param fieldDesc
+     * @return
+     */
+    private Map<String,String> buildFieldMap(List<AnalysisField> fieldList,String fieldDesc){
+        Map<String,String> resMap = null;
+        if(fieldList.size()>0){
+            resMap = new HashMap<String, String>();
+            AnalysisField hitAf = null;
+            if(fieldList.size()>1){
+                // 多值筛选
+                switch(fieldDesc){
+                    case FD_ONE_NAME: hitAf =filterOneName(fieldList);break;
+                    default:hitAf =fieldList.get(0);
+                }
+            }else{
+                //单匹配值，直接转化
+                hitAf = fieldList.get(0);
+            }
+            resMap.put(hitAf.getDesc(),hitAf.getValues()[0]);
+        }else{
+            logger.warn("no match field");
         }
         return resMap;
     }
@@ -157,7 +272,6 @@ public class NoticeTableAnalysis implements TableAnalysis{
             log.setHasResult(hasResult);
             log.setNoticeUrl(esNotice.getUrl());
             log.setGsDate(esNotice.getOpenDate());
-            log.setOrigin_content(esNotice.getContent());
             log.setTable_mapping(tableString);
             log.setRows_parser(rowListString);
             log.setRows_parser_size(rowListSize);
@@ -168,6 +282,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
         }catch (Exception e){
             logger.error(e,e);
         }finally {
+            log.setTable_mapping(null);
             log.setOrigin_content(null);
             log.setRows_parser(null);
             log.setCols_parser(null);
@@ -206,7 +321,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
                 }
 //                logger.debug("[colCount:"+colCount+"]第"+i+"行元素个数："+tmpColCount);
             }
-            logger.info("初始化二维表["+rowCount+"]["+colCount+"]");
+            logger.debug("初始化二维表["+rowCount+"]["+colCount+"]");
             tbArray=new String[rowCount][colCount];
 
             //二维表填充值
@@ -276,8 +391,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
         List<List<AnalysisTd>> tableList =null;
         //中标表格,范围预选尝试
         if(flag.equals(ZHONGBIAO_TB)){
-            String rgx= "(?<=(中标结果|谈判情况))[\\s\\S.]*<table.*?>[\\s\\S.]*?</table.*?>";
-            String subSeg = RegexUtils.matchValue(segment,rgx);
+            String subSeg = matchValue(segment,TB_RANGE_BID);
             if(subSeg !=null){
                 tableList = buildTableListByHtml(subSeg);
                 subSeg=null;
@@ -389,7 +503,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
      * @param tbArray
      * @return
      */
-    private  List<AnalysisField> extracColumnData(String[][] tbArray){
+    private  List<AnalysisField> extractColumnData(String[][] tbArray){
         List<AnalysisField> colStyleList = new ArrayList<>();
 
         List<AnalysisField> colStyleListTmp = new ArrayList<>();
@@ -456,7 +570,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
             infoShow(rowStyleList);
 
             logger.info("列式结对数据判断开始。。。");
-            colStyleList =extracColumnData(tbArray);
+            colStyleList = extractColumnData(tbArray);
             //列式结果展示
             logger.info("列式匹配结果：" + colStyleList.size());
             infoShow(colStyleList);
@@ -504,10 +618,12 @@ public class NoticeTableAnalysis implements TableAnalysis{
         for(PairRule pr : pairRules) {
             String lr = pr.getkRegex();
             String vr = pr.getvRegex();
-            if (matchExists(label, lr)
-                    && matchExists(value, vr)) {
+            String labelKey = matchValue(label, lr);
+            if ( labelKey != null && matchValue(value, vr) != null) {
                 logger.debug("["+pr.getDesc()+"][values:"+value+"]行式成对匹配成功。lr:"+lr+"--vr:"+vr);
-                afield = new AnalysisField(pr.getDesc(),new String[]{value},EXTRACT_STYLE_ROW);
+                afield = new AnalysisField(label,new String[]{value},pr.getDesc(),EXTRACT_STYLE_ROW);
+                afield.setTitleKey(labelKey);
+                afield.setTitleAttach(label.replace(labelKey,""));
                 isHoriz = true;
                 break;
             }
@@ -531,14 +647,17 @@ public class NoticeTableAnalysis implements TableAnalysis{
             String lr = pr.getkRegex();
             String vr = pr.getvRegex();
 //            logger.debug("列式：成对判断["+label+"]["+lr+"]");
-            if (matchExists(label, lr)) {
+            String labelKey = matchValue(label, lr);
+            if (labelKey != null) {
                 List<String> mList = RegexUtils.matchExists(af.getValues(), vr);
 //                logger.debug("列式：matchExists成对判断["+af.getValues()+"]["+vr+"]");
                 if(mList.size() > 0){
                     isVertical =true;
                     //更新values队列
-                    af.setTitle(pr.getDesc());
+                    af.setDesc(pr.getDesc());
                     af.setValues(mList.toArray(new String[mList.size()]));
+                    af.setTitleKey(labelKey);
+                    af.setTitleAttach(label.replace(labelKey,""));
                     logger.debug("["+pr.getDesc()+"][values:"+Arrays.deepToString(mList.toArray(new String[mList.size()]))+"]列式成对匹配成功。lr:"+lr+"--vr:"+vr);
                     break;
                 }

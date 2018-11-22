@@ -109,7 +109,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
         if(MyStringUtils.isNotNull(analysisResult)) {
             //根据企业名称库,校验解析结果
             String corpFilterStatus = (String) CustomizedPropertyConfigurer.getContextProperty("analysis.corpName.filter");
-            if (corpFilterStatus != null && corpFilterStatus.equals("true")) {
+            if (corpFilterStatus != null && corpFilterStatus.equalsIgnoreCase("true")) {
                 logger.info("校验企业名称库开始。。。[title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"][source:"+esNotice.getSource()+"]");
                 boolean isExists = companyService.existsCorpName(analysisResult);
                 if(!isExists){

@@ -20,6 +20,26 @@ public class MyStringUtils {
 
 	private static final String[] remit = {"网银转账","网上支付","银行保函","保险单","担保函","电汇","转账"};
 
+	public static void main(String[] args){
+		String s = "可是打飞机施蒂利克水电费看";
+		s = controllLength(s,10);
+		System.out.println(s.length());
+	}
+
+	public static String controllLength(String s,int max){
+		if(s!= null && s.length()>max) {
+			s =s.substring(0, max);
+		}
+		return s;
+	}
+
+	public static String[] controllLength(String[] arr,int max){
+		for(int i=0; i<arr.length;i++){
+			arr[i]=controllLength(arr[i],max);
+		}
+		return arr;
+	}
+
 	/**
 	 * 对字符串中的转移字符增加'\'
 	 * @param s

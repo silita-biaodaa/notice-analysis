@@ -14,13 +14,13 @@ public class HtmlTagUtils {
 //        content = content.replaceAll("[  ]*","");//剔除空格
 //        content = content.replaceAll("\\n\\n","");//剔除连续换行符
 
-        content = content.replaceAll("(<(?!img|br|p|/p).*?>)" +//剔除连续换行符
-                "|(<script[^>]*?>.*?</script >)" +
-                "|((style|class|align)+?=*?\".*\")" +
-                "|(<!--[\\s\\S\\W\\w.]*-->)" +
-                "|(&.*?;)" +
-                "|([  ]*)" +
-                "|(\\n\\n)","");
+        content = content.replaceAll("(<(?!img|br|p|/p).*?>)" + //去除所有标签，只剩img,br,p
+                "|(<script[^>]*?>.*?</script >)" +//去除script块
+                "|((style|class|align)+?=*?\".*\")" +//去除样式属性
+                "|(<!--[\\s\\S\\W\\w.]*-->)" +//去除注释
+                "|(&.*?;)" +//去除转义字符
+                "|([  ]*)" +//剔除空格
+                "|(\\n\\n)","");//剔除连续换行符
         return content;
     }
 
@@ -32,10 +32,10 @@ public class HtmlTagUtils {
 //        content = content.replaceAll("\\n\\n","");//剔除连续换行符
 
         content = content.replaceAll("(<(?!img|br|p|/p|table|/table|tr|/tr|/td|td|span|/span).*?>)" + //去除所有标签，只剩img,br,p
-                "|(<script[^>]*?>.*?</script >)" +
-                "|(<!--[\\s\\S\\W\\w.]*-->)" +
-                "|(&.*?;)" +
-                "|(\\n\\n)","");
+                "|(<script[^>]*?>.*?</script >)" +//去除script块
+                "|(<!--[\\s\\S\\W\\w.]*-->)" +//去除注释
+                "|(&.*?;)" +//去除转义字符
+                "|(\\n\\n)","");//剔除连续换行符
         return content;
     }
 }
