@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -55,7 +56,6 @@ public class TestService {
     }
 
     public void pushHunanRedisNotice(){
-        int pageSize =100;
         int pageNum=0;
         int result=0;
         while(pageNum==0 || result>0) {
@@ -93,19 +93,24 @@ public class TestService {
         jedisStringTemplate.opsForValue().set(tbName,String.valueOf(totalCount));
     }
 
-    public int pushCustomRedisNotice(String tbName,String title,String source){
+    private static final int pageSize = 100;
+
+    public int pushCustomRedisNotice(Map argMap){
         int totalCount = 0;
+        String tbName = (String)argMap.get("tbName");
         try {
             if (!isContinue(tbName)) {
                 throw new RuntimeException("导数失败，" + tbName + "导数任务正在进行中或已完成导数，可查看redis：" + tbName);
             }
-            int pageSize = 100;
             int pageNum = 0;
             int result = 0;
+            argMap.put("end",pageSize);
+
             WeakReference<List<Notice>> list = null;
             while (pageNum == 0 || result > 0) {
                 int start = pageNum * pageSize;
-                list = new WeakReference(testMapper.pushCustomRedisNotice(start, pageSize, tbName, title,source));
+                argMap.put("start",start);
+                list = new WeakReference(testMapper.pushCustomRedisNotice(argMap));
                 if (list.get() != null && list.get().size() > 0) {
                     result = list.get().size();
                     sendAnalysisMsg(list.get());// 模拟爬虫，生成解析队列
@@ -162,13 +167,18 @@ public class TestService {
         if(!isContinue(tbName)){
             throw new RuntimeException("导数失败，"+tbName+"导数任务正在进行中或已完成导数，可查看redis："+tbName);
         }
-        int pageSize =100;
         int result=0;
         int totalCount=0;
         int runNum = startNum;
+        Map argMap = new HashMap();
+        argMap.put("end",pageSize);
+        argMap.put("tbName",tbName);
+        argMap.put("title",title);
+        argMap.put("source",source);
         WeakReference<List<Notice>> list =null;
         while((startNum==runNum || result>0) && totalCount<tCount) {
-            list =new WeakReference(testMapper.pushCustomRedisNotice(runNum, pageSize,tbName,title,source));
+            argMap.put("start",runNum);
+            list =new WeakReference(testMapper.pushCustomRedisNotice(argMap));
             if(list.get()!=null && list.get().size()>0) {
                 result = list.get().size();
 //                for (Notice notice : list) {
@@ -195,8 +205,14 @@ public class TestService {
     }
 
     public List debugNoticeList(String tbName,String title){
-        int pageSize =1000;
-        WeakReference<List<Notice>> list=new WeakReference(testMapper.pushCustomRedisNotice(0, pageSize,tbName,title,null));
+        Map argMap = new HashMap();
+        argMap.put("start",0);
+        argMap.put("end",1000);
+        argMap.put("tbName",tbName);
+        argMap.put("title",title);
+        argMap.put("source",null);
+
+        WeakReference<List<Notice>> list=new WeakReference(testMapper.pushCustomRedisNotice(argMap));
         return list.get();
     }
 

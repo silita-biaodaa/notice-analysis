@@ -120,9 +120,17 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
         String result = null;
         try {
             List<Map<String, Object>> accurateList = regListMap.get("accurate");//精准匹配规则
+            List<Map<String, Object>> filterResultRegList= regListMap.get("filterResult");//结果过滤规则
 
             //1.精准匹配前,自定义规则（子类实现）
             result = beforeAccurateMatch(esNotice, matchPart,regListMap, rangeRegex);
+            //自定义得到的值进行过滤校验，不通过则继续其他精准匹配
+            if(MyStringUtils.isNotNull(result)) {
+                result = filterResult(esNotice, result, filterResultRegList);
+            }
+            if(MyStringUtils.isNotNull(result)) {
+                result = verifyResult(esNotice,result,regListMap);
+            }
             if (MyStringUtils.isNotNull(result)) {
                 String px="2.1";
                 String dInfo = "精准匹配前的自定义业务规则匹配值:";
@@ -244,30 +252,39 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
             //2.解析结果过滤
             if(MyStringUtils.isNotNull(analysisResult)) {
-                logger.info("2.1 解析结果过滤前：[title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
-                //过滤规则匹配
-                analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
-                logger.info("2.2 解析结果规则过滤后： [title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
-                //自定义过滤规则
-                analysisResult = customfilterResult(analysisResult, esNotice);
-                logger.info("2.3 解析结果自定义过滤后： [title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
-                if(Constant.IS_DEBUG){
-                    PROCESS_INFO.put("5","[title:"+esNotice.getTitle()+"]结果过滤完成后："+analysisResult);
-                }
+                analysisResult = filterResult(esNotice,analysisResult,filterResultRegList);
             }
-
             //3.解析结果有效性检验，检验失败返回空
             if(MyStringUtils.isNotNull(analysisResult)) {
-                try {
-                    analysisResult = verifyAnalysisResult(esNotice, regListMap, analysisResult);
-                }catch(Exception e){
-                    logger.error("[title:"+esNotice.getTitle()+"]解析结果有效性检验出错！"+e,e);
-                    analysisResult=null;
-                }
-                if(Constant.IS_DEBUG){
-                    PROCESS_INFO.put("6","[title:"+esNotice.getTitle()+"]解析结果有效性检验结果[analysisResult："+analysisResult+"]");
-                }
+                analysisResult = verifyResult(esNotice,analysisResult,regListMap);
             }
+        }
+        return analysisResult;
+    }
+
+    private String filterResult(EsNotice esNotice,String analysisResult,List<Map<String, Object>> filterResultRegList){
+        logger.info("2.1 解析结果过滤前：[title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
+        //过滤规则匹配
+        analysisResult = filterAnalysisResult(analysisResult, filterResultRegList);
+        logger.info("2.2 解析结果规则过滤后： [title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
+        //自定义过滤规则
+        analysisResult = customfilterResult(analysisResult, esNotice);
+        logger.info("2.3 解析结果自定义过滤后： [title:"+esNotice.getTitle()+"][analysisResult:"+analysisResult+"]");
+        if(Constant.IS_DEBUG){
+            PROCESS_INFO.put("5","[title:"+esNotice.getTitle()+"]结果过滤完成后："+analysisResult);
+        }
+        return analysisResult;
+    }
+
+    private String verifyResult(EsNotice esNotice,String analysisResult,Map<String ,List<Map<String, Object>>> regListMap){
+        try {
+            analysisResult = verifyAnalysisResult(esNotice, regListMap, analysisResult);
+        }catch(Exception e){
+            logger.error("[title:"+esNotice.getTitle()+"]解析结果有效性检验出错！"+e,e);
+            analysisResult=null;
+        }
+        if(Constant.IS_DEBUG){
+            PROCESS_INFO.put("6","[title:"+esNotice.getTitle()+"]解析结果有效性检验结果[analysisResult："+analysisResult+"]");
         }
         return analysisResult;
     }
@@ -285,7 +302,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
         //结果段落分割
         str = splitSection(str,"</p>");
         str = str.replaceFirst("\\n","");
-        str = str.trim();
+        str = str.replaceAll("[  ]","");
         //输出结果过滤
         for(Map regexMap: filterResultRegList) {
             String regex =  (String)regexMap.get("regex");

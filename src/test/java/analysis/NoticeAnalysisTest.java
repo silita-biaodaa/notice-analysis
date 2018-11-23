@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +23,6 @@ import java.util.concurrent.TimeUnit;
  * Created by zhangxiahui on 18/3/20.
  */
 public class NoticeAnalysisTest extends ConfigTest {
-
-
     @Autowired
     TestService testService;
 
@@ -46,9 +45,15 @@ public class NoticeAnalysisTest extends ConfigTest {
     public void pushCustomRedisNotice() {
         String title ="隆阳区第一中学女生宿舍楼建设项目";
         title =null;
-        //dev_zhongbiao_20181031_all
+        String tbName = "test.dev_zhongbiao_20181024_all";//uat_zhongbiao_20181108_all
+        //dev_zhongbiao_20181031_all dev_zhongbiao_20181024_all  uat_zhongbiao_20181108_all
 //        title = "河北建投新能源有限公司生产及技术改造工程中标候选人公示";dev_zhaobiao_20181024_all
-        testService.pushCustomRedisNotice("test.dev_zhongbiao_20181031_all",title,null);
+        Map argMap = new HashMap();
+        argMap.put("tbName",tbName);
+        argMap.put("title",title);
+//        argMap.put("redisId",7578117);
+        testService.pushCustomRedisNotice(argMap);
+//        testService.pushCustomRedisSec(tbName,0,100,title,null);
 //        testService.pushCustomRedisNotice("test.dev_zhongbiao_2018_all",null,null);dev_zhongbiao_20181024_all
 //        analyzeHandler();
 //        dev_zhaobiao_20181024_all  dev_zhongbiao_2018_all

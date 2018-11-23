@@ -4,6 +4,7 @@ import com.silita.biaodaa.analysisRules.notice.zhongbiao.FirstCandidateRule;
 import com.silita.biaodaa.disruptor.handler.BaseAnalysisHandler;
 import com.snatch.model.EsNotice;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +15,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class FirstCandidateHandler extends BaseAnalysisHandler {
 
-    Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     FirstCandidateRule firstCandidateRule;
 
     public FirstCandidateHandler(){
-        this.fieldDesc="第一中标人";
+        this.fieldDesc="第一中标候选人";
     }
 
     @Override

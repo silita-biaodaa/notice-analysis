@@ -73,6 +73,9 @@ public class DisruptorOperator {
     @Autowired
     SendMsgHandler sendMsgHandler;
 
+    @Autowired
+    BeforeBidsHandle beforeBidsHandle;
+
 
     private static EventTranslatorOneArg<AnalyzeEvent,EsNotice> eventTranslator = new EventTranslatorOneArg<AnalyzeEvent,EsNotice>() {
         @Override
@@ -103,7 +106,7 @@ public class DisruptorOperator {
 //        zhongbiaoHandlerList.add(twoNameHandler);
 //        zhongbiaoHandlerList.add(threeNameHandler);
 //        zhongbiaoHandlerList.add(projDutyHandler);
-        ZhongBiaoDisruptorCreator.initDisruptor(zhongbiaoHandlerList,insertAnalyzeDetailZhongBiaoHandler,sendMsgHandler);
+        ZhongBiaoDisruptorCreator.initDisruptor(beforeBidsHandle,zhongbiaoHandlerList,insertAnalyzeDetailZhongBiaoHandler,sendMsgHandler);
     }
 
     /**

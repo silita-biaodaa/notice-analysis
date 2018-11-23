@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.silita.biaodaa.dao.TableAnalysisMapper">
+
+    <insert id="insertAnlyTbLogs" parameterType="com.silita.biaodaa.analysisRules.vo.AnalysisTbLog">
+       insert into mishu_analyze.anly_tb_logs(
+          has_result,redisId,noticeUrl
+         ,title,gsDate,origin_content
+         ,table_mapping,rows_parser
+         ,rows_parser_size,cols_parser
+         ,cols_parser_size,source,city
+         ,result_map)
+       values(
+        #{hasResult},
+        #{redisId},
+        #{noticeUrl},
+        #{title},
+        #{gsDate},
+        #{origin_content},
+        #{table_mapping},
+        #{rows_parser},
+        #{rows_parser_size},
+        #{cols_parser},
+        #{cols_parser_size},
+        #{source},
+        #{city},
+        #{result_map}
+        )
+    </insert>
+</mapper>

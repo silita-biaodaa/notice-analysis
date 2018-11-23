@@ -128,7 +128,11 @@ public class TestController {
     @RequestMapping(value = "/pushCustomRedis", method = RequestMethod.GET)
     public Map<String, Object> pushCustomRedis(String tbName,String title,String source) {
         try {
-            int total = testService.pushCustomRedisNotice(tbName,title,source);
+            Map argMap = new HashMap();
+            argMap.put("tbName",tbName);
+            argMap.put("title",title);
+            argMap.put("source",source);
+            int total = testService.pushCustomRedisNotice(argMap);
             return new ImmutableMap.Builder<String, Object>().put("status", 1)
                     .put("msg", "custom push到Redis成功!").put("successCount",total).build();
         } catch (Exception e) {

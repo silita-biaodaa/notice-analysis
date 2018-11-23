@@ -1,6 +1,7 @@
 package com.snatch.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class EsNotice implements Serializable{
 
@@ -41,6 +42,19 @@ public class EsNotice implements Serializable{
 	private AnalyzeDetail detail;
 
 	private AnalyzeDetailZhongBiao detailZhongBiao;
+
+	/**
+	 *表格解析结果集
+	 */
+	private Map<String,String> tbAnalysisMap;
+
+	public Map<String, String> getTbAnalysisMap() {
+		return tbAnalysisMap;
+	}
+
+	public void setTbAnalysisMap(Map<String, String> tbAnalysisMap) {
+		this.tbAnalysisMap = tbAnalysisMap;
+	}
 
 	public String getSource() {
 		return source;

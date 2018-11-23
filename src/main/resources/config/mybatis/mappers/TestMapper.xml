@@ -19,23 +19,36 @@
         limit #{param2}
     </select>
 
-    <select id="pushCustomRedisNotice" resultType="com.snatch.model.Notice" >
+    <select id="pushCustomRedisNotice" resultType="com.snatch.model.Notice" parameterType="Map">
         select id,redisId,title,opendate,content,url,pdfURL,areaCode,catchType,noticeType,
         province,city,county,provinceCode,cityCode,countyCode,photoUrl,catchtype as `type`,
         snatchNumber,areaRank,source
-        from  ${param3}
+        from  ${tbName}
         where id>=(SELECT id
-            from ${param3}
-            <if test="param5!=null and param5!=''">
-                WHERE source=#{param5}
+            from ${tbName}
+            WHERE 1=1
+            <if test="source!=null and source!=''">
+                AND source=#{source}
+            </if>
+            <if test="title!=null and title!=''">
+                and  title LIKE '%${title}%'
+            </if>
+            <if test="redisId!=null and redisId!=''">
+                and  redisId = #{redisId}
             </if>
             order by id
-            limit #{param1},1)
-            <if test="param4!=null and param4!=''">
-               and  title LIKE '%${param4}%'
-            </if>
+            limit #{start},1)
+        <if test="source!=null and source!=''">
+            and source=#{source}
+        </if>
+        <if test="title!=null and title!=''">
+           and  title LIKE '%${title}%'
+        </if>
+        <if test="redisId!=null and redisId!=''">
+            and  redisId = #{redisId}
+        </if>
         ORDER  by id
-        limit #{param2}
+        limit #{end}
     </select>
 
     <select id="getNoticeToRedis" resultType="com.snatch.model.Notice">
