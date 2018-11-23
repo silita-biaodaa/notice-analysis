@@ -174,6 +174,13 @@ public class NoticeTableAnalysis implements TableAnalysis{
     }
 
 
+    /**
+     * 从横，纵向表格解析结果中提取相应字段信息
+     * @param rowStyleList
+     * @param colStyleList
+     * @param fieldDesc
+     * @return
+     */
     private Map<String,String> filterFiedValues(List<AnalysisField> rowStyleList,List<AnalysisField> colStyleList,String fieldDesc){
         Map<String,String> resMap = null;
         int rowCount=0,colCount=0;
