@@ -48,11 +48,12 @@ public class NoticeAnalysisTest extends ConfigTest {
         String tbName = "test.dev_zhongbiao_20181024_all";//uat_zhongbiao_20181108_all
         //dev_zhongbiao_20181031_all dev_zhongbiao_20181024_all  uat_zhongbiao_20181108_all
 //        title = "河北建投新能源有限公司生产及技术改造工程中标候选人公示";dev_zhaobiao_20181024_all
-        Map argMap = new HashMap();
+         Map argMap = new HashMap();
         argMap.put("tbName",tbName);
         argMap.put("title",title);
-//        argMap.put("redisId",7578117);
+        argMap.put("redisId",1448087);
         testService.pushCustomRedisNotice(argMap);
+        String s = "(<.{0,7}>|^[。，,;；：: )）“”\"]+|((<.?[^>]?p>|[。，,;；：: )）“”\"])([\\S\\W\\D\\d]){0,2}$))";
 //        testService.pushCustomRedisSec(tbName,0,100,title,null);
 //        testService.pushCustomRedisNotice("test.dev_zhongbiao_2018_all",null,null);dev_zhongbiao_20181024_all
 //        analyzeHandler();

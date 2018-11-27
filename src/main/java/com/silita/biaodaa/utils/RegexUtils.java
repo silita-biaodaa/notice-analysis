@@ -78,4 +78,33 @@ public class RegexUtils {
         return mStr;
     }
 
+    public static String insertMatchValuePos(String s,String regex,String posfix){
+        String mStr=null;
+        try {
+            if(s != null) {
+                StringBuilder sb = new StringBuilder(s);
+                Pattern ptn = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+                Matcher mt = ptn.matcher(s);
+                while(mt.find()) {
+                    mStr = mt.group();
+                    int sIdx = sb.indexOf(mStr);
+                    int eIdx = sIdx+mStr.length();
+                    //匹配字符后面没有posfix时，才进行插入补充
+                    if((eIdx+1)<s.length()
+                            && s.substring(eIdx,eIdx+1).indexOf(posfix)==-1){
+                        sb.insert(eIdx,posfix);
+                    }else if(eIdx+1>s.length()){
+                        sb.insert(eIdx,posfix);
+                    }
+                }
+                if(s.length() < sb.length()){
+                    s = sb.toString();
+                }
+            }
+        }catch(Exception e){
+            logger.error(e,e);
+        }
+        return s;
+    }
+
 }

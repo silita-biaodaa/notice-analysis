@@ -6,8 +6,6 @@ import com.silita.biaodaa.utils.RegexUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-
 /**
  * Created by dh on 2018/10/31.
  */
@@ -445,9 +443,14 @@ public class TableAnalysisTest extends ConfigTest {
 //        String s="            ";
 //        System.out.println(MyStringUtils.isNotNull(s));
 //        System.out.println(s.replaceAll("[  ]","").length());
-        String[] vs = new String[]{"1","2","3"};
-        vs = Arrays.copyOfRange(vs,1,vs.length);
-        System.out.println(Arrays.deepToString(vs));
+//        String[] vs = new String[]{"1","2","3"};
+//        vs = Arrays.copyOfRange(vs,1,vs.length);
+//        System.out.println(Arrays.deepToString(vs));
+        String rgx = "(?<=\\d{1,100}[.\\s\\S\\.]{0,100})(\\(|\\（)[.\\s\\S\\：\\；\\.]{0,200}";
+        String s = "45502164.71（施工：45053964.71；设计：448";
+        System.out.println(s.replaceAll(rgx,""));
+//        System.out.println(RegexUtils.matchValue(s,rgx));
+
     }
 
 

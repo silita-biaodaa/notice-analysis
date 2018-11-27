@@ -30,9 +30,6 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
     @Autowired
     CompanyService companyService;
 
-    @Autowired
-    private NoticeTableAnalysis noticeTableAnalysis;
-
     private static final String[] endKeys = {"公司","研究院"};
 
     @Override

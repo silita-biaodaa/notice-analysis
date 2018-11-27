@@ -20,6 +20,7 @@ public class PreAnalysisFactory {
         switch (clsName){
             case "ApplyAddressHandler":return fullSection;
             case "FirstCandidateHandler":return fullSection;
+            case "FirstQuoteHandler":return fullSection;
             default: return splitSection;
         }
     }

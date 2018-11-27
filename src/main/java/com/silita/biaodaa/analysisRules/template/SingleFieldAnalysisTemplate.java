@@ -55,6 +55,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             logger.error(e.getMessage(),e);
         }catch (Error re){
             logger.error(re.getMessage(),re);
+        }finally {
         }
         return analysisRes;
     }
@@ -131,10 +132,10 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             if(MyStringUtils.isNotNull(result)) {
                 result = verifyResult(esNotice,result,regListMap);
             }
+            String px="2.1";
+            String dInfo = "精准匹配前的自定义业务规则匹配值(校验后):";
+            logger.debug(px+dInfo + result);
             if (MyStringUtils.isNotNull(result)) {
-                String px="2.1";
-                String dInfo = "精准匹配前的自定义业务规则匹配值:";
-                logger.debug(px+dInfo + result);
                 if (Constant.IS_DEBUG) {
                     PROCESS_INFO.put(px, dInfo + result);
                 }
@@ -142,36 +143,40 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             }
 
             //2.默认精准匹配
-            for (Map accurateMap : accurateList) {
-                String innerRegex = accurateMap.get("regex").toString();
-                Pattern innerPtn = Pattern.compile(innerRegex, Pattern.CASE_INSENSITIVE);
-                Matcher innerMtr = innerPtn.matcher(matchPart);
+            if(accurateList !=null) {
+                for (Map accurateMap : accurateList) {
+                    String innerRegex = accurateMap.get("regex").toString();
+                    Pattern innerPtn = Pattern.compile(innerRegex, Pattern.CASE_INSENSITIVE);
+                    Matcher innerMtr = innerPtn.matcher(matchPart);
 
-                logger.debug("3.精确匹配-->扫描段落：" + matchPart + "\n[regex:" + innerRegex + "][groupCount:" + innerMtr.groupCount() + "]");
-                while (innerMtr.find()) {
-                    int gCount = innerMtr.groupCount();
-                    if (innerMtr.groupCount() > 2) {
-                        try {
-                            result = innerMtr.group().replaceFirst(innerMtr.group(1), "").replaceFirst(innerMtr.group(gCount), "");//去掉首尾
-                        } catch (Exception e) {
-                            result = innerMtr.group().replaceFirst(innerMtr.group(1), "");
+                    logger.debug("3.精确匹配-->扫描段落：" + matchPart + "\n[regex:" + innerRegex + "][groupCount:" + innerMtr.groupCount() + "]");
+                    while (innerMtr.find()) {
+                        int gCount = innerMtr.groupCount();
+                        String mGroup = innerMtr.group();
+                        logger.debug("3.01精确匹配-->祛收尾前，mGroup:"+mGroup);
+                        if (innerMtr.groupCount() > 2) {
+                            try {
+                                result = mGroup.replaceFirst(innerMtr.group(1), "").replaceFirst(innerMtr.group(gCount), "");//去掉首尾
+                            } catch (Exception e) {
+                                result = mGroup.replaceFirst(innerMtr.group(1), "");
+                            }
+                        } else if (innerMtr.groupCount() > 1) {
+                            result = mGroup.replaceFirst(innerMtr.group(1), "");//去掉首
+                        } else {
+                            result = mGroup;
                         }
-                    } else if (innerMtr.groupCount() > 1) {
-                        result = innerMtr.group().replaceFirst(innerMtr.group(1), "");//去掉首
-                    } else {
-                        result = innerMtr.group();
-                    }
 //                            result = innerMtr.group();
-                    if (MyStringUtils.isNotNull(result)) {
-                        logger.info("3.1 精准规则匹配结果:[result:" + result + "] by " +
-                                "[rangeRegex:\"" + rangeRegex + "\"][innerRegex:\"" + innerRegex + "\"]" +
-                                "[groupCount:" + innerMtr.groupCount() + "]");
-                        logger.debug("##匹配段落：" + matchPart);
-                        if (Constant.IS_DEBUG) {
-                            PROCESS_INFO.put("3.1", "[解析字段：" + fieldName + "]\n[范围匹配规则:" + rangeRegex + "]\n[精确规则:" + innerRegex + "]" +
-                                    "\n[groupCount:" + innerMtr.groupCount() + "]\n[解析结果:" + result + "]");
+                        if (MyStringUtils.isNotNull(result)) {
+                            logger.info("3.1 精准规则匹配结果:[result:" + result + "] by " +
+                                    "[rangeRegex:\"" + rangeRegex + "\"][innerRegex:\"" + innerRegex + "\"]" +
+                                    "[groupCount:" + innerMtr.groupCount() + "]");
+                            logger.debug("##匹配段落：" + matchPart);
+                            if (Constant.IS_DEBUG) {
+                                PROCESS_INFO.put("3.1", "[解析字段：" + fieldName + "]\n[范围匹配规则:" + rangeRegex + "]\n[精确规则:" + innerRegex + "]" +
+                                        "\n[groupCount:" + innerMtr.groupCount() + "]\n[解析结果:" + result + "]");
+                            }
+                            return result;
                         }
-                        return result;
                     }
                 }
             }
@@ -210,14 +215,16 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             if(rangeList!=null) {
                 logger.debug("rangeList:" + rangeList.size());
             }
-            logger.debug("accurateList:"+accurateList.size());
+            if(accurateList!=null) {
+                logger.debug("accurateList:" + accurateList.size());
+            }
             logger.debug("filterResultRegList:"+filterResultRegList.size());
             logger.debug("#####################################");
 
             // 1.1范围匹配判断
             if(rangeList!=null && rangeList.size()>0) {
-                outerMtr:
-                for (Map rangeMap : rangeList) {
+                int rangeMatchCount=0;
+                outerMtr:for (Map rangeMap : rangeList) {
                     String rangeRegex = (String) rangeMap.get("regex") + rangeMap.get("ext_content");
                     Pattern outerPtn = Pattern.compile(rangeRegex, Pattern.CASE_INSENSITIVE);
                     Matcher outerMtr = outerPtn.matcher(html);
@@ -231,15 +238,20 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                             continue;
                         }
 
+                        rangeMatchCount++;
                         //内层精准匹配
                         analysisResult = innertMatchRules(esNotice,regListMap, matchPart, rangeRegex);
                         if (MyStringUtils.isNotNull(analysisResult)) {
                             //命中规则，停止执行其他规则
                             break outerMtr;
                         }
-
                     }
                     matchPart = null;
+                }
+
+                //范围匹配一次都没有，则尝试全文匹配一次
+                if(rangeMatchCount==0){
+                    analysisResult = innertMatchRules(esNotice,regListMap, html, null);
                 }
             }else{
                 //1.2 无范围匹配
@@ -250,11 +262,11 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                 analysisResult = innertMatchRules(esNotice,regListMap, html, null);
             }
 
-            //2.解析结果过滤
+            //22.解析结果过滤
             if(MyStringUtils.isNotNull(analysisResult)) {
                 analysisResult = filterResult(esNotice,analysisResult,filterResultRegList);
             }
-            //3.解析结果有效性检验，检验失败返回空
+            //33.解析结果有效性检验，检验失败返回空
             if(MyStringUtils.isNotNull(analysisResult)) {
                 analysisResult = verifyResult(esNotice,analysisResult,regListMap);
             }

@@ -58,6 +58,9 @@ public class DisruptorOperator {
     FirstCandidateHandler firstCandidateHandler;
 
     @Autowired
+    FirstQuoteHandler firstQuoteHandler;
+
+    @Autowired
     TwoNameHandler twoNameHandler;
 
     @Autowired
@@ -103,6 +106,7 @@ public class DisruptorOperator {
 
         List<EventHandler> zhongbiaoHandlerList = new ArrayList<EventHandler>();
         zhongbiaoHandlerList.add(firstCandidateHandler);
+        zhongbiaoHandlerList.add(firstQuoteHandler);
 //        zhongbiaoHandlerList.add(twoNameHandler);
 //        zhongbiaoHandlerList.add(threeNameHandler);
 //        zhongbiaoHandlerList.add(projDutyHandler);

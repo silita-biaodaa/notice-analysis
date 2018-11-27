@@ -218,11 +218,11 @@ public class NoticeTableAnalysis implements TableAnalysis{
     }
 
     /**
-     * 多值筛选：第一中标候选人
+     * 多值筛选：取序号第一
      * @param fieldList
      * @return
      */
-    private AnalysisField filterOneName(List<AnalysisField> fieldList){
+    private AnalysisField filterOne(List<AnalysisField> fieldList){
         //判断title中的序号信息
         String oneRegex = "(第)?(一|1|壹)";
         for(AnalysisField af : fieldList){
@@ -249,18 +249,62 @@ public class NoticeTableAnalysis implements TableAnalysis{
             if(fieldList.size()>1){
                 // 多值筛选
                 switch(fieldDesc){
-                    case FD_ONE_NAME: hitAf =filterOneName(fieldList);break;
+                    case FD_ONE_NAME: hitAf = filterOne(fieldList);break;
+                    case FD_ONE_OFFER: hitAf = filterOne(fieldList);break;
                     default:hitAf =fieldList.get(0);
                 }
             }else{
                 //单匹配值，直接转化
                 hitAf = fieldList.get(0);
             }
+
+            //匹配的键值对进行结果收集：进行键值互联判断,修正value值
+            switch(fieldDesc){
+                case FD_ONE_OFFER: wrapOfferValue(hitAf);break;
+                default:break;
+            }
+
             resMap.put(hitAf.getDesc(),hitAf.getValues()[0]);
         }else{
             logger.warn("no match field");
         }
         return resMap;
+    }
+
+    private void wrapOfferValue(AnalysisField hitAf){
+        String[] unitW = {"万元","（ 万元 ）","（万）","(万)","（ 万 ）"};
+        String[] unitY = {"（元）","(元)","（ 元 ）"};
+        for(String u: unitW) {
+            if (hitAf.getTitle().indexOf(u)>0) {
+                if(MyStringUtils.isNotNull(hitAf.getValues()[0])
+                        && hitAf.getValues()[0].indexOf(u)==-1){
+                        hitAf.getValues()[0]=insertUnit(hitAf.getValues()[0],"万");
+                        return;
+                }
+            }
+        }
+
+        for(String u: unitY) {
+            if (hitAf.getTitle().indexOf(u)>0) {
+                if(MyStringUtils.isNotNull(hitAf.getValues()[0])
+                        && hitAf.getValues()[0].indexOf(u)==-1){
+                    hitAf.getValues()[0]=insertUnit(hitAf.getValues()[0],"元");
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * 把金额后面插入对应单位字符
+     * @param s
+     * @param unitStr
+     * @return
+     */
+    private String insertUnit(String s,String unitStr){
+        String regex="\\d{1,50}[.]{0,100}\\d{1,50}";
+        s=RegexUtils.insertMatchValuePos(s,regex,unitStr);
+        return s;
     }
 
     private void insertAnalysisLog(EsNotice esNotice
