@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 import static com.silita.biaodaa.analysisRules.factory.PairRuleFactory.getPairRuleList;
+import static com.silita.biaodaa.analysisRules.notice.AnalysisConstant.*;
 import static com.silita.biaodaa.utils.LoggerUtils.buildRow;
 import static com.silita.biaodaa.utils.RegexUtils.matchValue;
 
@@ -34,56 +35,6 @@ public class NoticeTableAnalysis implements TableAnalysis{
 
     private static final String TABLE_LOG_FLAG =  (String)CustomizedPropertyConfigurer.getContextProperty("analysis.table.logs");
 
-    /** 数据抽取来源：行式*/
-    public static final int EXTRACT_STYLE_ROW=1;
-
-    /** 数据抽取来源：列式*/
-    public static final int EXTRACT_STYLE_COL=2;
-
-    /** 表格模式—横向表格*/
-    public static final int TB_STYLE_ROW=1;
-
-    /** 表格模式—纵向表格*/
-    public static final int TB_STYLE_COL=2;
-
-    /** 表格模式—混合嵌套型表格*/
-    public static final int TB_STYLE_MIX=3;
-
-
-    public static final String ZHONGBIAO_TB="zhongbiao";
-
-    public static final String ZHAOBIAO_TB="zhaobiao";
-
-    public static final String FD_ONE_NAME="第一中标候选人";
-
-    public static final String FD_ONE_OFFER="第一中标报价";
-
-    public static final String FD_TIIME_LIMIT="工期";
-
-    public static final String FD_TIMES="时间/日期";
-
-    public static final String FD_PJ_NAME="项目名称";
-
-    public static final String FD_PJ_NO="项目编号";
-
-    public static final String FD_SEGMENT="标段";
-
-    public static final String FD_ORDER="排序";
-
-    /** 中标公告：表格范围优先规则*/
-    public static final String TB_RANGE_BID ="(?<=(" +
-            "谈判情况|中标结果|中标候选人|中标（成交）结果|参与谈判情况" +
-            "|推荐中标候选人名单|参与询价情况|成交结果信息" +
-            "|供应商提交响应文件情况|报价及综合得分排序表" +
-            "))[\\s\\S.]*<table.*?>[\\s\\S.]*?</table.*?>";
-
-    /**
-     * 中标: 有效表格判定关键字
-     */
-    public static final String[] VALID_TABLE_KEYS = {"名称","单位","工程"
-            ,"项目","标段","报价","第一","名次"
-            ,"标段","投标","排名","得分","工期"
-            ,"候选人","供应商","投标报价"};
 
     @Autowired
     private TableAnalysisService tableAnalysisService;
@@ -129,19 +80,6 @@ public class NoticeTableAnalysis implements TableAnalysis{
                         resMap.putAll(temp);
                     }
                 }
-
-//                //行，列匹配数据合并
-//                List<AnalysisField> afLists= new ArrayList<AnalysisField>(rowStyleList);
-//                afLists.addAll(colStyleList);
-//                //从横，纵向结果中筛选对应字段的值
-//                boolean haresMapsResult = false;
-//                if (afLists.size() > 0) {
-//                    hasResult = true;
-//                    resMap = new HashMap<String, String>();
-//                    for (AnalysisField af : afLists) {
-//                        resMap.put(af.getTitle(), af.getValues()[0]);
-//                    }
-//                }
 
                 if("true".equalsIgnoreCase(TABLE_LOG_FLAG)) {
                     tableString = MyStringUtils.controllLength(tableString,2000);
@@ -218,6 +156,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
                     targetListCol.add(af);
                 }
             }
+
             if (colCount > rowCount) {
                 resMap =buildFieldMap(targetListCol,fieldDesc);
             } else if(colCount == rowCount && colCount != 0 && rowCount != 0) {
@@ -651,38 +590,6 @@ public class NoticeTableAnalysis implements TableAnalysis{
         return colStyleList;
     }
 
-
-    @Override
-    public List<AnalysisField> recognitionStyleData(String[][] tbArray){
-        List<AnalysisField> resList = null;
-        //行式表格数据集合
-        List<AnalysisField> rowStyleList = null;
-        //列式表格数据集合
-        List<AnalysisField> colStyleList = null;
-        try {
-            //按有效值进行结对判断
-            logger.info("#######tbArray.length:" + tbArray.length + "##tbArray[x].length:" + tbArray[0].length);
-            logger.debug("行式结对数据判断开始。。。");
-            rowStyleList =extractRowData(tbArray);
-            //行式判断结果展示
-            logger.debug("行式匹配结果：" + rowStyleList.size());
-            infoShow(rowStyleList);
-
-            logger.info("列式结对数据判断开始。。。");
-            colStyleList = extractColumnData(tbArray);
-            //列式结果展示
-            logger.info("列式匹配结果：" + colStyleList.size());
-            infoShow(colStyleList);
-
-        }catch (Exception e ){
-            logger.error(e,e);
-        }finally {
-            resList = new ArrayList<AnalysisField>(rowStyleList);
-            resList.addAll(colStyleList);
-        }
-        return resList;
-    }
-
     private String debugShow(List<AnalysisField> rowStyleList){
         StringBuilder sb = null;
         if(rowStyleList.size() > 0){
@@ -766,14 +673,4 @@ public class NoticeTableAnalysis implements TableAnalysis{
         return isVertical;
     }
 
-
-    @Override
-    public AnalysisTable dataToObj(List<List> tDate) {
-        return null;
-    }
-
-    @Override
-    public String pickField(String[] keys) {
-        return null;
-    }
 }

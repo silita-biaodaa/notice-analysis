@@ -5,7 +5,7 @@ import com.silita.biaodaa.analysisRules.vo.PairRule;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.silita.biaodaa.analysisRules.notice.NoticeTableAnalysis.*;
+import static com.silita.biaodaa.analysisRules.notice.AnalysisConstant.*;
 
 /**
  * Created by dh on 2018/11/13.
