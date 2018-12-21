@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -82,7 +83,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
     public static final String[] VALID_TABLE_KEYS = {"名称","单位","工程"
             ,"项目","标段","报价","第一","名次"
             ,"标段","投标","排名","得分","工期"
-            ,"中标候选人","供应商名称","投标报价"};
+            ,"候选人","供应商","投标报价"};
 
     @Autowired
     private TableAnalysisService tableAnalysisService;
@@ -187,6 +188,21 @@ public class NoticeTableAnalysis implements TableAnalysis{
         List<AnalysisField> targetListRow = new ArrayList<>();
         List<AnalysisField> targetListCol = new ArrayList<>();
         try {
+            //去重
+            for (int i = 0; i < rowStyleList.size() - 1; i++ )  {
+                for (int j = rowStyleList.size() - 1; j > i; j-- )  {
+                    if  (rowStyleList.get(j).getTitleKey().equals(rowStyleList.get(i).getTitleKey()))  {
+                        rowStyleList.remove(j);
+                    }
+                }
+            }
+            for (int i = 0; i < colStyleList.size() - 1; i++ )  {
+                for (int j = colStyleList.size() - 1; j > i; j-- )  {
+                    if  (colStyleList.get(j).getTitleKey().equals(colStyleList.get(i).getTitleKey()))  {
+                        colStyleList.remove(j);
+                    }
+                }
+            }
             //收集、比对横，纵表格的命中数量
             for (AnalysisField af : rowStyleList) {
                 if (af.getDesc().equals(fieldDesc)) {
@@ -202,9 +218,16 @@ public class NoticeTableAnalysis implements TableAnalysis{
                     targetListCol.add(af);
                 }
             }
-
             if (colCount > rowCount) {
                 resMap =buildFieldMap(targetListCol,fieldDesc);
+            } else if(colCount == rowCount && colCount != 0 && rowCount != 0) {
+                if(rowStyleList.size() > 0 && colStyleList.size() > 0) {
+                    if(rowStyleList.get(0).getValues().length > colStyleList.get(0).getValues().length) {
+                        resMap =buildFieldMap(targetListRow,fieldDesc);
+                    } else {
+                        resMap =buildFieldMap(targetListCol,fieldDesc);
+                    }
+                }
             } else {
                 resMap =buildFieldMap(targetListRow,fieldDesc);
             }
@@ -260,6 +283,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
 
             //匹配的键值对进行结果收集：进行键值互联判断,修正value值
             switch(fieldDesc){
+                case FD_ONE_NAME: wrapFirstCandidate(hitAf);break;
                 case FD_ONE_OFFER: wrapOfferValue(hitAf);break;
                 default:break;
             }
@@ -269,6 +293,27 @@ public class NoticeTableAnalysis implements TableAnalysis{
             logger.warn("no match field");
         }
         return resMap;
+    }
+
+    /**
+     *
+     * @param hitAf
+     */
+    private void wrapFirstCandidate(AnalysisField hitAf) {
+        if(!StringUtils.isEmpty(hitAf.getValues())) {
+            if(hitAf.getValues()[0].contains(":") || hitAf.getValues()[0].contains("：")) {
+                String[] tempArr = new String[hitAf.getValues().length];
+                for (int i = 0; i < hitAf.getValues().length; i++) {
+                    String firstCandidateStr = hitAf.getValues()[i];
+                    if(firstCandidateStr.contains(":")) {
+                        tempArr[i] = firstCandidateStr.substring(firstCandidateStr.lastIndexOf(":") + 1);
+                    }else {
+                        tempArr[i] = firstCandidateStr.substring(firstCandidateStr.lastIndexOf("：") + 1);
+                    }
+                }
+                hitAf.setValues(tempArr);
+            }
+        }
     }
 
     private void wrapOfferValue(AnalysisField hitAf){
@@ -469,6 +514,9 @@ public class NoticeTableAnalysis implements TableAnalysis{
 
         //获取第一个有效表格
         for(Element tb: tables ){
+            if(tb.previousElementSibling() == null) {
+                continue;
+            }
             tableList =parseTableTag(tb);
             if(tableList !=null) {
                 break;
