@@ -1,6 +1,7 @@
 package com.silita.biaodaa.disruptor.handler.zhongBiao;
 
 import com.lmax.disruptor.EventHandler;
+import com.silita.biaodaa.analysisRules.notice.AnalysisConstant;
 import com.silita.biaodaa.analysisRules.notice.NoticeTableAnalysis;
 import com.silita.biaodaa.disruptor.event.AnalyzeEvent;
 import com.snatch.model.EsNotice;
@@ -28,7 +29,7 @@ public class BeforeBidsHandle implements EventHandler<AnalyzeEvent> {
         long start = System.nanoTime();
         logger.debug("中标公告：表格解析开始...");
         EsNotice esNotice = event.getEsNotice();
-        Map<String,String> resMap = noticeTableAnalysis.analysis(esNotice, esNotice.getContent(), NoticeTableAnalysis.ZHONGBIAO_TB);
+        Map<String,String> resMap = noticeTableAnalysis.analysis(esNotice, esNotice.getContent(), AnalysisConstant.ZHONGBIAO_TB);
         esNotice.setTbAnalysisMap(resMap);
         long end = System.nanoTime()-start;
         logger.info("中标公告，表格解析结束,耗时："+end/(1000*1000)+"毫秒||"+end/(1000)+"微秒");

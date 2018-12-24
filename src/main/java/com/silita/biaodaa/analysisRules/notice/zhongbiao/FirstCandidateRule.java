@@ -1,6 +1,6 @@
 package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
-import com.silita.biaodaa.analysisRules.notice.NoticeTableAnalysis;
+import com.silita.biaodaa.analysisRules.notice.AnalysisConstant;
 import com.silita.biaodaa.analysisRules.template.SingleFieldAnalysisTemplate;
 import com.silita.biaodaa.common.config.CustomizedPropertyConfigurer;
 import com.silita.biaodaa.service.CommonService;
@@ -32,6 +32,8 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
 
     private static final String[] endKeys = {"公司","研究院"};
 
+    private static final String[] preKeys = {":","："};
+
     @Override
     protected void init() {
         this.fieldName="firstCandidate";
@@ -42,7 +44,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
         try {
             Map<String,String> resMap = esNotice.getTbAnalysisMap();
             if(resMap !=null && resMap.size()>0){
-                res = resMap.get(NoticeTableAnalysis.FD_ONE_NAME);
+                res = resMap.get(AnalysisConstant.FD_ONE_NAME);
                 if(res != null && res.length()>100){
                     res = res.substring(0,100);
                 }
@@ -63,14 +65,25 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
      * @return
      */
     protected String customfilterResult(String analysisResult,EsNotice esNotice){
-        //判断是否以公司关键字结尾，如果匹配到的关键字不是字符串的结尾，则进行截取处理。
+
         if(MyStringUtils.isNotNull(analysisResult)){
             int len = analysisResult.length();
+            //1.祛除冒号等符号前面的内容
+            for(String preKey: preKeys){
+                int kIdx = analysisResult.lastIndexOf(preKey);
+                if(kIdx!= -1 && kIdx<(len-1)){
+                    logger.debug("customfilterResult：从结果中["+analysisResult+"]祛除特殊符号前缀。。");
+                    analysisResult = analysisResult.substring(kIdx+1);
+                }
+            }
+
+            //2.判断是否以公司关键字结尾，如果匹配到的关键字不是字符串的结尾，则进行截取处理。
             for(String endKey: endKeys){
-                int kIdx = analysisResult.indexOf(endKey);
+                int kIdx = analysisResult.lastIndexOf(endKey);
                 int kLen = endKey.length();
                 if(kIdx!= -1){
                     if((kIdx+kLen) < len){//满足截取条件
+                        logger.debug("customfilterResult：["+analysisResult+"]满足截取条件，执行截取。。");
                         analysisResult=analysisResult.substring(0,kIdx+kLen);
                         break;
                     }
@@ -79,6 +92,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
                 }
             }
         }
+
         return analysisResult;
     }
 

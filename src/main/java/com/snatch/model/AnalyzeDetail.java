@@ -1,15 +1,10 @@
 package com.snatch.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
 /**
  * Created by jianlan on 2017/3/22.
  */
-@Getter
-@Setter
 public class AnalyzeDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
@@ -71,4 +66,428 @@ public class AnalyzeDetail implements Serializable {
     private String money;//资金来源
     private String block;//标段信息
     private String relationUrl; // 相关公告
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getRedisId() {
+        return redisId;
+    }
+
+    public void setRedisId(Integer redisId) {
+        this.redisId = redisId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getNoticeUrl() {
+        return noticeUrl;
+    }
+
+    public void setNoticeUrl(String noticeUrl) {
+        this.noticeUrl = noticeUrl;
+    }
+
+    public String getTbAssureSum() {
+        return tbAssureSum;
+    }
+
+    public void setTbAssureSum(String tbAssureSum) {
+        this.tbAssureSum = tbAssureSum;
+    }
+
+    public String getProjSum() {
+        return projSum;
+    }
+
+    public void setProjSum(String projSum) {
+        this.projSum = projSum;
+    }
+
+    public String getAssureSumRemit() {
+        return assureSumRemit;
+    }
+
+    public void setAssureSumRemit(String assureSumRemit) {
+        this.assureSumRemit = assureSumRemit;
+    }
+
+    public String getBmStartDate() {
+        return bmStartDate;
+    }
+
+    public void setBmStartDate(String bmStartDate) {
+        this.bmStartDate = bmStartDate;
+    }
+
+    public String getBmEndDate() {
+        return bmEndDate;
+    }
+
+    public void setBmEndDate(String bmEndDate) {
+        this.bmEndDate = bmEndDate;
+    }
+
+    public String getBmEndTime() {
+        return bmEndTime;
+    }
+
+    public void setBmEndTime(String bmEndTime) {
+        this.bmEndTime = bmEndTime;
+    }
+
+    public String getBmSite() {
+        return bmSite;
+    }
+
+    public void setBmSite(String bmSite) {
+        this.bmSite = bmSite;
+    }
+
+    public String getKbSite() {
+        return kbSite;
+    }
+
+    public void setKbSite(String kbSite) {
+        this.kbSite = kbSite;
+    }
+
+    public String getTbEndDate() {
+        return tbEndDate;
+    }
+
+    public void setTbEndDate(String tbEndDate) {
+        this.tbEndDate = tbEndDate;
+    }
+
+    public String getAnalyzeDate() {
+        return analyzeDate;
+    }
+
+    public void setAnalyzeDate(String analyzeDate) {
+        this.analyzeDate = analyzeDate;
+    }
+
+    public String getTbEndTime() {
+        return tbEndTime;
+    }
+
+    public void setTbEndTime(String tbEndTime) {
+        this.tbEndTime = tbEndTime;
+    }
+
+    public String getGsDate() {
+        return gsDate;
+    }
+
+    public void setGsDate(String gsDate) {
+        this.gsDate = gsDate;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
+    }
+
+    public String getProjType() {
+        return projType;
+    }
+
+    public void setProjType(String projType) {
+        this.projType = projType;
+    }
+
+    public String getZzRank() {
+        return zzRank;
+    }
+
+    public void setZzRank(String zzRank) {
+        this.zzRank = zzRank;
+    }
+
+    public String getPbMode() {
+        return pbMode;
+    }
+
+    public void setPbMode(String pbMode) {
+        this.pbMode = pbMode;
+    }
+
+    public String getProjDq() {
+        return projDq;
+    }
+
+    public void setProjDq(String projDq) {
+        this.projDq = projDq;
+    }
+
+    public String getProjXs() {
+        return projXs;
+    }
+
+    public void setProjXs(String projXs) {
+        this.projXs = projXs;
+    }
+
+    public String getTbAssureEndDate() {
+        return tbAssureEndDate;
+    }
+
+    public void setTbAssureEndDate(String tbAssureEndDate) {
+        this.tbAssureEndDate = tbAssureEndDate;
+    }
+
+    public String getTbAssureEndTime() {
+        return tbAssureEndTime;
+    }
+
+    public void setTbAssureEndTime(String tbAssureEndTime) {
+        this.tbAssureEndTime = tbAssureEndTime;
+    }
+
+    public String getLyAssureSum() {
+        return lyAssureSum;
+    }
+
+    public void setLyAssureSum(String lyAssureSum) {
+        this.lyAssureSum = lyAssureSum;
+    }
+
+    public String getSlProveSum() {
+        return slProveSum;
+    }
+
+    public void setSlProveSum(String slProveSum) {
+        this.slProveSum = slProveSum;
+    }
+
+    public String getAssureEndDate() {
+        return assureEndDate;
+    }
+
+    public void setAssureEndDate(String assureEndDate) {
+        this.assureEndDate = assureEndDate;
+    }
+
+    public String getAssureEndTime() {
+        return assureEndTime;
+    }
+
+    public void setAssureEndTime(String assureEndTime) {
+        this.assureEndTime = assureEndTime;
+    }
+
+    public String getZgCheckDate() {
+        return zgCheckDate;
+    }
+
+    public void setZgCheckDate(String zgCheckDate) {
+        this.zgCheckDate = zgCheckDate;
+    }
+
+    public String getKbStaffAsk() {
+        return kbStaffAsk;
+    }
+
+    public void setKbStaffAsk(String kbStaffAsk) {
+        this.kbStaffAsk = kbStaffAsk;
+    }
+
+    public String getFileCost() {
+        return fileCost;
+    }
+
+    public void setFileCost(String fileCost) {
+        this.fileCost = fileCost;
+    }
+
+    public String getOtherCost() {
+        return otherCost;
+    }
+
+    public void setOtherCost(String otherCost) {
+        this.otherCost = otherCost;
+    }
+
+    public String getZbName() {
+        return zbName;
+    }
+
+    public void setZbName(String zbName) {
+        this.zbName = zbName;
+    }
+
+    public String getZbContactMan() {
+        return zbContactMan;
+    }
+
+    public void setZbContactMan(String zbContactMan) {
+        this.zbContactMan = zbContactMan;
+    }
+
+    public String getZbContactWay() {
+        return zbContactWay;
+    }
+
+    public void setZbContactWay(String zbContactWay) {
+        this.zbContactWay = zbContactWay;
+    }
+
+    public String getDlName() {
+        return dlName;
+    }
+
+    public void setDlName(String dlName) {
+        this.dlName = dlName;
+    }
+
+    public String getDlContactMan() {
+        return dlContactMan;
+    }
+
+    public void setDlContactMan(String dlContactMan) {
+        this.dlContactMan = dlContactMan;
+    }
+
+    public String getDlContactWay() {
+        return dlContactWay;
+    }
+
+    public void setDlContactWay(String dlContactWay) {
+        this.dlContactWay = dlContactWay;
+    }
+
+    public String getPersonRequest() {
+        return personRequest;
+    }
+
+    public void setPersonRequest(String personRequest) {
+        this.personRequest = personRequest;
+    }
+
+    public String getShebaoRequest() {
+        return shebaoRequest;
+    }
+
+    public void setShebaoRequest(String shebaoRequest) {
+        this.shebaoRequest = shebaoRequest;
+    }
+
+    public String getYejiRequest() {
+        return yejiRequest;
+    }
+
+    public void setYejiRequest(String yejiRequest) {
+        this.yejiRequest = yejiRequest;
+    }
+
+    public String getRegistrationForm() {
+        return registrationForm;
+    }
+
+    public void setRegistrationForm(String registrationForm) {
+        this.registrationForm = registrationForm;
+    }
+
+    public String getProjectTimeLimit() {
+        return projectTimeLimit;
+    }
+
+    public void setProjectTimeLimit(String projectTimeLimit) {
+        this.projectTimeLimit = projectTimeLimit;
+    }
+
+    public String getProjectCompletionDate() {
+        return projectCompletionDate;
+    }
+
+    public void setProjectCompletionDate(String projectCompletionDate) {
+        this.projectCompletionDate = projectCompletionDate;
+    }
+
+    public String getSupplementNoticeNumber() {
+        return supplementNoticeNumber;
+    }
+
+    public void setSupplementNoticeNumber(String supplementNoticeNumber) {
+        this.supplementNoticeNumber = supplementNoticeNumber;
+    }
+
+    public String getSupplementNoticeReason() {
+        return supplementNoticeReason;
+    }
+
+    public void setSupplementNoticeReason(String supplementNoticeReason) {
+        this.supplementNoticeReason = supplementNoticeReason;
+    }
+
+    public String getFlowStandardFlag() {
+        return flowStandardFlag;
+    }
+
+    public void setFlowStandardFlag(String flowStandardFlag) {
+        this.flowStandardFlag = flowStandardFlag;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public String getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
+        this.block = block;
+    }
+
+    public String getRelationUrl() {
+        return relationUrl;
+    }
+
+    public void setRelationUrl(String relationUrl) {
+        this.relationUrl = relationUrl;
+    }
 }

@@ -1,6 +1,6 @@
 package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
-import com.silita.biaodaa.analysisRules.notice.NoticeTableAnalysis;
+import com.silita.biaodaa.analysisRules.notice.AnalysisConstant;
 import com.silita.biaodaa.analysisRules.template.SingleFieldAnalysisTemplate;
 import com.silita.biaodaa.utils.RegexUtils;
 import com.snatch.model.EsNotice;
@@ -28,7 +28,7 @@ public class FirstQuoteRule extends SingleFieldAnalysisTemplate {
         try {
             Map<String,String> resMap = esNotice.getTbAnalysisMap();
             if(resMap !=null && resMap.size()>0){
-                res = resMap.get(NoticeTableAnalysis.FD_ONE_OFFER);
+                res = resMap.get(AnalysisConstant.FD_ONE_OFFER);
                 if(res != null && res.length()>50){
                     res = res.substring(0,50);
                 }

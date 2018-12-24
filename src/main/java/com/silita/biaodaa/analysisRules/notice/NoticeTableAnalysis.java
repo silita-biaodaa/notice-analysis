@@ -1,7 +1,10 @@
 package com.silita.biaodaa.analysisRules.notice;
 
 import com.silita.biaodaa.analysisRules.inter.TableAnalysis;
-import com.silita.biaodaa.analysisRules.vo.*;
+import com.silita.biaodaa.analysisRules.vo.AnalysisField;
+import com.silita.biaodaa.analysisRules.vo.AnalysisTbLog;
+import com.silita.biaodaa.analysisRules.vo.AnalysisTd;
+import com.silita.biaodaa.analysisRules.vo.PairRule;
 import com.silita.biaodaa.common.config.CustomizedPropertyConfigurer;
 import com.silita.biaodaa.service.TableAnalysisService;
 import com.silita.biaodaa.utils.HtmlTagUtils;
@@ -16,7 +19,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -126,21 +128,6 @@ public class NoticeTableAnalysis implements TableAnalysis{
         List<AnalysisField> targetListRow = new ArrayList<>();
         List<AnalysisField> targetListCol = new ArrayList<>();
         try {
-            //去重
-            for (int i = 0; i < rowStyleList.size() - 1; i++ )  {
-                for (int j = rowStyleList.size() - 1; j > i; j-- )  {
-                    if  (rowStyleList.get(j).getTitleKey().equals(rowStyleList.get(i).getTitleKey()))  {
-                        rowStyleList.remove(j);
-                    }
-                }
-            }
-            for (int i = 0; i < colStyleList.size() - 1; i++ )  {
-                for (int j = colStyleList.size() - 1; j > i; j-- )  {
-                    if  (colStyleList.get(j).getTitleKey().equals(colStyleList.get(i).getTitleKey()))  {
-                        colStyleList.remove(j);
-                    }
-                }
-            }
             //收集、比对横，纵表格的命中数量
             for (AnalysisField af : rowStyleList) {
                 if (af.getDesc().equals(fieldDesc)) {
@@ -222,7 +209,6 @@ public class NoticeTableAnalysis implements TableAnalysis{
 
             //匹配的键值对进行结果收集：进行键值互联判断,修正value值
             switch(fieldDesc){
-                case FD_ONE_NAME: wrapFirstCandidate(hitAf);break;
                 case FD_ONE_OFFER: wrapOfferValue(hitAf);break;
                 default:break;
             }
@@ -232,27 +218,6 @@ public class NoticeTableAnalysis implements TableAnalysis{
             logger.warn("no match field");
         }
         return resMap;
-    }
-
-    /**
-     *
-     * @param hitAf
-     */
-    private void wrapFirstCandidate(AnalysisField hitAf) {
-        if(!StringUtils.isEmpty(hitAf.getValues())) {
-            if(hitAf.getValues()[0].contains(":") || hitAf.getValues()[0].contains("：")) {
-                String[] tempArr = new String[hitAf.getValues().length];
-                for (int i = 0; i < hitAf.getValues().length; i++) {
-                    String firstCandidateStr = hitAf.getValues()[i];
-                    if(firstCandidateStr.contains(":")) {
-                        tempArr[i] = firstCandidateStr.substring(firstCandidateStr.lastIndexOf(":") + 1);
-                    }else {
-                        tempArr[i] = firstCandidateStr.substring(firstCandidateStr.lastIndexOf("：") + 1);
-                    }
-                }
-                hitAf.setValues(tempArr);
-            }
-        }
     }
 
     private void wrapOfferValue(AnalysisField hitAf){
@@ -507,6 +472,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
     private  List<AnalysisField> extractRowData(String[][] tbArray){
         List<AnalysisField> rowStyleList = new ArrayList<>();
         ArrayList<String> arr = new ArrayList<String>();
+        List hashList = new ArrayList();
         for (int x = 0; x < tbArray.length; x++) {
             arr.clear();
             for (int y = 0; y < tbArray[x].length; y++) {
@@ -526,15 +492,26 @@ public class NoticeTableAnalysis implements TableAnalysis{
             for (int i = 0; i < arr.size() - 1; i++, i++) {
                 AnalysisField af = rowStyle(arr.get(i), arr.get(i + 1));
                 if (af != null) {
-                    rowStyleList.add(af);
+                    int hash = af.hashCode();
+                    if(hashList.isEmpty()){
+                        hashList.add(hash);
+                        rowStyleList.add(af);
+                    }else{
+                        if(!hashList.contains(hash)){//排除【key、values】对相同的值
+                            hashList.add(hash);
+                            rowStyleList.add(af);
+                        }
+                    }
                 }
             }
+
             if (rowStyleList.size() > 0) {
                 logger.debug("第" + x + "行内容：" + buildRow(tbArray[x]) + ",判断为：行式表格数据");
             }
         }
         return rowStyleList;
     }
+
 
     /**
      * 表格纵向数据抽取
@@ -543,8 +520,9 @@ public class NoticeTableAnalysis implements TableAnalysis{
      */
     private  List<AnalysisField> extractColumnData(String[][] tbArray){
         List<AnalysisField> colStyleList = new ArrayList<>();
-
         List<AnalysisField> colStyleListTmp = new ArrayList<>();
+        List hashList = new ArrayList();
+
         for (int y = 0; y < tbArray[0].length; y++) {
             AnalysisField af = new AnalysisField(EXTRACT_STYLE_COL);
             //根据列式表格获取数据
@@ -583,7 +561,17 @@ public class NoticeTableAnalysis implements TableAnalysis{
                 }
             }
             if (isValidate) {
-                colStyleList.add(af);
+                int hash = af.hashCode();
+                if(hashList.isEmpty()){
+                    hashList.add(hash);
+                    colStyleList.add(af);
+                }else{
+                    if(!hashList.contains(hash)){
+                        hashList.add(hash);
+                        colStyleList.add(af);
+                    }
+                }
+
             }
         }
 

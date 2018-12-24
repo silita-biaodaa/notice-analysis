@@ -72,7 +72,7 @@
     <repository>
       <id>aliyun</id>
       <name>aliyun Repository</name>
-      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+      <url>https://maven.aliyun.com/repository/releases</url>
     </repository>
   </repositories>
 
@@ -238,7 +238,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.12</version>
+      <version>1.18.2</version>
       <scope>provided</scope>
     </dependency>
 
