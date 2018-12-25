@@ -361,7 +361,11 @@ public class NoticeTableAnalysis implements TableAnalysis{
                         for(int rsp = Integer.parseInt(rowspan)-1;rsp>0;rsp--){
                             tmpX++;
 //                            logger.debug("rowspan["+rowspan+"]合并单元格赋值["+tmpX+"]["+newY+"]="+v);
-                            tbArray[tmpX][newY]=v;
+                            if(tmpX < rowCount) {
+                                tbArray[tmpX][newY] = v;
+                            }else{
+                                break;
+                            }
                         }
                     }
                 }

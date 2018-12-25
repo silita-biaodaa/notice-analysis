@@ -87,6 +87,17 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
     }
 
     /**
+     * 所有匹配逻辑匹配无效时，执行自定义匹配逻辑
+     * 由子类实现
+     * @param esNotice
+     * @param regListMap
+     * @return
+     */
+    protected String afterAllMatch(String html,EsNotice esNotice,Map<String ,List<Map<String, Object>>> regListMap){
+        return null;
+    }
+
+    /**
      * 解析值，有效性检验（具体规则子类实现）
      * @param regListMap 规则集合
      * @param analysisResult 解析结果值
@@ -267,6 +278,15 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
                 analysisResult = filterResult(esNotice,analysisResult,filterResultRegList);
             }
             //33.解析结果有效性检验，检验失败返回空
+            if(MyStringUtils.isNotNull(analysisResult)) {
+                analysisResult = verifyResult(esNotice,analysisResult,regListMap);
+            }
+
+            //无解析结果时,执行自定义解析逻辑
+            if(MyStringUtils.isNull(analysisResult)){
+                analysisResult=afterAllMatch(html,esNotice, regListMap);
+            }
+            //34.解析结果有效性检验，检验失败返回空
             if(MyStringUtils.isNotNull(analysisResult)) {
                 analysisResult = verifyResult(esNotice,analysisResult,regListMap);
             }

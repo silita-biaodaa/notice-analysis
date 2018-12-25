@@ -1,5 +1,6 @@
 package com.silita.biaodaa.dao;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,4 +11,7 @@ public interface CompanyMapper {
     int existsCompany(String comName);
 
     void insertSuspectCompanyName(Map argMap);
+
+    List<String> queryProvComName(Map argMap);
+
 }

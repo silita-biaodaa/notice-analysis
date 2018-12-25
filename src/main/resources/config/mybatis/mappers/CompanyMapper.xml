@@ -14,4 +14,11 @@
         VALUES
         (#{id},#{field},#{com_name},#{title},#{url},#{source})
     </insert>
+
+    <select id="queryProvComName" resultType="String">
+        SELECT com_name
+        FROM mishu.tb_company
+        WHERE regis_address=#{provName}
+    </select>
+
 </mapper>

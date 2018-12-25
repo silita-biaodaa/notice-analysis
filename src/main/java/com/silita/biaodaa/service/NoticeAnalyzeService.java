@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Created by zhangxiahui on 18/3/13.
  */
-@Component//// TODO: 2018/4/2 歷史解析方法待整理刪除
+@Component
 public class NoticeAnalyzeService {
 
     Logger logger = Logger.getLogger(NoticeAnalyzeService.class);
@@ -34,6 +34,11 @@ public class NoticeAnalyzeService {
     CommonService commonService;
 
     public void insertAnalyzeDetailZhongbiao(AnalyzeDetailZhongBiao analyzeDetailZhongBiao){
+        logger.debug("insertAnalyzeDetailZhongbiao...[oneName:"+analyzeDetailZhongBiao.getOneName()+"][oneOffer:"+analyzeDetailZhongBiao.getOneOffer()+"]");
+        String oneName = analyzeDetailZhongBiao.getOneName();
+        if(oneName!=null && oneName.length()>100){
+            analyzeDetailZhongBiao.setOneName(oneName.substring(0,99));
+        }
         analyzeRangeMapper.insertAnalyzeDetailZhongbiao(analyzeDetailZhongBiao);
     }
 

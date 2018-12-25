@@ -39,6 +39,14 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
         this.fieldName="firstCandidate";
     }
 
+    /**
+     * 正则匹配之前（获取表格解析结果）
+     * @param esNotice
+     * @param matchPart
+     * @param regListMap
+     * @param rangeRegex
+     * @return
+     */
     protected String beforeAccurateMatch(EsNotice esNotice,String matchPart,Map<String ,List<Map<String, Object>>> regListMap,String rangeRegex){
         String res = null;
         try {
@@ -57,6 +65,95 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
         return res;
     }
 
+    /**
+     * 规则匹配，表格解析都无结果时执行
+     * @param html
+     * @param esNotice
+     * @param regListMap
+     * @return
+     */
+    @Override
+    protected String afterAllMatch(String html, EsNotice esNotice, Map<String, List<Map<String, Object>>> regListMap) {
+        String result = null;
+        String matchCorpName = (String) CustomizedPropertyConfigurer.getContextProperty("analysis.firstCandidate.match.corpName");
+        if (matchCorpName != null && matchCorpName.equalsIgnoreCase("true")) {
+            //无匹配结果时，根据当前省份企业库进行匹配
+            String source = esNotice.getSource();
+            long start = System.nanoTime();
+            List<String> nameList = companyService.queryProvComName(source);
+            try {
+                //分批次进行处理，减少一次性资源占用
+                int minIdx = -1;
+                int size = nameList.size();
+                int batchCount = 1000;
+                if (nameList != null && size > batchCount) {
+                    int loopNum = size / batchCount;
+                    int lastLoopSize = size % batchCount;
+                    int tmpMin = -1;
+                    String tmpRes = null;
+                    //分批次处理
+                    for (int i = 0; i < loopNum; i++) {
+                        int lastListSize = 0;
+                        if (i + 1 == loopNum) {//最后一批增加取余数（防止遗漏数据）
+                            if (lastLoopSize > 0) {
+                                lastListSize = lastLoopSize;
+                            }
+                        }
+
+                        List<String> subList = nameList.subList(i*batchCount, (batchCount*i)+batchCount+lastListSize);
+                        Object[] resObj = findMinIdxName(html, subList);
+                        //挑选最小的index
+                        tmpMin = Integer.parseInt(resObj[0].toString());
+                        tmpRes = resObj[1].toString();
+                        if (tmpMin != -1) {
+                            if (minIdx == -1) {
+                                minIdx = tmpMin;
+                                result = tmpRes;
+                            } else {
+                                if (tmpMin < minIdx) {
+                                    minIdx = tmpMin;
+                                    result = tmpRes;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Error error) {
+                logger.error(error, error);
+            } catch (Exception e) {
+                logger.error(e, e);
+            } finally {
+                long cost = (System.nanoTime() - start);
+                logger.info("afterAllMatch：企业库匹配中标候选人耗时：" + cost / 1000000 + "ms" + cost / 1000 + "微秒 ####  [noticeId:" + esNotice.getUuid() + "][redisId:" + esNotice.getRedisId() + "][rank:" + esNotice.getRank() + "][source:" + esNotice.getSource() + "][ur:" + esNotice.getUrl() + "]" + esNotice.getTitle() + esNotice.getOpenDate());
+            }
+            logger.debug("afterAllMatch,result-->" + result);
+        }
+        return result;
+    }
+
+    private Object[] findMinIdxName(String html,List<String> nameList){
+        int minIdx = -1;
+        String result = "";
+        Object[] res = new Object[2];
+        for (String comName : nameList) {
+            int idx = html.indexOf(comName);
+            if (idx != -1) {
+                if (minIdx != -1) {
+                    if (idx < minIdx) {
+                        minIdx = idx;
+                        result = comName;
+                        continue;
+                    }
+                } else {
+                    minIdx = idx;
+                    result = comName;
+                }
+            }
+        }
+        res[0]=minIdx;
+        res[1]=result;
+        return res;
+    }
 
     /**
      * 对匹配出的值进行过滤
@@ -65,7 +162,6 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
      * @return
      */
     protected String customfilterResult(String analysisResult,EsNotice esNotice){
-
         if(MyStringUtils.isNotNull(analysisResult)){
             int len = analysisResult.length();
             //1.祛除冒号等符号前面的内容

@@ -8,7 +8,7 @@
          timeToLiveSeconds:最大的存活时间
          overflowToDisk:是否允许对象被写入到磁盘
       -->
-    <diskStore path="user.home/ehcache/notice-analysis" />
+    <diskStore path="d:/ehcache/notice-analysis" />
 
     <defaultCache 
             maxElementsInMemory="10000"    
@@ -20,8 +20,15 @@
             diskSpoolBufferSizeMB="256"
       		maxElementsOnDisk="20000"  
             diskExpiryThreadIntervalSeconds="100"    
-            memoryStoreEvictionPolicy="LFU"    
+            memoryStoreEvictionPolicy="LFU"
             />
+
+    <cache name="queryProvComName"  maxEntriesLocalHeap="1000000"
+           maxElementsOnDisk="1000000" eternal="false"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="30" timeToIdleSeconds="86400" timeToLiveSeconds="259200"
+           memoryStoreEvictionPolicy="LFU" />
+
    <cache name="regexCache"  maxEntriesLocalHeap="100"
         maxElementsOnDisk="1000" eternal="false" overflowToDisk="true"  
         diskSpoolBufferSizeMB="20" timeToIdleSeconds="300" timeToLiveSeconds="600"  
