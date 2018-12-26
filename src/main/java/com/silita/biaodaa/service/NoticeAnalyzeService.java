@@ -37,7 +37,11 @@ public class NoticeAnalyzeService {
         logger.debug("insertAnalyzeDetailZhongbiao...[oneName:"+analyzeDetailZhongBiao.getOneName()+"][oneOffer:"+analyzeDetailZhongBiao.getOneOffer()+"]");
         String oneName = analyzeDetailZhongBiao.getOneName();
         if(oneName!=null && oneName.length()>100){
-            analyzeDetailZhongBiao.setOneName(oneName.substring(0,99));
+            analyzeDetailZhongBiao.setOneName(null);
+        }
+        String oneOffer = analyzeDetailZhongBiao.getOneOffer();
+        if(oneOffer!=null && oneOffer.length()>50){
+            analyzeDetailZhongBiao.setOneOffer(null);
         }
         analyzeRangeMapper.insertAnalyzeDetailZhongbiao(analyzeDetailZhongBiao);
     }
