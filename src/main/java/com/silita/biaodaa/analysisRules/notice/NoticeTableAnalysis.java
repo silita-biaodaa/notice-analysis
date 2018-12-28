@@ -37,6 +37,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
 
     private static final String TABLE_LOG_FLAG =  (String)CustomizedPropertyConfigurer.getContextProperty("analysis.table.logs");
 
+    TableParse tableParse = new TableParse();
 
     @Autowired
     private TableAnalysisService tableAnalysisService;
@@ -75,7 +76,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
                 if (rowStyleList.size() > 0 || colStyleList.size() > 0) {
                     resMap = new HashMap<String, String>();
                     //需要提取的字段
-                    String[] fields = {FD_ONE_NAME,FD_ONE_OFFER,FD_TIIME_LIMIT,FD_TIMES,FD_PJ_NAME,FD_PJ_NO,FD_SEGMENT,FD_ORDER};
+                    String[] fields = {FD_ONE_NAME,FD_ONE_OFFER,FD_TIIME_LIMIT,FD_TIMES,FD_PJ_NAME,FD_PJ_NO,FD_SEGMENT,FD_ORDER, FD_PROJECT_MANAGER};
                     for(String desc: fields){
                         Map temp = filterFiedValues(rowStyleList,colStyleList,desc);
                         if(temp!=null)
@@ -425,7 +426,13 @@ public class NoticeTableAnalysis implements TableAnalysis{
             if(tb.previousElementSibling() == null) {
                 continue;
             }
-            tableList =parseTableTag(tb);
+            //表格预处理
+            Element tempTb = tableParse.parseTable(tb);
+            if(null != tempTb) {
+                tableList =parseTableTag(tempTb);
+            } else {
+                tableList =parseTableTag(tb);
+            }
             if(tableList !=null) {
                 break;
             }

@@ -70,6 +70,9 @@ public class DisruptorOperator {
     ProjDutyHandler projDutyHandler;
 
     @Autowired
+    FirstProjectManagerHandler firstProjectManagerHandler;
+
+    @Autowired
     InsertAnalyzeDetailZhongBiaoHandler insertAnalyzeDetailZhongBiaoHandler;
     //----中標end------
 
@@ -107,6 +110,7 @@ public class DisruptorOperator {
         List<EventHandler> zhongbiaoHandlerList = new ArrayList<EventHandler>();
         zhongbiaoHandlerList.add(firstCandidateHandler);
         zhongbiaoHandlerList.add(firstQuoteHandler);
+        zhongbiaoHandlerList.add(firstProjectManagerHandler);
 //        zhongbiaoHandlerList.add(twoNameHandler);
 //        zhongbiaoHandlerList.add(threeNameHandler);
 //        zhongbiaoHandlerList.add(projDutyHandler);

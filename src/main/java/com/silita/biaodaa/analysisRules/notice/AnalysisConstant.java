@@ -41,6 +41,8 @@ public class AnalysisConstant {
 
     public static final String FD_ORDER="排序";
 
+    public static final String FD_PROJECT_MANAGER="第一中标项目经理";
+
     /** 中标公告：表格范围优先规则*/
     public static final String TB_RANGE_BID ="(?<=(" +
             "谈判情况|中标结果|中标候选人|中标（成交）结果|参与谈判情况" +
