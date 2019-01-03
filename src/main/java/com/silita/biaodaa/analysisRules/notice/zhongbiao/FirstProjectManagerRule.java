@@ -2,8 +2,10 @@ package com.silita.biaodaa.analysisRules.notice.zhongbiao;
 
 import com.silita.biaodaa.analysisRules.notice.AnalysisConstant;
 import com.silita.biaodaa.analysisRules.template.SingleFieldAnalysisTemplate;
+import com.silita.biaodaa.service.CompanyService;
 import com.snatch.model.EsNotice;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -20,7 +22,9 @@ import java.util.Map;
 public class FirstProjectManagerRule extends SingleFieldAnalysisTemplate {
 
     private static final String[] preKeys = {":","："};
-    private static final String[] containKeys = {"编号","姓名", "时间", "单位", "电话", "资格", "资质", "等级", "证书", "情况", "注册"};
+
+    @Autowired
+    CompanyService companyService;
 
     private Logger logger = Logger.getLogger(FirstProjectManagerRule.class);
 
@@ -73,11 +77,24 @@ public class FirstProjectManagerRule extends SingleFieldAnalysisTemplate {
      * @return
      */
     protected String verifyAnalysisResult(EsNotice esNotice,Map<String , List<Map<String, Object>>> regListMap, String analysisResult){
+        String source = esNotice.getSource();
+        String oneName = esNotice.getDetailZhongBiao().getOneName();
         //根据规则校验解析结果是否有效，无效结果直接置空
-        for(String temp : containKeys) {
-            if(analysisResult.contains(temp)) {
+        if(!StringUtils.isEmpty(oneName)) {
+            int count = 0;
+            List<String> personNames = companyService.listPersonNameByComName(source, oneName);
+            for (String name : personNames) {
+                if(name.contains(analysisResult)) {
+                    analysisResult = name;
+                    count++;
+                    break;
+                }
+            }
+            if(count == 0) {
                 analysisResult = null;
             }
+        } else {
+            analysisResult = null;
         }
         return analysisResult;
     }

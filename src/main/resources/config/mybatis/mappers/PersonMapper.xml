@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.silita.biaodaa.dao.PersonMapper">
+
+    <select id="listPersonNameByCompanyName" resultType="String">
+      SELECT `name` FROM mishu.tb_person_${source} WHERE `com_name` = #{comName}
+    </select>
+
+</mapper>

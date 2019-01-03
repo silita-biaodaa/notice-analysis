@@ -1,6 +1,7 @@
 package com.silita.biaodaa.service;
 
 import com.silita.biaodaa.dao.CompanyMapper;
+import com.silita.biaodaa.dao.PersonMapper;
 import com.silita.biaodaa.utils.BeanUtils;
 import com.snatch.model.EsNotice;
 import org.apache.log4j.Logger;
@@ -22,6 +23,8 @@ public class CompanyService {
 
     @Autowired
     private CompanyMapper companyMapper ;
+    @Autowired
+    private PersonMapper personMapper;
 
     public  boolean existsCorpName(String comName){
         int c = companyMapper.existsCompany(comName);
@@ -49,6 +52,10 @@ public class CompanyService {
         Map map = new HashMap();
         map.put("provName",source2ProvName(source));
         return companyMapper.queryProvComName(map);
+    }
+
+    public List<String> listPersonNameByComName(String source, String companyName) {
+        return personMapper.listPersonNameByCompanyName(source, companyName);
     }
 
     private String source2ProvName(String source){
