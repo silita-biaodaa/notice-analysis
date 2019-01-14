@@ -7,7 +7,6 @@ import com.silita.biaodaa.analysisRules.vo.AnalysisTd;
 import com.silita.biaodaa.analysisRules.vo.PairRule;
 import com.silita.biaodaa.common.config.CustomizedPropertyConfigurer;
 import com.silita.biaodaa.service.TableAnalysisService;
-import com.silita.biaodaa.utils.HtmlTagUtils;
 import com.silita.biaodaa.utils.LoggerUtils;
 import com.silita.biaodaa.utils.MyStringUtils;
 import com.silita.biaodaa.utils.RegexUtils;
@@ -19,6 +18,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
     @Override
     public Map<String, String> analysis(EsNotice esNotice, String segment,String flag) throws Exception {
         LoggerUtils.debugTrace("表格解析开始",esNotice,logger);
-        segment = HtmlTagUtils.clearTagByTable(segment);
+//        segment = HtmlTagUtils.clearTagByTable(segment);
         Map<String, String> resMap = null;
         try {
             //解析html，获取有效表格
@@ -123,7 +123,8 @@ public class NoticeTableAnalysis implements TableAnalysis{
      * @param fieldDesc
      * @return
      */
-    private Map<String,String> filterFiedValues(List<AnalysisField> rowStyleList,List<AnalysisField> colStyleList,String fieldDesc){
+    private Map<String,String>
+    filterFiedValues(List<AnalysisField> rowStyleList,List<AnalysisField> colStyleList,String fieldDesc){
         Map<String,String> resMap = null;
         int rowCount=0,colCount=0;
         List<AnalysisField> targetListRow = new ArrayList<>();
@@ -174,10 +175,10 @@ public class NoticeTableAnalysis implements TableAnalysis{
      */
     private AnalysisField filterOne(List<AnalysisField> fieldList){
         //判断title中的序号信息
-        String oneRegex = "(第)?(一|1|壹)";
+        String oneRegex = "((第)?(一|1|壹))|(首选)";
         for(AnalysisField af : fieldList){
-            if(af.getTitleAttach() !=null
-                    && RegexUtils.matchExists(af.getTitleAttach(), oneRegex)) {
+            if(af.getTitle() !=null
+                    && RegexUtils.matchExists(af.getTitle(), oneRegex)) {
                     return af;
             }
         }
@@ -395,13 +396,13 @@ public class NoticeTableAnalysis implements TableAnalysis{
     public List<List<AnalysisTd>> parseContent(String segment,String flag) throws Exception {
         List<List<AnalysisTd>> tableList =null;
         //中标表格,范围预选尝试
-        if(flag.equals(ZHONGBIAO_TB)){
-            String subSeg = matchValue(segment,TB_RANGE_BID);
-            if(subSeg !=null){
-                tableList = buildTableListByHtml(subSeg);
-                subSeg=null;
-            }
-        }
+//        if(flag.equals(ZHONGBIAO_TB)){
+//            String subSeg = matchValue(segment,TB_RANGE_BID);
+//            if(subSeg !=null){
+//                tableList = buildTableListByHtml(subSeg);
+//                subSeg=null;
+//            }
+//        }
 
         //按全文顺序获取表格
         if(tableList==null) {
@@ -423,15 +424,14 @@ public class NoticeTableAnalysis implements TableAnalysis{
 
         //获取第一个有效表格
         for(Element tb: tables ){
-            if(tb.previousElementSibling() == null) {
+            //文章就是一个表格
+            if(StringUtils.isEmpty(tb.select("tr").text())) {
                 continue;
             }
             //表格预处理
             Element tempTb = tableParse.parseTable(tb);
             if(null != tempTb) {
                 tableList =parseTableTag(tempTb);
-            } else {
-                tableList =parseTableTag(tb);
             }
             if(tableList !=null) {
                 break;
@@ -449,7 +449,7 @@ public class NoticeTableAnalysis implements TableAnalysis{
         String tmpTxt = tmptds.text();
 //            logger.debug("tmptds.outerHtml():"+tmptds.outerHtml());
 //            logger.debug("tmptds.text():" + tmpTxt);
-        if(verifyTable(tmpTxt)) {
+//        if(verifyTable(tmpTxt)) {
             if (trs.size() > 1 && !tmptds.isEmpty()) {
                 tableList = new ArrayList<List<AnalysisTd>>(trs.size());
                 for (Element tr : trs) {
@@ -468,10 +468,10 @@ public class NoticeTableAnalysis implements TableAnalysis{
                     tableList.add(tdList);
                 }
             }
-        }else{
-            //无效表格
-            logger.debug("跳过无效表格，td.outerHtml："+tmptds.outerHtml());
-        }
+//        }else{
+//            //无效表格
+//            logger.debug("跳过无效表格，td.outerHtml："+tmptds.outerHtml());
+//        }
         return tableList;
     }
 

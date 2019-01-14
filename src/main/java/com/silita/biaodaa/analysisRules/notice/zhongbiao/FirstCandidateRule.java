@@ -30,9 +30,9 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
     @Autowired
     CompanyService companyService;
 
-    private static final String[] endKeys = {"公司","研究院"};
+    private static final String[] endKeys = {"公司", "所", "院", "局", "中心", "场", "社"};
 
-    private static final String[] preKeys = {":","："};
+    private static final String[] preKeys = {":","：", "、", "名称"};
 
     @Override
     protected void init() {
@@ -169,24 +169,27 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
                 int kIdx = analysisResult.lastIndexOf(preKey);
                 if(kIdx!= -1 && kIdx<(len-1)){
                     logger.debug("customfilterResult：从结果中["+analysisResult+"]祛除特殊符号前缀。。");
-                    analysisResult = analysisResult.substring(kIdx+1);
+                    analysisResult = analysisResult.substring(kIdx + preKey.length());
                 }
+            }
+            if(analysisResult.length() > 25 || analysisResult.length() < 5) {
+                analysisResult = null;
             }
 
-            //2.判断是否以公司关键字结尾，如果匹配到的关键字不是字符串的结尾，则进行截取处理。
-            for(String endKey: endKeys){
-                int kIdx = analysisResult.lastIndexOf(endKey);
-                int kLen = endKey.length();
-                if(kIdx!= -1){
-                    if((kIdx+kLen) < len){//满足截取条件
-                        logger.debug("customfilterResult：["+analysisResult+"]满足截取条件，执行截取。。");
-                        analysisResult=analysisResult.substring(0,kIdx+kLen);
-                        break;
-                    }
-                }else{
-                    continue;
-                }
-            }
+//            //2.判断是否以公司关键字结尾，如果匹配到的关键字不是字符串的结尾，则进行截取处理。
+//            for(String endKey: endKeys){
+//                int kIdx = analysisResult.lastIndexOf(endKey);
+//                int kLen = endKey.length();
+//                if(kIdx!= -1){
+//                    if((kIdx+kLen) < len){//满足截取条件
+//                        logger.debug("customfilterResult：["+analysisResult+"]满足截取条件，执行截取。。");
+//                        analysisResult=analysisResult.substring(0,kIdx+kLen);
+//                        break;
+//                    }
+//                }else{
+//                    continue;
+//                }
+//            }
         }
 
         return analysisResult;

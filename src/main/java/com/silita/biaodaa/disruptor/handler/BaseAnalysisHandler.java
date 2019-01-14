@@ -43,7 +43,7 @@ public abstract class BaseAnalysisHandler implements EventHandler<AnalyzeEvent> 
             PROCESS_INFO.put("0", "开始解析[title:"+esNotice.getTitle()+"]\n[url:"+esNotice.getUrl()+"]");
         }
         if(MyStringUtils.isNull(currentFieldValues(esNotice))) {
-            String[] list = preAnalysisRule.buildAnalysisList(esNotice,"</p>","</td>");
+            String[] list = preAnalysisRule.buildAnalysisList(esNotice,"</p>","</tr>");
             Object s3 = null;
             this.keyWord = null;
             this.keyValue = null;

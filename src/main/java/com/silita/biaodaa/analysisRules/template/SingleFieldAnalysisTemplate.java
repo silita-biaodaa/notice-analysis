@@ -129,6 +129,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
      * @return
      */
     private String  innertMatchRules(EsNotice esNotice,Map<String ,List<Map<String, Object>>> regListMap,String matchPart,String rangeRegex){
+        matchPart = matchPart.replaceAll("(\\s)|(&nbsp;)", "");
         String result = null;
         try {
             List<Map<String, Object>> accurateList = regListMap.get("accurate");//精准匹配规则
@@ -284,7 +285,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
 
             //无解析结果时,执行自定义解析逻辑
             if(MyStringUtils.isNull(analysisResult)){
-                analysisResult=afterAllMatch(html,esNotice, regListMap);
+//                analysisResult=afterAllMatch(html,esNotice, regListMap);
             }
             //34.解析结果有效性检验，检验失败返回空
             if(MyStringUtils.isNotNull(analysisResult)) {
@@ -332,7 +333,7 @@ public abstract class SingleFieldAnalysisTemplate implements SingleFieldAnalysis
             return null;
         }
         //结果段落分割
-        str = splitSection(str,"</p>");
+//        str = splitSection(str,"</p>");
         str = str.replaceFirst("\\n","");
         str = str.replaceAll("[  ]","");
         //输出结果过滤
