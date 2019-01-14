@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 第一中标人解析
@@ -32,7 +30,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
 
     private static final String[] endKeys = {"公司", "所", "院", "局", "中心", "场", "社"};
 
-    private static final String[] preKeys = {":","：", "、", "名称"};
+    private static final String[] preKeys = {":","：", "、", "名称", "第一名", "第一"};
 
     @Override
     protected void init() {
@@ -163,6 +161,7 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
      */
     protected String customfilterResult(String analysisResult,EsNotice esNotice){
         if(MyStringUtils.isNotNull(analysisResult)){
+            analysisResult = analysisResult.replaceAll("\\s+", "");
             int len = analysisResult.length();
             //1.祛除冒号等符号前面的内容
             for(String preKey: preKeys){
@@ -204,17 +203,17 @@ public class FirstCandidateRule extends SingleFieldAnalysisTemplate {
      */
     protected String verifyAnalysisResult(EsNotice esNotice,Map<String , List<Map<String, Object>>> regListMap, String analysisResult){
         //根据规则校验解析结果是否有效，无效结果直接置空
-        List<Map<String, Object>> verifyRuleList = regListMap.get("verifyResult");
-        for(Map<String, Object> verifyRule:verifyRuleList){
-            String regex = verifyRule.get("regex").toString();
-            Pattern ptn = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
-            Matcher matcher = ptn.matcher(analysisResult);
-            if(!matcher.find()){
-                logger.info("解析结果[analysisResult:"+analysisResult+"]，表达式验证失败，返回null。[regex:"+regex+"]");
-                analysisResult= null;
-                break;
-            }
-        }
+//        List<Map<String, Object>> verifyRuleList = regListMap.get("verifyResult");
+//        for(Map<String, Object> verifyRule:verifyRuleList){
+//            String regex = verifyRule.get("regex").toString();
+//            Pattern ptn = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
+//            Matcher matcher = ptn.matcher(analysisResult);
+//            if(!matcher.find()){
+//                logger.info("解析结果[analysisResult:"+analysisResult+"]，表达式验证失败，返回null。[regex:"+regex+"]");
+//                analysisResult= null;
+//                break;
+//            }
+//        }
 
         if(MyStringUtils.isNotNull(analysisResult)) {
             //根据企业名称库,校验解析结果

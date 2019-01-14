@@ -94,25 +94,10 @@ public class TableParse {
             //用于判断是否是需要截取的表格
             Map otherPosition = matchTableHead(otherRows);
             Map rowsPosition = matchTableHead(allRows);
-            if((null != rowsPosition && ((int)rowsPosition.get("firstRowPosition") > allRows.size() / 2)) || (firstRow.size() == 2 && lastRow.size() == 2)) {
-                rowsPosition = null;
-            }
-            if (null == otherPosition && null == rowsPosition) {
-                if (otherRows.size() > 0 && (otherFirstRow.size() == otherLastRow.size())) {
-                    for (int j = 0; j < otherRows.get(String.valueOf(0)).size(); j++) {
-                        ArrayList tempCols = new ArrayList();
-                        for (int i = 0; i < otherRows.size(); i++) {
-                            tempCols.add(otherRows.get(String.valueOf(i)).get(j));
-                        }
-                        otherCols.put(String.valueOf(j), tempCols);
-                    }
-                    Map otherColPosition = this.matchTableHead(otherCols);
-                    //http://www.ahtba.org.cn/Notice/NoticeDetail?id=549514 这种表格
-                    if (otherColPosition != null && otherFirstCol.size() > 1) {
-                        return mapToString(otherCols);
-                    }
-                }
-            }
+            //
+//            if((null != rowsPosition && ((int)rowsPosition.get("firstRowPosition") > allRows.size() / 2)) || (firstRow.size() == 2 && lastRow.size() == 2)) {
+//                rowsPosition = null;
+//            }
 
             //简单表格判断规则
             if (firstRow.size() == 1 && lastRow.size() == 1) {
@@ -215,11 +200,28 @@ public class TableParse {
                         return mapToString(allRows);
                     }
                 } else {
-                    System.out.println("竖向表格");
                     //http://www.bidding.hunan.gov.cn/jyxxzbhx/39131.jhtml 普通竖向表格表头判断
                     if (this.matchTableHead(allCols) != null && firstCol.size() > 1) {
+                        System.out.println("竖向表格");
                         return mapToString(allRows);
                     } else {
+                        if (null == otherPosition && null == rowsPosition) {
+                            if (otherRows.size() > 0 && (otherFirstRow.size() == otherLastRow.size())) {
+                                for (int j = 0; j < otherRows.get(String.valueOf(0)).size(); j++) {
+                                    ArrayList tempCols = new ArrayList();
+                                    for (int i = 0; i < otherRows.size(); i++) {
+                                        tempCols.add(otherRows.get(String.valueOf(i)).get(j));
+                                    }
+                                    otherCols.put(String.valueOf(j), tempCols);
+                                }
+                                Map otherColPosition = this.matchTableHead(otherCols);
+                                //http://www.ahtba.org.cn/Notice/NoticeDetail?id=549514 这种表格
+                                if (otherColPosition != null && otherFirstCol.size() > 1) {
+                                    System.out.println("竖向表格");
+                                    return mapToString(otherCols);
+                                }
+                            }
+                        }
                         System.out.println("表格判断失败");
                         return null;
                     }
@@ -245,9 +247,9 @@ public class TableParse {
         //删除空白、
         for (int i = 0; i < table.select("tr").size(); i++) {
             Element tempRow = table.select("tr").get(i);
-            String tdColsStr = tempRow.select("td").text().replaceAll("(\\s*)|(&nbsp;)", "");
+            String tdColsStr = tempRow.select("td").html().replaceAll("(\\s+)|(&nbsp;)", "");
             if(StringUtils.isEmpty(tdColsStr) && i == 0) {
-                tdColsStr = tempRow.select("th").text().replaceAll("(\\s*)|(&nbsp;)", "");
+                tdColsStr = tempRow.select("th").html().replaceAll("(\\s+)|(&nbsp;)", "");
             }
             if (StringUtils.isEmpty(tdColsStr) ) {
                 table.select("tr").get(i).remove();
